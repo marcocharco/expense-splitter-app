@@ -6,7 +6,7 @@ const Home = () => {
     <section className="home">
       <div className="home-content">
 
-        Welcome
+        Welcome User
         <GroupList />
         
       </div>

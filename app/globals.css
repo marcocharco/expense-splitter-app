@@ -11,14 +11,18 @@
 }
 
 @theme {
-  --font-display: "Inter", "sans-serif"
+  --font-display: "Inter", "sans-serif";
+  --color-primary: #14EB00;
 }
-
 
 @utility home {
     @apply no-scrollbar flex w-full flex-row max-xl:max-h-screen max-xl:overflow-y-scroll;
 }
 
 @utility home-content {
-  @apply no-scrollbar flex w-full flex-1 flex-col gap-4 px-5 sm:px-8 py-7 lg:py-12 xl:max-h-screen xl:overflow-y-scroll
+  @apply no-scrollbar flex w-full flex-1 flex-col gap-4 px-5 sm:px-8 py-7 lg:py-12 xl:max-h-screen xl:overflow-y-scroll;
+}
+
+@utility sidebar {
+  @apply sticky left-0 top-0 flex h-screen w-fit flex-col justify-between border-r border-gray-200 bg-white pt-8 text-neutral-700 max-md:hidden sm:p-4 xl:p-6 2xl:w-[355px];
 }
