@@ -6,7 +6,7 @@ export default function Dashboard({
   children: React.ReactNode;
 }>) {
 
-  const loggedIn = {firstName: "Bob", lastName: "Lee "};
+  const loggedIn = {$id: "1", name: "Bob"};
   return (
     <main className="flex h-screen w-full font-display">
         <Sidebar user={loggedIn}/>
