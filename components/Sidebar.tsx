@@ -5,7 +5,10 @@ const Sidebar = ({ user }: SidebarProps) => {
   return (
     <section className="sidebar">
       <nav className="flex flex-col gap-4 w-full">
-        <Link href="/" className="mb-12 cursor-pointer flex items-center gap-2">
+        <Link
+          href="/"
+          className="mb-12 cursor-pointer flex items-center justify-center gap-2 h-12"
+        >
           <Image
             src="icons/logo.svg"
             width={34}

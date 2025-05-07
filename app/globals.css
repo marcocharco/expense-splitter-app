@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -6,6 +7,7 @@
 
 @theme {
   --font-DM-Sans: "DM Sans", sans-serif;
+  --font-Raleway: "Raleway", sans-serif;
   /* --font-display: "Inter", "sans-serif"; */
   --color-main: #14eb00;
 }
@@ -17,6 +19,10 @@
 }
 
 @layer base {
+  h1 {
+    @apply text-4xl font-medium;
+    font-family: var(--font-Raleway);
+  }
   button:not([disabled]),
   [role="button"]:not([disabled]) {
     cursor: pointer;
@@ -38,11 +44,11 @@
 }
 
 @utility layout-content {
-  @apply no-scrollbar flex w-full flex-1 flex-col gap-4 px-8 sm:px-12 lg:px-24 py-7 lg:py-12 xl:max-h-screen xl:overflow-y-scroll max-w-[1200px];
+  @apply no-scrollbar flex w-full flex-1 flex-col gap-8 px-8 sm:px-12 lg:px-24 py-12 lg:py-20 xl:max-h-screen xl:overflow-y-scroll max-w-[1200px];
 }
 
 @utility sidebar {
-  @apply sticky left-0 top-0 flex h-screen w-fit flex-col justify-between border-r border-gray-200 bg-white pt-8 text-neutral-700 max-md:hidden sm:p-4 xl:p-6 2xl:w-[355px];
+  @apply sticky left-0 top-0 flex h-screen w-60 flex-col justify-between border-r border-gray-200 bg-white pt-8 text-neutral-700 max-md:hidden sm:p-4 xl:p-6 2xl:w-[355px];
 }
 
 @theme inline {

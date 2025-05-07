@@ -34,19 +34,19 @@ const GroupPage = () => {
               </Button>
             </Link> */}
 
-            <p className="text-xl">{groupId}</p>
+            <h1>{groupId}</h1>
           </div>
 
           <div className="flex flex-wrap gap-3 justify-end">
             <Link href="">
               <Button variant="outline">
-                <Plus /> Add Expense
+                <Plus /> Add expense
               </Button>
             </Link>
             <Link href="">
               <Button variant="outline">
                 <Scale />
-                Settle Expenses
+                Settle expenses
               </Button>
             </Link>
           </div>
@@ -54,9 +54,10 @@ const GroupPage = () => {
 
         <div className="flex justify-center">
           <Tabs defaultValue="activity" className="w-full max-w-[1000px]">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="activity">Recent Activity</TabsTrigger>
-              <TabsTrigger value="balances">Balances</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="activity">All activity</TabsTrigger>
+              <TabsTrigger value="you">Your expenses</TabsTrigger>
+              <TabsTrigger value="balances">Group balances</TabsTrigger>
               <TabsTrigger value="members">Members</TabsTrigger>
             </TabsList>
             <TabsContent value="activity" className="justify-center">
@@ -81,7 +82,7 @@ const GroupPage = () => {
                     </TableCell>
                     <TableCell>$169.42</TableCell>
                     <TableCell>Bob</TableCell>
-                    <TableHead>17/04/2025</TableHead>
+                    <TableHead>April 17, 2025</TableHead>
                     <TableCell>Utilities</TableCell>
                     <TableCell>0/3</TableCell>
                   </TableRow>
@@ -89,8 +90,8 @@ const GroupPage = () => {
                     <TableCell className="font-medium">Costco</TableCell>
                     <TableCell>$133.70</TableCell>
                     <TableCell>Rick</TableCell>
-                    <TableHead>27/04/2025</TableHead>
-                    <TableCell>Utilities</TableCell>
+                    <TableHead>April 23, 2025</TableHead>
+                    <TableCell>Groceries</TableCell>
                     <TableCell>0/2</TableCell>
                   </TableRow>
                 </TableBody>
