@@ -99,6 +99,9 @@ const GroupPage = () => {
               {/* </div>
               </div> */}
             </TabsContent>
+            <TabsContent value="you">
+              Items where you owe or are owed.
+            </TabsContent>
             <TabsContent value="balances">
               <Table>
                 <TableCaption>
