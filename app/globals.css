@@ -27,6 +27,10 @@
   [role="button"]:not([disabled]) {
     cursor: pointer;
   }
+  body {
+    overflow: hidden;
+    height: 100%;
+  }
 }
 
 @utility no-scrollbar {
