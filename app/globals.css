@@ -55,6 +55,30 @@
   @apply sticky left-0 top-0 flex h-screen w-60 flex-col justify-between border-r border-gray-200 bg-white pt-8 text-neutral-700 max-md:hidden sm:p-4 xl:p-6 2xl:w-[355px];
 }
 
+@utility auth-form {
+  @apply flex min-h-screen w-full max-w-[420px] flex-col justify-center gap-2 py-10 md:gap-8;
+}
+
+@utility form-item {
+  @apply flex flex-col gap-1;
+}
+
+@utility form-label {
+  @apply !text-base w-full max-w-[280px] font-medium !text-neutral-900;
+}
+
+@utility input-class {
+  @apply !text-sm !border-neutral-200 !h-12 my-2;
+}
+
+@utility form-message {
+  @apply !text-red-500 !text-sm !h-[20px];
+}
+
+@utility form-btn {
+  @apply !bg-main text-white !shadow-accent font-medium;
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
