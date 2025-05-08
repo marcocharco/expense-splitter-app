@@ -10,7 +10,7 @@ const Sidebar = ({ user }: SidebarProps) => {
           className="mb-12 cursor-pointer flex items-center justify-center gap-2 h-12"
         >
           <Image
-            src="icons/logo.svg"
+            src="/icons/logo.svg"
             width={34}
             height={34}
             alt="Logo"
