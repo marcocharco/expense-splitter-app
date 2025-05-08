@@ -4,14 +4,20 @@ declare interface GroupCardProps {
   members: Member[];
 }
 
+declare interface SidebarProps {
+  user: User;
+}
+
+declare interface SignUpParams {
+  name: string;
+  email: string;
+  password: string;
+}
+
 declare type Member = {
   id: string;
   name: string;
 };
-
-declare interface SidebarProps {
-  user: User;
-}
 
 declare type User = {
   $id: string;
