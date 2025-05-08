@@ -9,7 +9,7 @@ declare interface SidebarProps {
 }
 
 declare interface SignUpParams {
-  name: string;
+  name?: string;
   email: string;
   password: string;
 }

@@ -38,11 +38,11 @@ const AuthForm = ({ type }: { type: string }) => {
     try {
       // Sign up with supabase auth
       if (type === "sign-in") {
-        const response = await signIn(values.email, values.password);
+        const response = await signIn(values);
         if (response) router.push("/");
       }
       if (type === "sign-up") {
-        const response = await signUp(values.email, values.password);
+        const response = await signUp(values);
         if (response) router.push("/");
       }
     } catch (error) {

@@ -1,5 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "./ui/button";
+import { supabase } from "@/lib/supabaseClient";
 
 const Sidebar = ({ user }: SidebarProps) => {
   return (
@@ -23,7 +27,15 @@ const Sidebar = ({ user }: SidebarProps) => {
         <Link href="/groups/Roomates">Roomates</Link>
         <Link href="/groups/Cottage">Cottage Trip</Link>
       </nav>
-      (User Info)
+      <Button
+        variant={"outline"}
+        onClick={async () => {
+          await supabase.auth.signOut({ scope: "local" });
+          window.location.href = "/sign-in"; // or redirect to "/"
+        }}
+      >
+        Logout
+      </Button>
     </section>
   );
 };
