@@ -4,22 +4,22 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-dm-sans: "DM Sans", sans-serif;
-  --font-raleway: "Raleway", sans-serif;
   --color-main: #14eb00;
+  --font-main: var(--font-dm-sans);
+  --font-header: var(--font-raleway);
 }
 
 @layer base {
   h1 {
     @apply text-4xl font-medium;
-    font-family: var(--font-raleway);
+    font-family: var(--font-header);
   }
   button:not([disabled]),
   [role="button"]:not([disabled]) {
     cursor: pointer;
   }
   body {
-    @apply font-dm-sans;
+    font-family: var(--font-main);
     overflow: hidden;
     height: 100%;
   }
@@ -52,7 +52,7 @@
 }
 
 @utility auth-header {
-  @apply text-3xl mb-4 font-raleway font-medium;
+  @apply text-3xl mb-4 font-header font-medium;
 }
 
 @utility form-item {
