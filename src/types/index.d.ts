@@ -1,7 +1,7 @@
 declare interface GroupCardProps {
   $id: string;
   name: string;
-  members: Member[];
+  // members: Member[];
 }
 
 declare interface SidebarProps {
@@ -14,6 +14,10 @@ declare interface SignUpParams {
   password: string;
 }
 
+declare interface GroupsPageProps {
+  groups: Group[];
+}
+
 declare type Member = {
   id: string;
   name: string;
@@ -21,5 +25,10 @@ declare type Member = {
 
 declare type User = {
   $id: string;
+  name: string;
+};
+
+export type Group = {
+  id: string;
   name: string;
 };

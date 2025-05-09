@@ -12,6 +12,9 @@ const Home = async () => {
 
   const name = user?.user_metadata?.name;
 
+  const { data: groups } = await supabase.from("groups").select(" id, name ");
+
+  // console.log(groups);
   return (
     <section className="layout-container">
       <div className="layout-content">
@@ -23,7 +26,7 @@ const Home = async () => {
             </>
           )}
         </h1>
-        <GroupList />
+        <GroupList groups={groups ?? []} />
       </div>
     </section>
   );
