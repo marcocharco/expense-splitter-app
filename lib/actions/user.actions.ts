@@ -39,3 +39,15 @@ export async function signUp(values: SignUpParams) {
   revalidatePath("/", "layout");
   redirect("/");
 }
+
+export async function signOut() {
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.signOut({ scope: "local" });
+  if (error) {
+    redirect("/error");
+  }
+
+  revalidatePath("/", "layout");
+  redirect("/sign-in");
+}
