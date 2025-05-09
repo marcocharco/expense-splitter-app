@@ -35,6 +35,7 @@ export async function updateSession(request: NextRequest) {
 
   // IMPORTANT: DO NOT REMOVE auth.getUser()
 
+  // Protect non auth pages when not signed in
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -48,6 +49,15 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = "/sign-in";
     return NextResponse.redirect(url);
+  }
+
+  // Block auth pages when signed in
+  if (
+    user &&
+    (request.nextUrl.pathname === "/sign-in" ||
+      request.nextUrl.pathname === "/sign-up")
+  ) {
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
