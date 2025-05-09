@@ -1,33 +1,25 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-DM-Sans: "DM Sans", sans-serif;
-  --font-Raleway: "Raleway", sans-serif;
-  /* --font-display: "Inter", "sans-serif"; */
+  --font-dm-sans: "DM Sans", sans-serif;
+  --font-raleway: "Raleway", sans-serif;
   --color-main: #14eb00;
-}
-
-@layer base {
-  html {
-    font-family: var(--font-DM-Sans);
-  }
 }
 
 @layer base {
   h1 {
     @apply text-4xl font-medium;
-    font-family: var(--font-Raleway);
+    font-family: var(--font-raleway);
   }
   button:not([disabled]),
   [role="button"]:not([disabled]) {
     cursor: pointer;
   }
   body {
+    @apply font-dm-sans;
     overflow: hidden;
     height: 100%;
   }
@@ -57,6 +49,10 @@
 
 @utility auth-form {
   @apply flex min-h-screen w-full max-w-[420px] flex-col justify-center gap-2 py-10 md:gap-8;
+}
+
+@utility auth-header {
+  @apply text-3xl mb-4 font-raleway font-medium;
 }
 
 @utility form-item {

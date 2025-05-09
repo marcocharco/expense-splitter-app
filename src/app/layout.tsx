@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
-import {Inter} from "next/font/google";
+import { DM_Sans, Raleway } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const dmSans = DM_Sans({
   variable: "--font-dm-sans",
+  subsets: ["latin"],
+});
+
+const raleway = Raleway({
+  variable: "--font-raleway",
   subsets: ["latin"],
 });
 

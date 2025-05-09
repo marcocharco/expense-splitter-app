@@ -54,7 +54,7 @@ const AuthForm = ({ type }: { type: string }) => {
 
   return (
     <section className="auth-form">
-      <p className="text-3xl mb-4">
+      <p className="auth-header">
         {user ? "Show Dashboard" : type === "sign-in" ? "Sign In" : "Sign Up"}
       </p>
 
