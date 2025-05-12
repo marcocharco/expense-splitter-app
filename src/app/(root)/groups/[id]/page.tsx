@@ -1,6 +1,5 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,19 +14,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Plus, Scale } from "lucide-react";
-import { getGroupById } from "@/lib/queries/getGroupById";
-import { useEffect, useState } from "react";
+import { useCurrentGroup } from "@/context/CurrentGroupContext";
 
 const GroupPage = () => {
-  const params = useParams();
-  const groupId = params.id as string;
-  const [group, setGroup] = useState<{ id: string; name: string } | null>(null);
-
-  useEffect(() => {
-    if (groupId) {
-      getGroupById(groupId as string).then(setGroup);
-    }
-  }, [groupId]);
+  const group = useCurrentGroup();
   return (
     <section className="layout-container">
       <div className="layout-content">
@@ -43,7 +33,7 @@ const GroupPage = () => {
           </div>
 
           <div className="flex flex-wrap gap-3 justify-end">
-            <Link href={`/groups/${groupId}/add-expense`}>
+            <Link href={`/groups/${group?.slug}/add-expense`}>
               <Button variant="outline">
                 <Plus /> Add expense
               </Button>

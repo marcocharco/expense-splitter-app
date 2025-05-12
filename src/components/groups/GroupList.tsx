@@ -2,7 +2,7 @@
 
 import React from "react";
 import GroupCard from "./GroupCard";
-import { GroupsPageProps } from "@/types";
+import { useUserGroups } from "@/context/UserGroupsContext";
 
 // const groupList = [
 //   {
@@ -39,10 +39,11 @@ import { GroupsPageProps } from "@/types";
 //   },
 // ];
 
-const GroupList = ({ groups }: GroupsPageProps) => {
+const GroupList = () => {
+  const groups = useUserGroups();
   return (
     <div className="flex w-full flex-col gap-4">
-      {groups.map((group) => (
+      {groups?.map((group) => (
         <GroupCard
           key={group.id}
           $id={group.id}

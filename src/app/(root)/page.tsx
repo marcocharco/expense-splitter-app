@@ -2,7 +2,6 @@ import { createClient } from "@/utils/supabase/server";
 
 import GroupList from "@/components/groups/GroupList";
 import React from "react";
-import { getUserGroups } from "@/lib/queries/getUserGroups";
 
 const Home = async () => {
   const supabase = await createClient();
@@ -12,8 +11,6 @@ const Home = async () => {
   } = await supabase.auth.getUser();
 
   const name = user?.user_metadata?.name;
-
-  const groups = await getUserGroups();
 
   // console.log(groups);
   return (
@@ -27,7 +24,7 @@ const Home = async () => {
             </>
           )}
         </h1>
-        <GroupList groups={groups ?? []} />
+        <GroupList />
       </div>
     </section>
   );

@@ -4,8 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { signOut } from "@/lib/actions/user.actions";
+import { useUserGroups } from "@/context/UserGroupsContext";
 
-const Sidebar = ({ user }: SidebarProps) => {
+const Sidebar = () => {
+  const groups = useUserGroups();
   return (
     <section className="sidebar">
       <nav className="flex flex-col gap-4 w-full">
@@ -24,8 +26,16 @@ const Sidebar = ({ user }: SidebarProps) => {
             uomi
           </h1>
         </Link>
-        <Link href="/groups/Roomates">Roomates</Link>
-        <Link href="/groups/Cottage">Cottage Trip</Link>
+
+        {groups?.map((group) => (
+          <Link
+            key={group.id}
+            href={`/groups/${group.slug}`}
+            className="hover:underline"
+          >
+            {group.name}
+          </Link>
+        ))}
       </nav>
       <Button variant="outline" onClick={() => signOut()}>
         Logout

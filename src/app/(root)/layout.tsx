@@ -1,15 +1,17 @@
 import Sidebar from "@/components/Sidebar";
+import { UserGroupsProvider } from "@/context/UserGroupsContext";
 
 export default function Dashboard({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const loggedIn = { $id: "1", name: "Bob" };
   return (
+    <UserGroupsProvider>
     <main className="flex h-screen w-full font-display">
-      <Sidebar user={loggedIn} />
+        <Sidebar />
       {children}
     </main>
+    </UserGroupsProvider>
   );
 }

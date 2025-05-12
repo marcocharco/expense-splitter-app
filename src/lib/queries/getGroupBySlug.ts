@@ -1,15 +1,15 @@
 import { createClient } from "@/utils/supabase/client";
 
-export async function getGroupById(groupId: string) {
+export async function getGroupBySlug(slug: string) {
   const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("group")
     .select("id, name, slug")
-    .eq("id", groupId)
+    .eq("slug", slug)
     .single();
 
   if (error) throw new Error(error.message);
-  console.log("Get group data by ID: ", data);
+  console.log("Get group data by slug: ", data);
   return data;
 }
