@@ -1,7 +1,6 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-
 import { getUserGroups } from "@/lib/queries/getUserGroups";
 import { Group } from "@/types";
 
@@ -17,15 +16,7 @@ export const UserGroupsProvider = ({
   const [groups, setGroups] = useState<Group[] | null>(null);
 
   useEffect(() => {
-    const fetchGroups = async () => {
-      const data = await getUserGroups();
-
-      if (data) {
-        setGroups(data.map((d) => d));
-      }
-    };
-
-    fetchGroups();
+    getUserGroups().then(setGroups);
   }, []);
 
   return (

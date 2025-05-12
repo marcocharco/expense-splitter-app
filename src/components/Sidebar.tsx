@@ -21,6 +21,7 @@ const Sidebar = () => {
             height={34}
             alt="Logo"
             className="size-[24px] max-xl:size-14"
+            priority={true}
           />
           <h1 className="text-main font-bold text-[26px] text-black-1 max-xl:hidden 2xl:text-26">
             uomi
