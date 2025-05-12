@@ -35,3 +35,14 @@ export type Group = {
   slug: string;
   created_at?: string;
 };
+
+export type Expense = {
+  id: string;
+  title: string;
+  amount: number;
+  paid_by: string;
+  date: string;
+  category_id: string;
+  settlement_id: string;
+  status: string;
+};
