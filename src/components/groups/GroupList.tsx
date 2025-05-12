@@ -47,6 +47,7 @@ const GroupList = ({ groups }: GroupsPageProps) => {
           key={group.id}
           $id={group.id}
           name={group.name}
+          slug={group.slug}
           // members={group.members}
         />
       ))}

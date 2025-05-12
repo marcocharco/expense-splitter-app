@@ -14,15 +14,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ChevronLeft, Plus, Scale } from "lucide-react";
-
-// const groupPage = async ({ params }: { params: { id: string } }) => {
-//   const group = params.id;
+import { Plus, Scale } from "lucide-react";
+import { getGroupById } from "@/lib/queries/getGroupById";
+import { useEffect, useState } from "react";
 
 const GroupPage = () => {
   const params = useParams();
-  const groupId = params.id;
+  const groupId = params.id as string;
+  const [group, setGroup] = useState<{ id: string; name: string } | null>(null);
 
+  useEffect(() => {
+    if (groupId) {
+      getGroupById(groupId as string).then(setGroup);
+    }
+  }, [groupId]);
   return (
     <section className="layout-container">
       <div className="layout-content">
@@ -34,7 +39,7 @@ const GroupPage = () => {
               </Button>
             </Link> */}
 
-            <h1>{groupId}</h1>
+            <h1>{group?.name}</h1>
           </div>
 
           <div className="flex flex-wrap gap-3 justify-end">

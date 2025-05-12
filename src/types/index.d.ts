@@ -1,6 +1,7 @@
 declare interface GroupCardProps {
   $id: string;
   name: string;
+  slug: string;
   // members: Member[];
 }
 
@@ -31,4 +32,5 @@ declare type User = {
 export type Group = {
   id: string;
   name: string;
+  slug: string;
 };
