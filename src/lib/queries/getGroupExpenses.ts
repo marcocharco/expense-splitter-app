@@ -6,11 +6,22 @@ export async function getGroupExpenses(groupId: string) {
   const { data, error } = await supabase
     .from("expense")
     .select(
-      "id, title, amount, paid_by, date, category_id, settlement_id, status"
+      `
+      id,
+      title,
+      amount,
+      date,
+      status,
+      group_id,
+      category_id,
+      settlement_id,
+      paid_by:profile(id, name)
+    `
     )
-    .eq("group_id", groupId);
+    .eq("group_id", groupId)
+    .order("date", { ascending: false });
 
+  // console.log(data);
   if (error) throw new Error(error.message);
-  // console.log("Get group expenses by GroupID: ", data);
   return data;
 }

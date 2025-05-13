@@ -40,7 +40,7 @@ export type Expense = {
   id: string;
   title: string;
   amount: number;
-  paid_by: string;
+  paid_by: { id: string; name: string };
   date: string;
   category_id: string;
   settlement_id: string;
