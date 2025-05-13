@@ -33,7 +33,9 @@ const GroupDashboardTabs = () => {
         <TabsContent value="activity" className="justify-center">
           {/* <div className="flex justify-center">
         <div className="w-full max-w-[800px]"> */}
-          <GroupActivity />
+          <div className="lg:mt-4">
+            <GroupActivity />
+          </div>
           {/* </div>
         </div> */}
         </TabsContent>

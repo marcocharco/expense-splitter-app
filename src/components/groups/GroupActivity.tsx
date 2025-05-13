@@ -14,45 +14,44 @@ const GroupActivity = () => {
   const expenses = useExpenses();
 
   return (
-    <div className="lg:mt-4">
-      <Table>
-        <TableCaption>A list of recent group activity.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Title</TableHead>
-            <TableHead>Amount</TableHead>
-            <TableHead>Paid By</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Status</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {expenses?.map((expense) => {
-            const formattedDate = new Date(expense.date).toLocaleDateString(
-              "en-US",
-              {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              }
-            );
-            // const paidByName = userMap[expense.paid_by] || "";
+    <Table>
+      <TableCaption>A list of recent group activity.</TableCaption>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-[20%]">Title</TableHead>
+          <TableHead className="text-right w-[10%] pr-4">Amount</TableHead>
+          <TableHead className="w-[15%]">Paid By</TableHead>
+          <TableHead className="w-[15%]">Date</TableHead>
+          <TableHead className="w-[10%]">Category</TableHead>
+          <TableHead className="w-[10%]">Status</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {expenses?.map((expense) => {
+          const formattedDate = new Date(expense.date).toLocaleDateString(
+            "en-US",
+            {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            }
+          );
 
-            return (
-              <TableRow key={expense.id}>
-                <TableCell className="font-medium">{expense.title}</TableCell>
-                <TableCell>${expense.amount}</TableCell>
-                <TableCell>{expense.paid_by.name}</TableCell>
-                <TableCell>{formattedDate}</TableCell>
+          return (
+            <TableRow key={expense.id}>
+              <TableCell className="font-medium">{expense.title}</TableCell>
+              <TableCell className="text-right pr-4">
+                ${expense.amount}
+              </TableCell>
+              <TableCell>{expense.paid_by.name}</TableCell>
+              <TableCell>{formattedDate}</TableCell>
               <TableCell>{expense.category_id.name}</TableCell>
-                <TableCell>{expense.status}</TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </div>
+              <TableCell>{expense.status}</TableCell>
+            </TableRow>
+          );
+        })}
+      </TableBody>
+    </Table>
   );
 };
 
