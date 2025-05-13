@@ -13,15 +13,17 @@ export async function getGroupExpenses(groupId: string) {
       date,
       status,
       group_id,
-      category_id,
       settlement_id,
+      category_id:expense_category (
+        name
+      ),
       paid_by:profile(id, name)
     `
     )
     .eq("group_id", groupId)
     .order("date", { ascending: false });
 
-  // console.log(data);
+  console.log(data);
   if (error) throw new Error(error.message);
   return data;
 }

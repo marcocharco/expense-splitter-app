@@ -9,30 +9,9 @@ import {
   TableRow,
 } from "../ui/table";
 import { useExpenses } from "@/context/ExpensesContext";
-// import { getUser } from "@/lib/queries/getUser";
 
 const GroupActivity = () => {
   const expenses = useExpenses();
-  // const [userMap, setUserMap] = useState<Record<string, string>>({});
-
-  // useEffect(() => {
-  //   const fetchUsers = async () => {
-  //     if (!expenses) return;
-
-  //     const uniqueUserIds = Array.from(new Set(expenses.map((e) => e.paid_by)));
-
-  //     const entries = await Promise.all(
-  //       uniqueUserIds.map(async (id) => {
-  //         const { name } = await getUser(id);
-  //         return [id, name] as const;
-  //       })
-  //     );
-
-  //     setUserMap(Object.fromEntries(entries));
-  //   };
-
-  //   fetchUsers();
-  // }, [expenses]);
 
   return (
     <div className="lg:mt-4">
@@ -66,7 +45,7 @@ const GroupActivity = () => {
                 <TableCell>${expense.amount}</TableCell>
                 <TableCell>{expense.paid_by.name}</TableCell>
                 <TableCell>{formattedDate}</TableCell>
-                <TableCell>{expense.category_id}</TableCell>
+              <TableCell>{expense.category_id.name}</TableCell>
                 <TableCell>{expense.status}</TableCell>
               </TableRow>
             );
