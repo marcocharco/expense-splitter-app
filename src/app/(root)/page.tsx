@@ -10,7 +10,13 @@ const Home = async () => {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const name = user?.user_metadata?.name;
+  const { data: profile } = await supabase
+    .from("profile")
+    .select("name")
+    .eq("id", user?.id)
+    .single();
+
+  const name = profile?.name;
 
   // console.log(groups);
   return (
