@@ -49,7 +49,7 @@ const GroupList = () => {
           $id={group.id}
           name={group.name}
           slug={group.slug}
-          // members={group.members}
+          members={group.group_member}
         />
       ))}
     </div>

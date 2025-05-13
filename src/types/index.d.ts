@@ -2,7 +2,7 @@ declare interface GroupCardProps {
   $id: string;
   name: string;
   slug: string;
-  // members: Member[];
+  members: Member[];
 }
 
 declare interface SidebarProps {
@@ -33,6 +33,7 @@ export type Group = {
   id: string;
   name: string;
   slug: string;
+  group_member: Member[];
   created_at?: string;
 };
 
