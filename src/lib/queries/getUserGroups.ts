@@ -5,7 +5,7 @@ export async function getUserGroups() {
 
   const { data, error } = await supabase
     .from("group")
-    .select(" id, name, slug, group_member:profile(id, name)");
+    .select(" id, name, slug, members:profile(id, name)");
 
   // console.log(data);
 

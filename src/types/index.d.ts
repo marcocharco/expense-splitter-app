@@ -22,8 +22,15 @@ export type Group = {
   id: string;
   name: string;
   slug: string;
-  group_member: Member[];
+  members: Member[];
   created_at?: string;
+};
+
+export type ExpenseSplit = {
+  expense_id?: string;
+  user: { name: string };
+  amount: number;
+  split_type: string;
 };
 
 export type Expense = {
@@ -35,4 +42,5 @@ export type Expense = {
   category: { name: string };
   settlement_id: string;
   status: string;
+  splits: ExpenseSplit[];
 };

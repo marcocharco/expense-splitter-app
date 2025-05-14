@@ -50,7 +50,9 @@ const GroupActivity = () => {
               </TableCell>
               <TableCell>{expense.paid_by.name}</TableCell>
               <TableCell>{formattedDate}</TableCell>
-              <TableCell>{expense.category_id.name}</TableCell>
+              <TableCell>
+                {expense.category ? expense.category.name : "-"}
+              </TableCell>
               <TableCell>{expense.status}</TableCell>
             </TableRow>
           );
