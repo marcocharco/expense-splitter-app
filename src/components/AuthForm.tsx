@@ -14,9 +14,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn, signUp } from "@/lib/actions/user.actions";
 
-const AuthForm = ({ type }: { type: string }) => {
+const AuthForm = ({ type }: { type: "sign-in" | "sign-up" }) => {
   const router = useRouter();
-  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const formSchema = authFormSchema(type);
@@ -38,12 +37,12 @@ const AuthForm = ({ type }: { type: string }) => {
     try {
       // Sign up with supabase auth
       if (type === "sign-in") {
-        const response = await signIn(values);
-        if (response) router.push("/");
+        await signIn(values);
+        router.push("/");
       }
       if (type === "sign-up") {
-        const response = await signUp(values);
-        if (response) router.push("/");
+        await signUp(values);
+        router.push("/");
       }
     } catch (error) {
       console.error("Error", error);
@@ -55,7 +54,7 @@ const AuthForm = ({ type }: { type: string }) => {
   return (
     <section className="auth-form">
       <p className="auth-header">
-        {user ? "Show Dashboard" : type === "sign-in" ? "Sign In" : "Sign Up"}
+        {type === "sign-in" ? "Sign In" : "Sign Up"}
       </p>
 
       <Form {...form}>

@@ -1,5 +1,12 @@
-import { GroupCardProps } from "@/types";
+import { Member } from "@/types";
 import Link from "next/link";
+
+type GroupCardProps = {
+  $id: string;
+  name: string;
+  slug: string;
+  members: Member[];
+};
 
 const GroupCard = ({ name, slug, members }: GroupCardProps) => {
   return (

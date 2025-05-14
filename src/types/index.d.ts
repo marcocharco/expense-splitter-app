@@ -1,30 +1,19 @@
-declare interface GroupCardProps {
-  $id: string;
-  name: string;
-  slug: string;
-  members: Member[];
-}
-
-declare interface SidebarProps {
+declare type SidebarProps = {
   user: User;
-}
+};
 
-declare interface SignUpParams {
-  name?: string;
+export type AuthFormParams = {
   email: string;
   password: string;
-}
+  name?: string;
+};
 
-declare interface GroupsPageProps {
-  groups: Group[];
-}
-
-declare type Member = {
+export type Member = {
   id: string;
   name: string;
 };
 
-declare type User = {
+export type User = {
   $id: string;
   name: string;
 };
