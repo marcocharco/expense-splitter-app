@@ -18,7 +18,8 @@ export async function getGroupExpenses(groupId: string) {
         name:name
       ),
       paid_by:profile!paid_by(id, name),
-      splits:expense_split(user:profile(name), amount, split_type)
+      splits:expense_split(user:profile(name), amount),
+      split_type
     `
     )
     .eq("group_id", groupId)

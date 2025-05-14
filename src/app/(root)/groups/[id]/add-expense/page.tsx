@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
+import NewExpenseForm from "@/components/NewExpenseForm";
 
 const AddExpense = () => {
   const params = useParams();
@@ -23,6 +24,8 @@ const AddExpense = () => {
             <h1>Add Expense</h1>
           </div>
         </div>
+
+        <NewExpenseForm />
       </div>
     </div>
   );
