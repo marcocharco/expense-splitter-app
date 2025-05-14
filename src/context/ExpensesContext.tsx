@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { getGroupExpenses } from "@/lib/queries/getGroupExpenses";
-import { Expense } from "@/types"; // or whatever your expense type is
+import { Expense } from "@/types";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";
 
 const ExpensesContext = createContext<Expense[] | null>(null);
