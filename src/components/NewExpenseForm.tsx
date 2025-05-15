@@ -12,8 +12,12 @@ import ExpenseFormInput from "./ExpenseFormInput";
 import { newExpenseFormSchema } from "@/lib/utils";
 import { addNewExpense } from "@/lib/actions/expense.actions";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";
+import { useRouter } from "next/navigation";
 
 const NewExpenseForm = () => {
+  const router = useRouter();
+  const group_slug = useCurrentGroup()?.slug;
+
   const formSchema = newExpenseFormSchema();
 
   const group_data = useCurrentGroup();
@@ -41,6 +45,7 @@ const NewExpenseForm = () => {
       group_data?.members.map((member) => ({ user_id: member.id })) ?? [];
     try {
       addNewExpense(values, group_data?.id as string, memberIds);
+      router.push(`/groups/${group_slug}`);
     } catch (error) {
       console.log(error);
     } finally {
