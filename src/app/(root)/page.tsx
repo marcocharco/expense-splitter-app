@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 
-import GroupList from "@/components/groups/GroupList";
+import GroupList from "@/components/root/GroupList";
 import React from "react";
 
 const Home = async () => {

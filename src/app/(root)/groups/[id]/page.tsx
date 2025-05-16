@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 
 import { Plus, Scale } from "lucide-react";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";
-import GroupDashboardTabs from "@/components/groups/GroupDashboardTabs";
+import GroupTabs from "@/components/groups/GroupTabs";
+
 import { ExpensesProvider } from "@/context/ExpensesContext";
 
 const GroupPage = () => {
@@ -40,7 +41,7 @@ const GroupPage = () => {
           </div>
         </div>
         <ExpensesProvider>
-          <GroupDashboardTabs />
+          <GroupTabs />
         </ExpensesProvider>
       </div>
     </section>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -8,7 +8,7 @@ import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import CustomInput from "./CustomInput";
+import AuthInput from "./AuthInput";
 import { authFormSchema } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -60,20 +60,20 @@ const AuthForm = ({ type }: { type: "sign-in" | "sign-up" }) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           {type === "sign-up" && (
-            <CustomInput
+            <AuthInput
               control={form.control}
               name="name"
               label="Name"
               placeholder="Enter your name"
             />
           )}
-          <CustomInput
+          <AuthInput
             control={form.control}
             name="email"
             label="Email"
             placeholder="Enter your email address"
           />
-          <CustomInput
+          <AuthInput
             control={form.control}
             name="password"
             label="Password"

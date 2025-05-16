@@ -7,6 +7,7 @@
   --color-main: #14eb00;
   --font-main: var(--font-dm-sans);
   --font-header: var(--font-raleway);
+  --font-number: var(--font-inter);
 }
 
 @layer base {
@@ -22,6 +23,16 @@
     font-family: var(--font-main);
     overflow: hidden;
     height: 100%;
+  }
+  dialog {
+    inset: 0.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15vh;
+    position: fixed;
+  }
+  dialog:focus {
+    outline: none;
   }
 }
 
@@ -73,6 +84,14 @@
 
 @utility form-btn {
   @apply !bg-main text-white !shadow-accent font-medium;
+}
+
+@utility expense-details-container {
+  @apply w-[960px] h-[600px] p-16 rounded-xl;
+}
+
+@utility expense-details-content {
+  @apply flex flex-col items-center h-[1000px] gap-4;
 }
 
 @theme inline {

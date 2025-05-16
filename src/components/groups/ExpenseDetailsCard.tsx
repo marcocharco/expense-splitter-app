@@ -1,5 +1,4 @@
 import { Expense } from "@/types";
-import React from "react";
 
 type ExpenseDetailsCardProps = {
   expense: Expense | null;

@@ -36,6 +36,18 @@ const GroupActivity = () => {
     return () => currDialog.removeEventListener("close", handleClose);
   }, []);
 
+  // useEffect(() => {
+  //   document.addEventListener("click", (event) => {
+  //     if (
+  //       dialogRef.current &&
+  //       !event.composedPath().includes(dialogRef.current)
+  //     ) {
+  //       // dialogRef.current?.close();
+  //       console.log(event.composedPath());
+  //     }
+  //   });
+  // });
+
   return (
     <section>
       <dialog ref={dialogRef} className="expense-details-container">

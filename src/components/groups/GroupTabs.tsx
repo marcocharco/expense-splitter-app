@@ -1,18 +1,9 @@
-import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import GroupActivity from "./GroupActivity";
+import GroupBalances from "./GroupBalances";
 
-const GroupDashboardTabs = () => {
+const GroupTabs = () => {
   return (
     <div className="flex justify-center">
       <Tabs defaultValue="activity" className="w-full max-w-[1000px]">
@@ -31,59 +22,15 @@ const GroupDashboardTabs = () => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="activity" className="justify-center">
-          {/* <div className="flex justify-center">
-        <div className="w-full max-w-[800px]"> */}
           <div className="lg:mt-4">
             <GroupActivity />
           </div>
-          {/* </div>
-        </div> */}
         </TabsContent>
         <TabsContent value="you">
           <div className="lg:mt-4">Items where you owe or are owed.</div>
         </TabsContent>
         <TabsContent value="balances">
-          <div className="lg:mt-4">
-            <Table>
-              <TableCaption>
-                Total owed and owing for each group member.
-              </TableCaption>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Total Owes</TableHead>
-                  <TableHead>Total Owed</TableHead>
-                  <TableHead>Net Payment</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell>Bob</TableCell>
-                  <TableCell>$42.78</TableCell>
-                  <TableCell>$127.07</TableCell>
-                  <TableCell className="text-green-700">$84.29</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Rick</TableCell>
-                  <TableCell>$42.36</TableCell>
-                  <TableCell>$104.58</TableCell>
-                  <TableCell className="text-green-700">$62.22</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Jack</TableCell>
-                  <TableCell>$42.36</TableCell>
-                  <TableCell>$0</TableCell>
-                  <TableCell className="text-red-700">$42.36</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Dave</TableCell>
-                  <TableCell>$104.16</TableCell>
-                  <TableCell>$0</TableCell>
-                  <TableCell className="text-red-700">$104.16</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </div>
+          <GroupBalances />
         </TabsContent>
         <TabsContent value="members">
           <div className="flex flex-col space-y-4 lg:mt-4">
@@ -122,4 +69,4 @@ const GroupDashboardTabs = () => {
   );
 };
 
-export default GroupDashboardTabs;
+export default GroupTabs;

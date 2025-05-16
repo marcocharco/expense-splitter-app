@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans, Raleway } from "next/font/google";
+import { DM_Sans, Raleway, Inter } from "next/font/google";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -9,6 +9,11 @@ const dmSans = DM_Sans({
 
 const raleway = Raleway({
   variable: "--font-raleway",
+  subsets: ["latin"],
+});
+
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -23,7 +28,10 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${raleway.variable}`}>
+    <html
+      lang="en"
+      className={`${dmSans.variable} ${raleway.variable} ${inter.variable}`}
+    >
       <body>{children}</body>
     </html>
   );

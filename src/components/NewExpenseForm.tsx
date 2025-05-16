@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -8,7 +8,7 @@ import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import ExpenseFormInput from "./ExpenseFormInput";
+import NewExpenseInput from "./NewExpenseInput";
 import { newExpenseFormSchema } from "@/lib/utils";
 import { addNewExpense } from "@/lib/actions/expense.actions";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";
@@ -57,37 +57,37 @@ const NewExpenseForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <ExpenseFormInput
+        <NewExpenseInput
           control={form.control}
           name="amount"
           label="Amount"
           placeholder="0.00"
         />
-        <ExpenseFormInput
+        <NewExpenseInput
           control={form.control}
           name="title"
           label="Title"
           placeholder="Enter the expense item"
         />
-        <ExpenseFormInput
+        <NewExpenseInput
           control={form.control}
           name="paid_by"
           label="Paid By"
           placeholder="Enter who paid for the item"
         />
-        <ExpenseFormInput
+        <NewExpenseInput
           control={form.control}
           name="date"
           label="Date"
           placeholder="Enter the date of the expense"
         />
-        <ExpenseFormInput
+        <NewExpenseInput
           control={form.control}
           name="category"
           label="Category"
           placeholder="Enter the expense category"
         />
-        <ExpenseFormInput
+        <NewExpenseInput
           control={form.control}
           name="split_type"
           label="Split Type"
