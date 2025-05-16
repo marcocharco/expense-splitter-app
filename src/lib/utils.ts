@@ -21,8 +21,8 @@ export const newExpenseFormSchema = () =>
       .number({ invalid_type_error: "Amount is required" })
       .positive("Amount must be greater than zero"),
     title: z.string().min(1),
-    paid_by: z.string(),
-    date: z.string(),
+    paid_by: z.string().uuid(),
+    date: z.string().date(),
     category: z.string().optional(),
     split_type: z.enum(SplitTypes),
   });

@@ -26,7 +26,7 @@ export async function addNewExpense(
       title: values.title,
       amount: values.amount,
       paid_by: values.paid_by,
-      category_id: values.category,
+      category_id: values.category === "" ? null : values.category,
       date: values.date,
       split_type: values.split_type,
     })
