@@ -17,7 +17,7 @@ export async function getGroupExpenses(groupId: string) {
       settlement_id,
       split_type,
       category:expense_category (
-        name
+        name, icon
       ),
       paid_by:profile!paid_by(id, name),
       splits:expense_split(user:profile(id, name), amount)

@@ -74,6 +74,7 @@ const GroupActivity = () => {
               <TableRow
                 key={expense.id}
                 onClick={() => setCurrentExpense(expense)}
+                className="cursor-pointer"
               >
                 <TableCell className="font-medium">{expense.title}</TableCell>
                 <TableCell className="text-right pr-4 font-number">
@@ -82,7 +83,9 @@ const GroupActivity = () => {
                 <TableCell>{expense.paid_by.name}</TableCell>
                 <TableCell>{formattedDate}</TableCell>
                 <TableCell>
-                  {expense.category ? expense.category.name : "-"}
+                  {expense.category
+                    ? expense.category.icon + "  " + expense.category.name
+                    : "-"}
                 </TableCell>
                 <TableCell>{expense.status}</TableCell>
               </TableRow>
