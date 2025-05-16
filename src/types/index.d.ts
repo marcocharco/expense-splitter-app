@@ -28,9 +28,8 @@ export type Group = {
 
 export type ExpenseSplit = {
   expense_id?: string;
-  user: { name: string };
+  user: { id: string; name: string };
   amount: number;
-  split_type: string;
 };
 
 export type Expense = {
@@ -39,10 +38,11 @@ export type Expense = {
   amount: number;
   paid_by: { id: string; name: string };
   date: string;
-  category: { name: string };
-  settlement_id: string;
+  category: { name: string } | null;
+  settlement_id: string | null;
   status: string;
   splits: ExpenseSplit[];
+  split_type: SplitType;
 };
 
 export type SplitType = "Even" | "Percentage" | "Shares" | "Custom";

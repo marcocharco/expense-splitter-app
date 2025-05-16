@@ -1,3 +1,4 @@
+import { Expense } from "@/types";
 import { createClient } from "@/utils/supabase/client";
 
 export async function getGroupExpenses(groupId: string) {
@@ -14,18 +15,19 @@ export async function getGroupExpenses(groupId: string) {
       status,
       group_id,
       settlement_id,
+      split_type,
       category:expense_category (
-        name:name
+        name
       ),
       paid_by:profile!paid_by(id, name),
-      splits:expense_split(user:profile(name), amount),
-      split_type
+      splits:expense_split(user:profile(id, name), amount)
     `
     )
     .eq("group_id", groupId)
-    .order("date", { ascending: false });
+    .order("date", { ascending: false })
+    .overrideTypes<Expense[], { merge: false }>();
 
   // console.log(data);
   if (error) throw new Error(error.message);
-  return data;
+  return data ?? [];
 }
