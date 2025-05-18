@@ -49,7 +49,7 @@ const GroupActivity = () => {
   // });
 
   return (
-    <section>
+    <>
       <dialog ref={dialogRef} className="expense-details-container">
         <ExpenseDetailsCard expense={currentExpense} />
       </dialog>
@@ -105,7 +105,7 @@ const GroupActivity = () => {
           })}
         </TableBody>
       </Table>
-    </section>
+    </>
   );
 };
 

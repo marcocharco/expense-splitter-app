@@ -6,7 +6,7 @@ import GroupBalances from "./GroupBalances";
 const GroupTabs = () => {
   return (
     <div className="flex justify-center">
-      <Tabs defaultValue="activity" className="w-full max-w-[1000px]">
+      <Tabs defaultValue="activity" className="w-full max-w-[1000px] !gap-4">
         <TabsList className="flex gap-4">
           <TabsTrigger value="activity" className="px-2">
             All activity
@@ -22,12 +22,10 @@ const GroupTabs = () => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="activity" className="justify-center">
-          <div className="lg:mt-4">
-            <GroupActivity />
-          </div>
+          <GroupActivity />
         </TabsContent>
         <TabsContent value="you">
-          <div className="lg:mt-4">Items where you owe or are owed.</div>
+          <p>Items where you owe or are owed.</p>
         </TabsContent>
         <TabsContent value="balances">
           <GroupBalances />

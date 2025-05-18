@@ -10,7 +10,6 @@ import {
 
 const GroupBalances = () => {
   return (
-    <div className="lg:mt-4">
       <Table>
         <TableCaption>Total owed and owing for each group member.</TableCaption>
         <TableHeader>
@@ -48,7 +47,6 @@ const GroupBalances = () => {
           </TableRow>
         </TableBody>
       </Table>
-    </div>
   );
 };
 
