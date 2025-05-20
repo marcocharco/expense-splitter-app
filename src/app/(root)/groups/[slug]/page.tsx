@@ -1,16 +1,25 @@
-"use client";
-
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 import { Plus, Scale } from "lucide-react";
-import { useCurrentGroup } from "@/context/CurrentGroupContext";
+import { CurrentGroupProvider } from "@/context/CurrentGroupContext";
 import GroupTabs from "@/components/groups/GroupTabs";
 
 import { ExpensesProvider } from "@/context/ExpensesContext";
+import { getGroupBySlug } from "@/lib/queries/getGroupBySlug";
 
-const GroupPage = () => {
-  const group = useCurrentGroup();
+const GroupPage = async ({
+  children,
+  params,
+}: Readonly<{
+  children: React.ReactNode;
+  params: { slug: string };
+}>) => {
+  // const group = useCurrentGroup();
+  const { slug } = await params;
+  const group = await getGroupBySlug(slug);
+
+  if (!group) return <div>Group not found</div>;
 
   return (
     <section className="layout-container">
@@ -40,9 +49,12 @@ const GroupPage = () => {
             </Link>
           </div>
         </div>
-        <ExpensesProvider>
-          <GroupTabs />
-        </ExpensesProvider>
+        <CurrentGroupProvider group={group}>
+          <ExpensesProvider>
+            <GroupTabs />
+            {children}
+          </ExpensesProvider>
+        </CurrentGroupProvider>
       </div>
     </section>
   );

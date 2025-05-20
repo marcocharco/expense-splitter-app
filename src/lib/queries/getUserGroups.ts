@@ -1,3 +1,4 @@
+import { Group } from "@/types";
 import { createClient } from "@/utils/supabase/client";
 
 export async function getUserGroups() {
@@ -12,8 +13,8 @@ export async function getUserGroups() {
     .select("group:group_id(id, name, slug, members:profile(id, name))")
     .eq("user_id", user?.id);
 
-  // console.log(data?.map((gm) => gm.group));
+  // console.log((data ?? []).flatMap((gm) => gm.group) as Group[]);
 
   if (error) throw new Error(error.message);
-  return data.map((gm) => gm.group) ?? [];
+  return (data ?? []).flatMap((gm) => gm.group) as Group[];
 }
