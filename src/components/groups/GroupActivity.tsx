@@ -22,35 +22,40 @@ const GroupActivity = () => {
   // update dialog modal when new expense is clicked
   useEffect(() => {
     if (!currentExpense) return;
-    dialogRef.current?.showModal();
+    const dialog = dialogRef.current;
+    dialog?.showModal();
+    dialog?.addEventListener("close", closeModal);
+
+    return () => dialog?.removeEventListener("close", closeModal);
   }, [currentExpense]);
 
-  // remove currentExpense state when dialog is closed
-  useEffect(() => {
-    const currDialog = dialogRef.current;
-    if (!currDialog) return;
+  // Handle click outside of modal
+  const handleDialogClick = (e: React.MouseEvent<HTMLDialogElement>) => {
+    const dialogDimensions = dialogRef.current?.getBoundingClientRect();
+    if (!dialogDimensions) return;
 
-    const handleClose = () => setCurrentExpense(null);
-    currDialog.addEventListener("close", handleClose);
+    if (
+      e.clientX < dialogDimensions.left ||
+      e.clientX > dialogDimensions.right ||
+      e.clientY < dialogDimensions.top ||
+      e.clientY > dialogDimensions.bottom
+    ) {
+      closeModal();
+    }
+  };
 
-    return () => currDialog.removeEventListener("close", handleClose);
-  }, []);
-
-  // useEffect(() => {
-  //   document.addEventListener("click", (event) => {
-  //     if (
-  //       dialogRef.current &&
-  //       !event.composedPath().includes(dialogRef.current)
-  //     ) {
-  //       // dialogRef.current?.close();
-  //       console.log(event.composedPath());
-  //     }
-  //   });
-  // });
+  const closeModal = () => {
+    dialogRef.current?.close();
+    setCurrentExpense(null);
+  };
 
   return (
     <>
-      <dialog ref={dialogRef} className="expense-details-container">
+      <dialog
+        ref={dialogRef}
+        className="expense-details-container"
+        onClick={handleDialogClick}
+      >
         <ExpenseDetailsCard expense={currentExpense} />
       </dialog>
 

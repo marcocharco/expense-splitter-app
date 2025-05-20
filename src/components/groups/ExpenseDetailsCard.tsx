@@ -12,9 +12,7 @@ const ExpenseDetailsCard = ({ expense }: ExpenseDetailsCardProps) => {
   return (
     <div className="expense-details-content">
       <h2 className="text-lg">{expense?.title}</h2>
-      <p>
-        Total Amount: {expense ? formattedAmount.format(expense?.amount) : ""}
-      </p>
+      <p>Total Amount: {expense && formattedAmount.format(expense?.amount)}</p>
       <p>Paid By: {expense?.paid_by.name}</p>
       <p>This expense was split {expense?.split_type}</p>
       {expense?.splits.map((split) => {
