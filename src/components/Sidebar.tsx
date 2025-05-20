@@ -5,9 +5,11 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { signOut } from "@/lib/actions/user.actions";
 import { useUserGroups } from "@/context/UserGroupsContext";
+import { useUser } from "@/context/UserContext";
 
 const Sidebar = () => {
   const groups = useUserGroups();
+  const profile = useUser();
   return (
     <section className="sidebar">
       <nav className="flex flex-col gap-4 w-full">
@@ -38,9 +40,13 @@ const Sidebar = () => {
           </Link>
         ))}
       </nav>
-      <Button variant="outline" onClick={() => signOut()}>
-        Logout
-      </Button>
+
+      <div className="gap-2 flex flex-col">
+        <p className="flex justify-center">{profile?.email}</p>
+        <Button variant="outline" onClick={() => signOut()}>
+          Logout
+        </Button>
+      </div>
     </section>
   );
 };

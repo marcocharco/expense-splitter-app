@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans, Raleway, Inter } from "next/font/google";
 import "./globals.css";
+import { UserProvider } from "@/context/UserContext";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -32,7 +33,9 @@ export default function Layout({
       lang="en"
       className={`${dmSans.variable} ${raleway.variable} ${inter.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <UserProvider>{children}</UserProvider>
+      </body>
     </html>
   );
 }
