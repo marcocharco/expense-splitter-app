@@ -1,21 +1,19 @@
-"use client";
-
-import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 import NewExpenseForm from "@/components/NewExpenseForm";
 
-const AddExpense = () => {
-  const params = useParams();
-  const groupId = params.id;
+const AddExpense = async ({ params }: { params: { slug: string } }) => {
+  // const params = useParams();
+  // const groupSlug = params.slug;
+  const { slug } = await params;
 
   return (
     <div className="layout-container">
       <div className="layout-content">
         <div className="flex flex-row justify-between flex-wrap gap-y-2">
           <div className="flex flex-row items-center">
-            <Link href={`/groups/${groupId}`}>
+            <Link href={`/groups/${slug}`}>
               <Button variant="link" size="icon">
                 <ChevronLeft />
               </Button>

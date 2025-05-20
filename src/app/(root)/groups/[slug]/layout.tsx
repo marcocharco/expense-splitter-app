@@ -10,7 +10,7 @@ export default function GroupLayout({
 }>) {
   const params = useParams();
   const groups = useUserGroups();
-  const groupFromContext = groups?.find((g) => g.slug === params.id);
+  const groupFromContext = groups?.find((g) => g.slug === params.slug);
 
   if (!groups) return;
 
