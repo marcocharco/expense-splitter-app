@@ -7,12 +7,14 @@ export async function getUserProfile() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  if (!user) return null;
+
   const { data: profile, error } = await supabase
     .from("profile")
     .select()
     .eq("id", user?.id)
-    .single();
+    .maybeSingle();
 
   if (error) throw new Error(error.message);
-  return profile ?? [];
+  return profile ?? null;
 }
