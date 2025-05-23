@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 import { Plus, Scale } from "lucide-react";
-import { CurrentGroupProvider } from "@/context/CurrentGroupContext";
 import GroupTabs from "@/components/groups/GroupTabs";
 
 import { ExpensesProvider } from "@/context/ExpensesContext";
@@ -16,13 +15,10 @@ const GroupPage = async ({
   children: React.ReactNode;
   params: { slug: string };
 }>) => {
-  // const group = useCurrentGroup();
   const { slug } = await params;
   const group = await getGroupBySlug(slug);
 
-  if (!group) return <div>Group not found</div>;
-
-  const expenses = await getGroupExpenses(group.id);
+  const expenses = await getGroupExpenses(group?.id);
 
   return (
     <section className="layout-container">
@@ -52,12 +48,10 @@ const GroupPage = async ({
             </Link>
           </div>
         </div>
-        <CurrentGroupProvider group={group}>
-          <ExpensesProvider initialExpenses={expenses}>
-            <GroupTabs />
-            {children}
-          </ExpensesProvider>
-        </CurrentGroupProvider>
+        <ExpensesProvider initialExpenses={expenses}>
+          <GroupTabs />
+          {children}
+        </ExpensesProvider>
       </div>
     </section>
   );

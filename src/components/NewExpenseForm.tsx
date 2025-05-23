@@ -16,11 +16,9 @@ import { useRouter } from "next/navigation";
 
 const NewExpenseForm = () => {
   const router = useRouter();
-  const group_slug = useCurrentGroup()?.slug;
+  const group_data = useCurrentGroup();
 
   const formSchema = newExpenseFormSchema();
-
-  const group_data = useCurrentGroup();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -44,14 +42,13 @@ const NewExpenseForm = () => {
     const memberIds: { user_id: string }[] =
       group_data?.members.map((member) => ({ user_id: member.id })) ?? [];
     try {
-      addNewExpense(values, group_data?.id as string, memberIds);
-      router.push(`/groups/${group_slug}`);
+      await addNewExpense(values, group_data?.id as string, memberIds);
+      router.push(`/groups/${group_data?.slug}`);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
-    // console.log(values);
   };
 
   return (
