@@ -4,7 +4,7 @@ import React from "react";
 import { useUser } from "@/context/UserContext";
 
 const Header = () => {
-  const user = useUser();
+  const { user } = useUser();
   return (
     <h1>
       Welcome

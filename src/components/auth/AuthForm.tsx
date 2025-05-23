@@ -11,12 +11,14 @@ import { Form } from "@/components/ui/form";
 import AuthInput from "./AuthInput";
 import { authFormSchema } from "@/lib/utils";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { signIn, signUp } from "@/lib/actions/user.actions";
+import { useUser } from "@/context/UserContext";
+import { getUserProfile } from "@/lib/queries/getUserProfile";
 
 const AuthForm = ({ type }: { type: "sign-in" | "sign-up" }) => {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+
+  const { setUser } = useUser();
 
   const formSchema = authFormSchema(type);
 
@@ -38,19 +40,18 @@ const AuthForm = ({ type }: { type: "sign-in" | "sign-up" }) => {
       // Sign up with supabase auth
       if (type === "sign-in") {
         await signIn(values);
-        router.push("/");
       }
       if (type === "sign-up") {
         await signUp(values);
-        router.push("/");
       }
     } catch (error) {
       console.error("Error", error);
     } finally {
+      const profile = await getUserProfile(); // freshly fetch profile
+      setUser(profile);
       setIsLoading(false);
     }
   };
-
   return (
     <section className="auth-form">
       <p className="auth-header">

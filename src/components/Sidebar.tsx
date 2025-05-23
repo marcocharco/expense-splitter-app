@@ -9,7 +9,7 @@ import { useUser } from "@/context/UserContext";
 
 const Sidebar = () => {
   const groups = useUserGroups();
-  const profile = useUser();
+  const { user, setUser } = useUser();
   return (
     <section className="sidebar">
       <nav className="flex flex-col gap-4 w-full">
@@ -42,8 +42,14 @@ const Sidebar = () => {
       </nav>
 
       <div className="gap-2 flex flex-col">
-        <p className="flex justify-center">{profile?.email}</p>
-        <Button variant="outline" onClick={() => signOut()}>
+        <p className="flex justify-center">{user?.email}</p>
+        <Button
+          variant="outline"
+          onClick={() => {
+            setUser(null);
+            signOut();
+          }}
+        >
           Logout
         </Button>
       </div>

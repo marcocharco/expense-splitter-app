@@ -15,6 +15,7 @@ export async function getUserProfile() {
     .eq("id", user?.id)
     .maybeSingle();
 
+  // console.log(profile);
   if (error) throw new Error(error.message);
   return profile ?? null;
 }
