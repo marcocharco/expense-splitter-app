@@ -82,7 +82,7 @@ const GroupActivity = () => {
               }
             );
 
-            const formattedAmount = new Intl.NumberFormat("en-US", {
+            const currencyFormatter = new Intl.NumberFormat("en-US", {
               style: "currency",
               currency: "USD",
             });
@@ -95,7 +95,7 @@ const GroupActivity = () => {
               >
                 <TableCell className="font-medium">{expense.title}</TableCell>
                 <TableCell className="text-right pr-4 font-number">
-                  {formattedAmount.format(expense.amount)}
+                  {currencyFormatter.format(expense.amount)}
                 </TableCell>
                 <TableCell>{expense.paid_by.name}</TableCell>
                 <TableCell>{formattedDate}</TableCell>
