@@ -1,5 +1,5 @@
 import { Group } from "@/types";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase/server";
 
 export async function getUserGroups() {
   const supabase = await createClient();

@@ -1,26 +1,32 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
-import { getUserGroups } from "@/lib/queries/getUserGroups";
+import { createContext, useContext, useState } from "react";
 import { Group } from "@/types";
 
-const UserGroupsContext = createContext<Group[] | null>(null);
+type userGroupsContextType = {
+  groups: Group[];
+  setGroups: React.Dispatch<React.SetStateAction<Group[]>>;
+};
 
-export const useUserGroups = () => useContext(UserGroupsContext);
+const UserGroupsContext = createContext<userGroupsContextType | null>(null);
+
+export const useUserGroups = () => {
+  const context = useContext(UserGroupsContext);
+  if (!context) throw new Error("must be used within UserGroupsProvider");
+  return context;
+};
 
 export const UserGroupsProvider = ({
+  initialGroups,
   children,
 }: {
+  initialGroups: Group[];
   children: React.ReactNode;
 }) => {
-  const [groups, setGroups] = useState<Group[] | null>(null);
-
-  useEffect(() => {
-    getUserGroups().then(setGroups);
-  }, []);
+  const [groups, setGroups] = useState<Group[]>(initialGroups);
 
   return (
-    <UserGroupsContext.Provider value={groups}>
+    <UserGroupsContext.Provider value={{ groups, setGroups }}>
       {children}
     </UserGroupsContext.Provider>
   );

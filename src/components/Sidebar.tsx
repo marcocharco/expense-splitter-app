@@ -8,7 +8,7 @@ import { useUserGroups } from "@/context/UserGroupsContext";
 import { useUser } from "@/context/UserContext";
 
 const Sidebar = () => {
-  const groups = useUserGroups();
+  const { groups } = useUserGroups();
   const { user, setUser } = useUser();
   return (
     <section className="sidebar">
