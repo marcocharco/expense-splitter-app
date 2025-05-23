@@ -7,6 +7,7 @@ import GroupTabs from "@/components/groups/GroupTabs";
 
 import { ExpensesProvider } from "@/context/ExpensesContext";
 import { getGroupBySlug } from "@/lib/queries/getGroupBySlug";
+import { getGroupExpenses } from "@/lib/queries/getGroupExpenses";
 
 const GroupPage = async ({
   children,
@@ -20,6 +21,8 @@ const GroupPage = async ({
   const group = await getGroupBySlug(slug);
 
   if (!group) return <div>Group not found</div>;
+
+  const expenses = await getGroupExpenses(group.id);
 
   return (
     <section className="layout-container">
@@ -50,7 +53,7 @@ const GroupPage = async ({
           </div>
         </div>
         <CurrentGroupProvider group={group}>
-          <ExpensesProvider>
+          <ExpensesProvider initialExpenses={expenses}>
             <GroupTabs />
             {children}
           </ExpensesProvider>

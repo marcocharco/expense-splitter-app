@@ -15,7 +15,7 @@ import ExpenseDetailsCard from "./ExpenseDetailsCard";
 import { Expense } from "@/types";
 
 const GroupActivity = () => {
-  const expenses = useExpenses();
+  const { expenses } = useExpenses();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [currentExpense, setCurrentExpense] = useState<Expense | null>(null);
 

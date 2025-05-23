@@ -1,5 +1,5 @@
 import { Expense } from "@/types";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase/server";
 
 export async function getGroupExpenses(groupId: string) {
   const supabase = await createClient();
@@ -29,5 +29,5 @@ export async function getGroupExpenses(groupId: string) {
 
   // console.log(data);
   if (error) throw new Error(error.message);
-  return data ?? [];
+  return data ?? null;
 }
