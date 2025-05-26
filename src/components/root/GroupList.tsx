@@ -10,7 +10,7 @@ const GroupList = () => {
       {groups?.map((group) => (
         <GroupCard
           key={group.id}
-          $id={group.id}
+          id={group.id}
           name={group.name}
           slug={group.slug}
           members={group.members}

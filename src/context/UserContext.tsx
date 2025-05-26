@@ -1,8 +1,7 @@
 "use client";
 
-import { getUserProfile } from "@/lib/queries/getUserProfile";
 import { User } from "@/types";
-import { useContext, createContext, useEffect, useState } from "react";
+import { useContext, createContext, useState } from "react";
 
 type userContextType = {
   user: User | null;
@@ -19,12 +18,14 @@ export const useUser = () => {
   return context;
 };
 
-export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    getUserProfile().then(setUser);
-  }, []);
+export const UserProvider = ({
+  initialUser,
+  children,
+}: {
+  initialUser: User | null;
+  children: React.ReactNode;
+}) => {
+  const [user, setUser] = useState<User | null>(initialUser);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

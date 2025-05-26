@@ -2,7 +2,7 @@ import { Member } from "@/types";
 import Link from "next/link";
 
 type GroupCardProps = {
-  $id: string;
+  id: string;
   name: string;
   slug: string;
   members: Member[];

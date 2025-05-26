@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Sans, Raleway, Inter } from "next/font/google";
 import "./globals.css";
 import { UserProvider } from "@/context/UserContext";
+import { getUserProfileServer } from "@/lib/queries/getUserProfileServer";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -23,18 +24,20 @@ export const metadata: Metadata = {
   description: "",
 };
 
-export default function Layout({
+export default async function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getUserProfileServer();
+
   return (
     <html
       lang="en"
       className={`${dmSans.variable} ${raleway.variable} ${inter.variable}`}
     >
       <body>
-        <UserProvider>{children}</UserProvider>
+        <UserProvider initialUser={user}>{children}</UserProvider>
       </body>
     </html>
   );
