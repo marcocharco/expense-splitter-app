@@ -1,4 +1,4 @@
-import { FormControl, FormField, FormLabel, FormMessage } from "./ui/form";
+import { FormControl, FormField, FormLabel, FormMessage } from "../../ui/form";
 import { Input } from "@/components/ui/input";
 import { Control, FieldPath } from "react-hook-form";
 
@@ -36,7 +36,12 @@ const ExpenseFormInput = ({
                 id={name}
                 {...field}
                 value={
-                  name === "amount" && field.value === 0 ? "" : field.value
+                  typeof field.value === "string" ||
+                  typeof field.value === "number"
+                    ? name === "amount" && field.value === 0
+                      ? ""
+                      : field.value
+                    : ""
                 }
                 onChange={(e) => {
                   if (name === "amount") {

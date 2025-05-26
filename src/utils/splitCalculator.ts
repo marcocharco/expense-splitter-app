@@ -5,9 +5,7 @@ export type splitInput = {
   total_amount: number;
   member_splits: {
     user_id: string;
-    percentage?: number;
-    shares?: number;
-    custom_amount?: number;
+    split: number;
   }[];
 };
 
@@ -17,30 +15,30 @@ export function calculateSplitCosts({
   member_splits,
 }: splitInput) {
   switch (type) {
-    case "Even":
+    case "even":
       const split_cost = total_amount / member_splits.length;
       return member_splits.map((member) => ({
         user_id: member.user_id,
         amount: split_cost,
       }));
-    case "Percentage":
+    case "percentage":
       return member_splits.map((member) => ({
         user_id: member.user_id,
-        amount: ((member.percentage ?? 0) * total_amount) / 100,
+        amount: ((member.split ?? 0) * total_amount) / 100,
       }));
-    case "Shares":
+    case "shares":
       const totalShares = member_splits.reduce(
-        (acc, member) => acc + (member.shares ?? 1),
+        (acc, member) => acc + (member.split ?? 1),
         0
       );
       return member_splits.map((member) => ({
         user_id: member.user_id,
-        amount: ((member.shares ?? 1) / totalShares) * total_amount,
+        amount: ((member.split ?? 1) / totalShares) * total_amount,
       }));
-    case "Custom":
+    case "custom":
       return member_splits.map((member) => ({
         user_id: member.user_id,
-        amount: member.custom_amount,
+        amount: member.split,
       }));
     default:
       throw new Error("Unsupported split type");

@@ -46,7 +46,7 @@ export type Expense = {
   split_type: SplitType;
 };
 
-export type SplitType = "Even" | "Percentage" | "Shares" | "Custom";
+export type SplitType = "even" | "percentage" | "shares" | "custom";
 
 export type NewExpense = {
   amount: number;
@@ -55,7 +55,7 @@ export type NewExpense = {
   date: string;
   split_type: SplitType;
   category?: string;
-  // splits: NewSplit[];
+  member_splits: { user_id: string; split: number }[];
 };
 
 export type NewSplit = {

@@ -13,16 +13,25 @@ export const authFormSchema = (type: "sign-in" | "sign-up") =>
     password: type === "sign-in" ? z.string() : z.string().min(8),
   });
 
-const SplitTypes = ["Even", "Percentage", "Shares", "Custom"] as const;
+const SplitTypes = ["even", "percentage", "shares", "custom"] as const;
 
 export const newExpenseFormSchema = () =>
   z.object({
-    amount: z
-      .number({ invalid_type_error: "Amount is required" })
-      .positive("Amount must be greater than zero"),
-    title: z.string().min(1),
+    amount: z.number().positive("Amount cannot be 0"),
+    title: z.string().min(1, "Title cannot be empty"),
     paid_by: z.string().uuid(),
-    date: z.string().date(),
+    date: z
+      .string()
+      .refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date" }),
     category: z.string().optional(),
     split_type: z.enum(SplitTypes),
+    member_splits: z
+      .array(
+        z.object({
+          user_id: z.string(),
+          split: z.number().min(0),
+        })
+      )
+      .nonempty("At least one member must be included in the split"),
+    selected_members: z.array(z.string()).nonempty(),
   });

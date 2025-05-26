@@ -4,18 +4,12 @@ import { createClient } from "@/utils/supabase/server";
 import { NewExpense } from "@/types";
 import { calculateSplitCosts } from "@/utils/splitCalculator";
 
-type member_split = {
-  user_id: string;
-  percentage?: number;
-  shares?: number;
-  custom_amount?: number;
-}[];
+// type member_split = {
+//   user_id: string;
+//   share: number;
+// }[];
 
-export async function addNewExpense(
-  values: NewExpense,
-  groupId: string,
-  member_splits: member_split
-) {
+export async function addNewExpense(values: NewExpense, groupId: string) {
   const supabase = await createClient();
 
   // add expense to db
@@ -39,7 +33,7 @@ export async function addNewExpense(
   const splits = calculateSplitCosts({
     type: values.split_type,
     total_amount: values.amount,
-    member_splits: member_splits,
+    member_splits: values.member_splits,
   });
 
   // add splits to db
