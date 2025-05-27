@@ -32,6 +32,8 @@ export const newExpenseFormSchema = () =>
           split: z.number().min(0),
         })
       )
-      .nonempty("At least one member must be included in the split"),
-    selectedMembers: z.array(z.string()).nonempty(),
+      .nonempty(),
+    selectedMembers: z.array(z.string()).refine((arr) => arr.length > 0, {
+      message: "At least one member must be selected",
+    }),
   });

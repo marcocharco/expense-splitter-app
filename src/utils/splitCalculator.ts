@@ -1,4 +1,5 @@
 import { SplitType } from "@/types";
+import { calculateTotalShares } from "./totalSharesCalculator";
 
 export type splitInput = {
   type: SplitType;
@@ -35,10 +36,7 @@ export function calculateSplitCosts({
         amount: ((member.split ?? 0) * totalAmount) / 100,
       }));
     case "shares":
-      const totalShares = memberSplits.reduce(
-        (acc, member) => acc + Number(member.split),
-        0
-      );
+      const totalShares = calculateTotalShares(memberSplits);
 
       return memberSplits.map((member) => ({
         userId: member.userId,

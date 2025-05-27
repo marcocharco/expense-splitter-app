@@ -46,6 +46,10 @@
   scrollbar-width: none;
 }
 
+@utility input-no-spinner {
+  @apply appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none;
+}
+
 @utility layout-container {
   @apply no-scrollbar flex w-full flex-row max-xl:max-h-screen max-xl:overflow-y-scroll justify-center;
 }

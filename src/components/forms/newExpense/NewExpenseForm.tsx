@@ -43,6 +43,7 @@ import { CalendarIcon } from "lucide-react";
 
 import NewExpenseInput from "./NewExpenseInput";
 import { calculateSplitCosts } from "@/utils/splitCalculator";
+import { calculateTotalShares } from "@/utils/totalSharesCalculator";
 
 const NewExpenseForm = () => {
   const router = useRouter();
@@ -96,6 +97,23 @@ const NewExpenseForm = () => {
       memberSplits: memberSplits,
       selectedMembers: selectedMembers,
     }) || [];
+
+  const totalShares = calculateTotalShares(memberSplits, selectedMembers);
+
+  const splitCostLabel = (() => {
+    switch (splitType) {
+      case "even":
+        return "";
+      case "percentage":
+        return "%";
+      case "shares":
+        return `/${totalShares}`;
+      case "custom":
+        return "$";
+      default:
+        return "";
+    }
+  })();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -233,45 +251,6 @@ const NewExpenseForm = () => {
           )}
         />
 
-        <FormField
-          name="selectedMembers"
-          render={({ field }) => (
-            <>
-              <FormLabel className="form-label">
-                Select included members
-              </FormLabel>
-              <FormControl>
-                <div>
-                  {groupMembers.map((member) => {
-                    const isChecked = field.value?.includes(member.id);
-                    return (
-                      <div
-                        key={member.id}
-                        className="flex items-center space-x-2"
-                      >
-                        <Checkbox
-                          id={member.id}
-                          checked={isChecked}
-                          onCheckedChange={(checked) => {
-                            const newValue = checked
-                              ? [...(field.value || []), member.id]
-                              : field.value.filter(
-                                  (id: string) => id !== member.id
-                                );
-                            field.onChange(newValue);
-                          }}
-                        />
-                        <label htmlFor={member.id}>{member.name}</label>
-                      </div>
-                    );
-                  })}
-                </div>
-              </FormControl>
-              <FormMessage className="form-message" />
-            </>
-          )}
-        />
-
         <FormLabel className="form-label">Splits</FormLabel>
 
         {groupMembers.map((member) => {
@@ -282,6 +261,16 @@ const NewExpenseForm = () => {
 
           return (
             <div key={member.id} className="flex items-center space-x-4">
+              <Checkbox
+                id={member.id}
+                checked={isSelected}
+                onCheckedChange={(checked) => {
+                  const newValue = checked
+                    ? [...(selectedMembers || []), member.id]
+                    : selectedMembers.filter((id: string) => id !== member.id);
+                  form.setValue("selectedMembers", newValue);
+                }}
+              />
               <span className="w-32">{member.name}</span>
               <span>
                 {currencyFormatter.format(isSelected ? splitAmount || 0 : 0)}
@@ -291,22 +280,33 @@ const NewExpenseForm = () => {
                 render={({ field }) => (
                   <>
                     {splitType !== "even" && (
-                      <Input
-                        placeholder=""
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        disabled={!isSelected}
-                        value={field.value}
-                        // disabled={splitType === "even" || !isSelected}
-                        // value={splitType === "even" ? "" : field.value}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value === "" ? "" : Number(e.target.value)
-                          )
-                        }
-                        className="w-32"
-                      />
+                      <div className="relative">
+                        <Input
+                          placeholder="0"
+                          type="number"
+                          inputMode="decimal"
+                          step="0.01"
+                          min="0"
+                          disabled={!isSelected}
+                          value={isSelected ? field.value : 0}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            // Only allow up to 2 decimal places
+                            if (value.includes(".")) {
+                              const [, decimal] = value.split(".");
+                              if (decimal && decimal.length > 2) {
+                                return;
+                              }
+                            }
+                            field.onChange(value === "" ? "" : Number(value));
+                          }}
+                          className="w-32 pr-16 input-no-spinner"
+                          onWheel={(e) => e.currentTarget.blur()}
+                        />
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
+                          {splitCostLabel}
+                        </span>
+                      </div>
                     )}
                     <FormMessage className="form-message" />
                   </>
