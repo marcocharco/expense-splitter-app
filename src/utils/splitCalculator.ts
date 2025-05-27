@@ -7,13 +7,21 @@ export type splitInput = {
     userId: string;
     split: number;
   }[];
+  selectedMembers?: string[];
 };
 
 export function calculateSplitCosts({
   type,
   totalAmount,
   memberSplits,
+  selectedMembers,
 }: splitInput) {
+  if (selectedMembers) {
+    memberSplits = memberSplits.filter((m) =>
+      selectedMembers.includes(m.userId)
+    );
+  }
+
   switch (type) {
     case "even":
       const splitCost = totalAmount / memberSplits.length;

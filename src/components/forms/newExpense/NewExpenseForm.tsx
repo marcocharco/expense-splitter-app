@@ -42,12 +42,18 @@ import {
 import { CalendarIcon } from "lucide-react";
 
 import NewExpenseInput from "./NewExpenseInput";
+import { calculateSplitCosts } from "@/utils/splitCalculator";
 
 const NewExpenseForm = () => {
   const router = useRouter();
   const { user } = useUser();
   const groupData = useCurrentGroup();
   const groupMembers = groupData?.members ?? [];
+
+  const currencyFormatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
 
   const formSchema = newExpenseFormSchema();
 
@@ -70,6 +76,7 @@ const NewExpenseForm = () => {
     },
   });
 
+  const currentAmount = useWatch({ control: form.control, name: "amount" });
   const splitType = useWatch({ control: form.control, name: "splitType" });
   const selectedMembers = useWatch({
     control: form.control,
@@ -82,6 +89,13 @@ const NewExpenseForm = () => {
   const memberIndexMap = Object.fromEntries(
     memberSplits.map((m, i) => [m.userId, i])
   );
+  const splitCosts =
+    calculateSplitCosts({
+      type: splitType,
+      totalAmount: currentAmount,
+      memberSplits: memberSplits,
+      selectedMembers: selectedMembers,
+    }) || [];
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -263,21 +277,41 @@ const NewExpenseForm = () => {
         {groupMembers.map((member) => {
           const isSelected = selectedMembers.includes(member.id);
           const memberIndex = memberIndexMap[member.id];
+          const splitAmount =
+            splitCosts.find((s) => s.userId === member.id)?.amount ?? 0;
 
           return (
             <div key={member.id} className="flex items-center space-x-4">
               <span className="w-32">{member.name}</span>
-              <Input
-                type="number"
-                step="0.01"
-                min="0"
-                disabled={splitType === "even" || !isSelected}
-                {...form.register(`member_splits.${memberIndex}.split`, {
-                  valueAsNumber: true,
-                })}
-                className="w-32"
+              <span>
+                {currencyFormatter.format(isSelected ? splitAmount || 0 : 0)}
+              </span>
+              <FormField
+                name={`memberSplits.${memberIndex}.split`}
+                render={({ field }) => (
+                  <>
+                    {splitType !== "even" && (
+                      <Input
+                        placeholder=""
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        disabled={!isSelected}
+                        value={field.value}
+                        // disabled={splitType === "even" || !isSelected}
+                        // value={splitType === "even" ? "" : field.value}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value === "" ? "" : Number(e.target.value)
+                          )
+                        }
+                        className="w-32"
+                      />
+                    )}
+                    <FormMessage className="form-message" />
+                  </>
+                )}
               />
-              <FormMessage className="form-message" />
             </div>
           );
         })}
