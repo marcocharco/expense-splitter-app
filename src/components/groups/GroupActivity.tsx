@@ -19,6 +19,11 @@ const GroupActivity = () => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [currentExpense, setCurrentExpense] = useState<Expense | null>(null);
 
+  const currencyFormatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
+
   // update dialog modal when new expense is clicked
   useEffect(() => {
     if (!currentExpense) return;
@@ -81,11 +86,6 @@ const GroupActivity = () => {
                 day: "numeric",
               }
             );
-
-            const currencyFormatter = new Intl.NumberFormat("en-US", {
-              style: "currency",
-              currency: "USD",
-            });
 
             return (
               <TableRow
