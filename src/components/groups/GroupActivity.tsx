@@ -9,7 +9,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
+} from "@/components/ui/table";
 import { useExpenses } from "@/context/ExpensesContext";
 import ExpenseDetailsCard from "./ExpenseDetailsCard";
 import { Expense } from "@/types";
