@@ -19,19 +19,19 @@ export const newExpenseFormSchema = () =>
   z.object({
     amount: z.number().positive("Amount cannot be 0"),
     title: z.string().min(1, "Title cannot be empty"),
-    paid_by: z.string().uuid(),
+    paidBy: z.string().uuid(),
     date: z
       .string()
       .refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date" }),
     category: z.string().optional(),
-    split_type: z.enum(SplitTypes),
-    member_splits: z
+    splitType: z.enum(SplitTypes),
+    memberSplits: z
       .array(
         z.object({
-          user_id: z.string(),
+          userId: z.string(),
           split: z.number().min(0),
         })
       )
       .nonempty("At least one member must be included in the split"),
-    selected_members: z.array(z.string()).nonempty(),
+    selectedMembers: z.array(z.string()).nonempty(),
   });

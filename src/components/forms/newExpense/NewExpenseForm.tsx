@@ -58,43 +58,43 @@ const NewExpenseForm = () => {
     defaultValues: {
       amount: 0.0,
       title: "",
-      paid_by: user?.id,
+      paidBy: user?.id,
       date: new Date().toISOString(),
       category: "",
-      split_type: "even",
-      member_splits: groupMembers.map((member) => ({
-        user_id: member.id,
+      splitType: "even",
+      memberSplits: groupMembers.map((member) => ({
+        userId: member.id,
         split: 0,
       })),
-      selected_members: user ? [user.id] : [],
+      selectedMembers: user ? [user.id] : [],
     },
   });
 
-  const splitType = useWatch({ control: form.control, name: "split_type" });
+  const splitType = useWatch({ control: form.control, name: "splitType" });
   const selectedMembers = useWatch({
     control: form.control,
-    name: "selected_members",
+    name: "selectedMembers",
   });
   const memberSplits = useWatch({
     control: form.control,
-    name: "member_splits",
+    name: "memberSplits",
   });
   const memberIndexMap = Object.fromEntries(
-    memberSplits.map((m, i) => [m.user_id, i])
+    memberSplits.map((m, i) => [m.userId, i])
   );
 
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (values: FormValues) => {
-    const { selected_members, member_splits, ...rest } = values;
+    const { selectedMembers, memberSplits, ...rest } = values;
 
-    const filteredSplits = member_splits.filter((split) =>
-      selected_members.includes(split.user_id)
+    const filteredSplits = memberSplits.filter((split) =>
+      selectedMembers.includes(split.userId)
     );
     setIsLoading(true);
     try {
       await addNewExpense(
-        { ...rest, member_splits: filteredSplits },
+        { ...rest, memberSplits: filteredSplits },
         groupData?.id as string
       );
       router.push(`/groups/${groupData?.slug}`);
@@ -122,7 +122,7 @@ const NewExpenseForm = () => {
         />
 
         <FormField
-          name="paid_by"
+          name="paidBy"
           render={({ field }) => (
             <>
               <FormLabel className="form-label">Paid By</FormLabel>
@@ -197,7 +197,7 @@ const NewExpenseForm = () => {
         />
 
         <FormField
-          name="split_type"
+          name="splitType"
           render={({ field }) => (
             <>
               <FormLabel className="form-label">Split Type</FormLabel>
@@ -220,7 +220,7 @@ const NewExpenseForm = () => {
         />
 
         <FormField
-          name="selected_members"
+          name="selectedMembers"
           render={({ field }) => (
             <>
               <FormLabel className="form-label">

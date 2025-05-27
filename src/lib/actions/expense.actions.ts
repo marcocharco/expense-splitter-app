@@ -4,11 +4,6 @@ import { createClient } from "@/utils/supabase/server";
 import { NewExpense } from "@/types";
 import { calculateSplitCosts } from "@/utils/splitCalculator";
 
-// type member_split = {
-//   user_id: string;
-//   share: number;
-// }[];
-
 export async function addNewExpense(values: NewExpense, groupId: string) {
   const supabase = await createClient();
 
@@ -19,10 +14,10 @@ export async function addNewExpense(values: NewExpense, groupId: string) {
       group_id: groupId,
       title: values.title,
       amount: values.amount,
-      paid_by: values.paid_by,
+      paid_by: values.paidBy,
       category_id: values.category === "" ? null : values.category,
       date: values.date,
-      split_type: values.split_type,
+      split_type: values.splitType,
     })
     .select()
     .single();
@@ -31,15 +26,15 @@ export async function addNewExpense(values: NewExpense, groupId: string) {
 
   // calculate splits
   const splits = calculateSplitCosts({
-    type: values.split_type,
-    total_amount: values.amount,
-    member_splits: values.member_splits,
+    type: values.splitType,
+    totalAmount: values.amount,
+    memberSplits: values.memberSplits,
   });
 
   // add splits to db
   const { error: splitError } = await supabase.from("expense_split").insert(
     splits.map((split) => ({
-      user_id: split.user_id,
+      user_id: split.userId,
       amount: split.amount,
       expense_id: expense.id,
     }))
