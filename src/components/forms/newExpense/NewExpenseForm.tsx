@@ -99,6 +99,8 @@ const NewExpenseForm = () => {
           groupMembers={groupMembers}
           control={form.control}
           setValue={form.setValue}
+          setError={form.setError}
+          clearErrors={form.clearErrors}
         />
 
         <Button type="submit" className="form-btn" disabled={isLoading}>
