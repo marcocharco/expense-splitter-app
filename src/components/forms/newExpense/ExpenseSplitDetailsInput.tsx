@@ -102,7 +102,10 @@ const ExpenseSplitDetailsInput = ({
                         step="0.01"
                         min="0"
                         disabled={!isSelected}
-                        value={isSelected ? field.value : 0}
+                        // prettier-ignore
+                        value={
+                          isSelected ? (field.value === 0 ? "" : field.value) : ""
+                        }
                         onChange={(e) => {
                           const value = e.target.value;
                           // Only allow up to 2 decimal places
