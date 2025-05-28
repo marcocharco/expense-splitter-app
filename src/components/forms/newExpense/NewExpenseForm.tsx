@@ -9,7 +9,6 @@ import { newExpenseFormSchema } from "@/lib/utils";
 
 import { useUser } from "@/context/UserContext";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";
-import { useRouter } from "next/navigation";
 
 import { addNewExpense } from "@/lib/actions/expense.actions";
 
@@ -24,8 +23,11 @@ import ExpenseSplitTypeInput from "./ExpenseSplitTypeInput";
 import ExpenseSplitDetailsInput from "./ExpenseSplitDetailsInput";
 import ExpenseCategoryInput from "./ExpenseCateogryInput";
 
-const NewExpenseForm = () => {
-  const router = useRouter();
+type NewExpenseFormProps = {
+  onSuccess?: () => void;
+};
+
+const NewExpenseForm = ({ onSuccess }: NewExpenseFormProps) => {
   const { user } = useUser();
   const groupData = useCurrentGroup();
   const groupMembers = groupData?.members ?? [];
@@ -65,7 +67,7 @@ const NewExpenseForm = () => {
         { ...rest, memberSplits: filteredSplits },
         groupData?.id as string
       );
-      router.push(`/groups/${groupData?.slug}`);
+      onSuccess?.();
     } catch (error) {
       console.error(error);
     } finally {

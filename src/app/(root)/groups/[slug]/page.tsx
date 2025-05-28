@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-import { Plus, Scale } from "lucide-react";
+import { Scale } from "lucide-react";
 import GroupTabs from "@/components/groups/GroupTabs";
 
 import { ExpensesProvider } from "@/context/ExpensesContext";
 import { getGroupBySlug } from "@/lib/queries/getGroupBySlug";
 import { getGroupExpenses } from "@/lib/queries/getGroupExpenses";
+import NewExpenseSheet from "@/components/forms/newExpense/NewExpenseSheet";
 
 const GroupPage = async ({
   children,
@@ -35,11 +36,7 @@ const GroupPage = async ({
           </div>
 
           <div className="flex flex-wrap gap-3 justify-end">
-            <Link href={`/groups/${group?.slug}/add-expense`}>
-              <Button variant="outline">
-                <Plus /> Add expense
-              </Button>
-            </Link>
+            <NewExpenseSheet />
             <Link href="">
               <Button variant="outline">
                 <Scale />
