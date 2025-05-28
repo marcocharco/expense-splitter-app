@@ -1,10 +1,20 @@
+import { useEffect, useState } from "react";
+
 import {
   FormControl,
   FormField,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { getExpenseCategories } from "@/lib/queries/getExpenseCategories";
+
 import { Control } from "react-hook-form";
 
 import { z } from "zod";
@@ -15,28 +25,46 @@ type ExpenseFormInputProps = {
 };
 
 const ExpenseCategoryInput = ({ control }: ExpenseFormInputProps) => {
+  const [categories, setCategories] = useState<
+    { id: string; name: string; icon: string }[]
+  >([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const result = await getExpenseCategories(); // This must return a promise
+      setCategories(result);
+    };
+    fetchCategories();
+  }, []);
+
   return (
     <FormField
       control={control}
       name="category"
       render={({ field }) => (
-        <div className="form-item">
+        <>
           <FormLabel className="form-label">Category</FormLabel>
-          <div className="flex flex-col w-full">
-            <FormControl>
-              <Input
-                placeholder="Choose a category"
-                className="input-class"
-                type="text"
-                id="category"
-                {...field}
-                value={field.value || ""}
-                onChange={field.onChange}
-              />
-            </FormControl>
-            <FormMessage className="form-message" />
-          </div>
-        </div>
+          <FormControl>
+            <Select value={field.value} onValueChange={field.onChange}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category) => {
+                  return (
+                    <SelectItem
+                      key={category.id}
+                      value={category.id.toString()}
+                    >
+                      {category.icon} {category.name}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          </FormControl>
+          <FormMessage className="form-message" />
+        </>
       )}
     />
   );
