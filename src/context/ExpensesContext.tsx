@@ -1,13 +1,11 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
-// import { getGroupExpenses } from "@/lib/queries/getGroupExpenses";
 import { Expense } from "@/types";
-// import { useCurrentGroup } from "@/context/CurrentGroupContext";
 
 type ExpensesContextType = {
   expenses: Expense[];
-  setExpenses: React.Dispatch<React.SetStateAction<Expense[]>>;
+  addExpense: (expense: Expense) => void;
 };
 
 const ExpensesContext = createContext<ExpensesContextType | undefined>(
@@ -31,8 +29,16 @@ export const ExpensesProvider = ({
 }) => {
   const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
 
+  const addExpense = (newExpense: Expense) => {
+    setExpenses((prev) =>
+      [...prev, newExpense].sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      )
+    );
+  };
+
   return (
-    <ExpensesContext.Provider value={{ expenses, setExpenses }}>
+    <ExpensesContext.Provider value={{ expenses, addExpense }}>
       {children}
     </ExpensesContext.Provider>
   );

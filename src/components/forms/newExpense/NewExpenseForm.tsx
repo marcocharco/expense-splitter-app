@@ -22,6 +22,7 @@ import ExpenseDateInput from "./ExpenseDateInput";
 import ExpenseSplitTypeInput from "./ExpenseSplitTypeInput";
 import ExpenseSplitDetailsInput from "./ExpenseSplitDetailsInput";
 import ExpenseCategoryInput from "./ExpenseCateogryInput";
+import { useExpenses } from "@/context/ExpensesContext";
 
 type NewExpenseFormProps = {
   onSuccess?: () => void;
@@ -31,6 +32,7 @@ const NewExpenseForm = ({ onSuccess }: NewExpenseFormProps) => {
   const { user } = useUser();
   const groupData = useCurrentGroup();
   const groupMembers = groupData?.members ?? [];
+  const { addExpense } = useExpenses();
 
   const formSchema = newExpenseFormSchema();
 
@@ -63,10 +65,11 @@ const NewExpenseForm = ({ onSuccess }: NewExpenseFormProps) => {
     );
     setIsLoading(true);
     try {
-      await addNewExpense(
+      const newExpense = await addNewExpense(
         { ...rest, memberSplits: filteredSplits },
         groupData?.id as string
       );
+      addExpense(newExpense);
       onSuccess?.();
     } catch (error) {
       console.error(error);

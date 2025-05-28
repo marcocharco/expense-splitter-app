@@ -13,18 +13,21 @@ export async function addNewExpense(values: NewExpense, groupId: string) {
     memberSplits: values.memberSplits,
   });
 
-  const { data, error } = await supabase.rpc("add_expense_with_splits", {
-    group_id: groupId,
-    title: values.title,
-    amount: values.amount,
-    paid_by: values.paidBy,
-    category_id: values.category === "" ? null : values.category,
-    date: values.date,
-    split_type: values.splitType,
-    splits: splits,
-  });
+  const { data: expense, error } = await supabase.rpc(
+    "add_expense_with_splits",
+    {
+      group_id: groupId,
+      title: values.title,
+      amount: values.amount,
+      paid_by: values.paidBy,
+      category_id: values.category === "" ? null : values.category,
+      date: values.date,
+      split_type: values.splitType,
+      splits: splits,
+    }
+  );
 
   if (error) throw new Error(error.message);
 
-  return data; // new expense id
+  return expense; // new expense as object
 }

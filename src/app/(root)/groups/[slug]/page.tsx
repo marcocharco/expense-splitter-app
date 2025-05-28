@@ -4,22 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Scale } from "lucide-react";
 import GroupTabs from "@/components/groups/GroupTabs";
 
-import { ExpensesProvider } from "@/context/ExpensesContext";
 import { getGroupBySlug } from "@/lib/queries/getGroupBySlug";
-import { getGroupExpenses } from "@/lib/queries/getGroupExpenses";
 import NewExpenseSheet from "@/components/forms/newExpense/NewExpenseSheet";
 
 const GroupPage = async ({
-  children,
   params,
 }: Readonly<{
-  children: React.ReactNode;
   params: { slug: string };
 }>) => {
   const { slug } = await params;
   const group = await getGroupBySlug(slug);
-
-  const expenses = await getGroupExpenses(group?.id);
 
   return (
     <section className="layout-container">
@@ -45,10 +39,8 @@ const GroupPage = async ({
             </Link>
           </div>
         </div>
-        <ExpensesProvider initialExpenses={expenses}>
-          <GroupTabs />
-          {children}
-        </ExpensesProvider>
+
+        <GroupTabs />
       </div>
     </section>
   );
