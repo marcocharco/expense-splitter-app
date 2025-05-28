@@ -46,6 +46,29 @@ const ExpenseAmountInput = ({ control }: ExpenseAmountInputProps) => {
                   }
                   field.onChange(value === "" ? 0 : Number(value));
                 }}
+                onBlur={(e) => {
+                  let value = e.target.value;
+
+                  // Remove non-digit characters except decimal point
+                  value = value.replace(/[^\d.]/g, "");
+
+                  // Remove leading zeros
+                  value = value.replace(/^0+(?=\d)/, "");
+
+                  // Remove trailing zeros after decimal
+                  if (value.includes(".")) {
+                    value = value.replace(/\.?0+$/, "");
+                  }
+
+                  // Handle empty or just decimal point
+                  if (value === "" || value === ".") {
+                    value = "";
+                  }
+
+                  // Update input and form
+                  e.target.value = value;
+                  field.onChange(parseFloat(value) || 0);
+                }}
                 onWheel={(e) => e.currentTarget.blur()}
               />
             </FormControl>
