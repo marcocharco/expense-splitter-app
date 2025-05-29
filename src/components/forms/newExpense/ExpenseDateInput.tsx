@@ -18,10 +18,10 @@ import { CalendarIcon } from "lucide-react";
 import { Control } from "react-hook-form";
 
 import { z } from "zod";
-import { newExpenseFormSchema } from "@/lib/utils";
+import { ExpenseFormSchema } from "@/lib/utils";
 
 type ExpenseDateInputProps = {
-  control: Control<z.infer<ReturnType<typeof newExpenseFormSchema>>>;
+  control: Control<z.infer<ReturnType<typeof ExpenseFormSchema>>>;
 };
 
 const ExpenseDateInput = ({ control }: ExpenseDateInputProps) => {

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
-import NewExpenseForm from "@/components/forms/newExpense/NewExpenseForm";
+// import ExpenseForm from "@/components/forms/newExpense/ExpenseForm";
 
 const AddExpense = async ({ params }: { params: { slug: string } }) => {
   // const params = useParams();
@@ -23,7 +23,7 @@ const AddExpense = async ({ params }: { params: { slug: string } }) => {
           </div>
         </div>
 
-        <NewExpenseForm />
+        {/* <ExpenseForm /> */}
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import { Control, UseFormReturn, useWatch } from "react-hook-form";
 
 import { Member } from "@/types";
 
-import { newExpenseFormSchema } from "@/lib/utils";
+import { ExpenseFormSchema } from "@/lib/utils";
 import { calculateTotalShares } from "@/utils/totalSharesCalculator";
 import { calculateSplitCosts } from "@/utils/splitCalculator";
 
@@ -13,15 +13,15 @@ import { FormField, FormLabel, FormMessage } from "@/components/ui/form";
 
 type ExpenseSplitDetailsInputProps = {
   groupMembers: Member[];
-  control: Control<z.infer<ReturnType<typeof newExpenseFormSchema>>>;
+  control: Control<z.infer<ReturnType<typeof ExpenseFormSchema>>>;
   setValue: UseFormReturn<
-    z.infer<ReturnType<typeof newExpenseFormSchema>>
+    z.infer<ReturnType<typeof ExpenseFormSchema>>
   >["setValue"];
   setError: UseFormReturn<
-    z.infer<ReturnType<typeof newExpenseFormSchema>>
+    z.infer<ReturnType<typeof ExpenseFormSchema>>
   >["setError"];
   clearErrors: UseFormReturn<
-    z.infer<ReturnType<typeof newExpenseFormSchema>>
+    z.infer<ReturnType<typeof ExpenseFormSchema>>
   >["clearErrors"];
 };
 

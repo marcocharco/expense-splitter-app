@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { Control } from "react-hook-form";
 
-import { newExpenseFormSchema } from "@/lib/utils";
+import { ExpenseFormSchema } from "@/lib/utils";
 
 import { Input } from "@/components/ui/input";
 import {
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form";
 
 type ExpenseAmountInputProps = {
-  control: Control<z.infer<ReturnType<typeof newExpenseFormSchema>>>;
+  control: Control<z.infer<ReturnType<typeof ExpenseFormSchema>>>;
 };
 
 const ExpenseAmountInput = ({ control }: ExpenseAmountInputProps) => {

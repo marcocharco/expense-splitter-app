@@ -15,7 +15,7 @@ export const authFormSchema = (type: "sign-in" | "sign-up") =>
 
 const SplitTypes = ["even", "percentage", "shares", "custom"] as const;
 
-export const newExpenseFormSchema = () =>
+export const ExpenseFormSchema = () =>
   z
     .object({
       amount: z.number().positive("Amount cannot be 0"),

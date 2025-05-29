@@ -18,10 +18,10 @@ import { getExpenseCategories } from "@/lib/queries/getExpenseCategories";
 import { Control } from "react-hook-form";
 
 import { z } from "zod";
-import { newExpenseFormSchema } from "@/lib/utils";
+import { ExpenseFormSchema } from "@/lib/utils";
 
 type ExpenseFormInputProps = {
-  control: Control<z.infer<ReturnType<typeof newExpenseFormSchema>>>;
+  control: Control<z.infer<ReturnType<typeof ExpenseFormSchema>>>;
 };
 
 const ExpenseCategoryInput = ({ control }: ExpenseFormInputProps) => {

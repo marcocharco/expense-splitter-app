@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/sheet";
 import { Plus } from "lucide-react";
 
-import NewExpenseForm from "./NewExpenseForm";
+import ExpenseForm from "./ExpenseForm";
 
 const NewExpenseSheet = () => {
   const [open, setOpen] = useState(false);
@@ -31,7 +31,7 @@ const NewExpenseSheet = () => {
             Add a new expense to split amongst group members.
           </SheetDescription>
         </SheetHeader>
-        <NewExpenseForm onSuccess={() => setOpen(false)} />
+        <ExpenseForm type="newExpense" onSuccess={() => setOpen(false)} />
       </SheetContent>
     </Sheet>
   );

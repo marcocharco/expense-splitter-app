@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { newExpenseFormSchema } from "@/lib/utils";
+import { ExpenseFormSchema } from "@/lib/utils";
 
 import { useUser } from "@/context/UserContext";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";
@@ -23,18 +23,21 @@ import ExpenseSplitTypeInput from "./ExpenseSplitTypeInput";
 import ExpenseSplitDetailsInput from "./ExpenseSplitDetailsInput";
 import ExpenseCategoryInput from "./ExpenseCateogryInput";
 import { useExpenses } from "@/context/ExpensesContext";
+import { Expense } from "@/types";
 
-type NewExpenseFormProps = {
+type ExpenseFormProps = {
+  type: "newExpense" | "updateExpense";
+  initialExpense?: Expense;
   onSuccess?: () => void;
 };
 
-const NewExpenseForm = ({ onSuccess }: NewExpenseFormProps) => {
+const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
   const { user } = useUser();
   const groupData = useCurrentGroup();
   const groupMembers = groupData?.members ?? [];
   const { addExpense } = useExpenses();
 
-  const formSchema = newExpenseFormSchema();
+  const formSchema = ExpenseFormSchema();
 
   type FormValues = z.infer<typeof formSchema>;
 
@@ -110,11 +113,11 @@ const NewExpenseForm = ({ onSuccess }: NewExpenseFormProps) => {
         />
 
         <Button type="submit" className="form-btn" disabled={isLoading}>
-          Submit
+          {type === "newExpense" ? "Add Expense" : "Update Expense"}
         </Button>
       </form>
     </Form>
   );
 };
 
-export default NewExpenseForm;
+export default ExpenseForm;
