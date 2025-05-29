@@ -92,13 +92,14 @@ const NewExpenseForm = ({ onSuccess }: NewExpenseFormProps) => {
         <ExpensePaidByInput
           groupMembers={groupMembers}
           currentUserId={user?.id ?? ""}
+          control={form.control}
         />
 
-        <ExpenseDateInput />
+        <ExpenseDateInput control={form.control} />
 
         <ExpenseCategoryInput control={form.control} />
 
-        <ExpenseSplitTypeInput />
+        <ExpenseSplitTypeInput control={form.control} />
 
         <ExpenseSplitDetailsInput
           groupMembers={groupMembers}

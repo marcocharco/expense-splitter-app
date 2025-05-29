@@ -74,6 +74,7 @@ const ExpenseSplitDetailsInput = ({
   return (
     <>
       <FormField
+        control={control}
         name="memberSplits"
         render={() => (
           <>
@@ -108,6 +109,7 @@ const ExpenseSplitDetailsInput = ({
                     )}
                   </span>
                   <FormField
+                    control={control}
                     name={`memberSplits.${memberIndex}.split`}
                     render={({ field }) => (
                       <>

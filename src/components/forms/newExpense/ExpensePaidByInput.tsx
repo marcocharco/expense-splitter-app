@@ -11,20 +11,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { newExpenseFormSchema } from "@/lib/utils";
 
 import { Member } from "@/types";
+import { Control } from "react-hook-form";
+import { z } from "zod";
 
-type ExpensePaidByInput = {
+type ExpensePaidByInputProps = {
   groupMembers: Member[];
   currentUserId: string;
+  control: Control<z.infer<ReturnType<typeof newExpenseFormSchema>>>;
 };
 
 const ExpensePaidByInput = ({
   groupMembers,
   currentUserId,
-}: ExpensePaidByInput) => {
+  control,
+}: ExpensePaidByInputProps) => {
   return (
     <FormField
+      control={control}
       name="paidBy"
       render={({ field }) => (
         <>

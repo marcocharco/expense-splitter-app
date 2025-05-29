@@ -15,9 +15,19 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 
-const ExpenseDateInput = () => {
+import { Control } from "react-hook-form";
+
+import { z } from "zod";
+import { newExpenseFormSchema } from "@/lib/utils";
+
+type ExpenseDateInputProps = {
+  control: Control<z.infer<ReturnType<typeof newExpenseFormSchema>>>;
+};
+
+const ExpenseDateInput = ({ control }: ExpenseDateInputProps) => {
   return (
     <FormField
+      control={control}
       name="date"
       render={({ field }) => (
         <>

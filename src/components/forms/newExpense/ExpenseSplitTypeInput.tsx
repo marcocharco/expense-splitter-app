@@ -12,9 +12,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const ExpenseSplitTypeInput = () => {
+import { newExpenseFormSchema } from "@/lib/utils";
+import { Control } from "react-hook-form";
+import { z } from "zod";
+
+type ExpenseSplitTypeInputProps = {
+  control: Control<z.infer<ReturnType<typeof newExpenseFormSchema>>>;
+};
+
+const ExpenseSplitTypeInput = ({ control }: ExpenseSplitTypeInputProps) => {
   return (
     <FormField
+      control={control}
       name="splitType"
       render={({ field }) => (
         <>
