@@ -24,7 +24,7 @@ export const ExpenseFormSchema = () =>
       date: z
         .string()
         .refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date" }),
-      category: z.string().optional(),
+      category: z.number().optional(),
       splitType: z.enum(SplitTypes),
       memberSplits: z
         .array(

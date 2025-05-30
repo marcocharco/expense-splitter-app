@@ -20,7 +20,7 @@ export async function addNewExpense(values: NewExpense, groupId: string) {
       title: values.title,
       amount: values.amount,
       paid_by: values.paidBy,
-      category_id: values.category === "" ? null : values.category,
+      category_id: values.category === undefined ? null : values.category,
       date: values.date,
       split_type: values.splitType,
       splits: splits,

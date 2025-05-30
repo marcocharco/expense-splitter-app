@@ -45,7 +45,10 @@ const ExpenseCategoryInput = ({ control }: ExpenseFormInputProps) => {
         <>
           <FormLabel className="form-label">Category</FormLabel>
           <FormControl>
-            <Select value={field.value} onValueChange={field.onChange}>
+            <Select
+              value={field.value?.toString()}
+              onValueChange={(value) => field.onChange(Number(value))}
+            >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>

@@ -48,7 +48,7 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
       title: "",
       paidBy: user?.id,
       date: new Date().toISOString(),
-      category: "",
+      category: undefined,
       splitType: "even",
       memberSplits: groupMembers.map((member) => ({
         userId: member.id,

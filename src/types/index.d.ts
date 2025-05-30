@@ -39,7 +39,7 @@ export type Expense = {
   amount: number;
   paid_by: { id: string; name: string };
   date: string;
-  category: { name: string; icon: string } | null;
+  category: { id: number; name: string; icon: string } | null;
   settlement_id: string | null;
   status: string;
   splits: ExpenseSplit[];
@@ -54,6 +54,6 @@ export type NewExpense = {
   paidBy: string;
   date: string;
   splitType: SplitType;
-  category?: string;
+  category?: number;
   memberSplits: { userId: string; split: number }[];
 };
