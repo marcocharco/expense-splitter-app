@@ -58,7 +58,7 @@ const ExpenseAmountInput = ({ control }: ExpenseAmountInputProps) => {
                 {...field}
                 value={displayValue}
                 onChange={(e) => {
-                  const value = e.target.value;
+                  const value = e.target.value.replace(/[^0-9.]/g, "");
                   // Only allow up to 2 decimal places
                   if (value.includes(".")) {
                     const [, decimal] = value.split(".");
@@ -67,6 +67,9 @@ const ExpenseAmountInput = ({ control }: ExpenseAmountInputProps) => {
                     }
                   }
                   setDisplayValue(value);
+
+                  const parsed = parseFloat(value);
+                  field.onChange(isNaN(parsed) ? 0 : parsed);
                 }}
                 onBlur={() => {
                   const parsed = parseFloat(displayValue);
