@@ -1,4 +1,5 @@
 import { Expense } from "@/types";
+import { toDomainExpense } from "@/utils/expenseMapper";
 import { createClient } from "@/utils/supabase/server";
 
 export async function getGroupExpenses(groupId: string) {
@@ -20,7 +21,7 @@ export async function getGroupExpenses(groupId: string) {
         id, name, icon
       ),
       paid_by:profile!paid_by(id, name),
-      splits:expense_split(user:profile(id, name), amount)
+      splits:expense_split(user:profile(id, name), weight)
     `
     )
     .eq("group_id", groupId)
@@ -29,5 +30,6 @@ export async function getGroupExpenses(groupId: string) {
 
   // console.log(data);
   if (error) throw new Error(error.message);
-  return data ?? null;
+
+  return data.map(toDomainExpense) ?? null;
 }

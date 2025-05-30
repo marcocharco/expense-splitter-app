@@ -30,7 +30,7 @@ export const ExpenseFormSchema = () =>
         .array(
           z.object({
             userId: z.string(),
-            split: z.number({ invalid_type_error: "" }).min(0),
+            weight: z.number({ invalid_type_error: "" }).min(0),
           })
         )
         .min(1, "At least one member must be selected."),
@@ -41,7 +41,10 @@ export const ExpenseFormSchema = () =>
     .superRefine((data, ctx) => {
       const { splitType, memberSplits } = data;
 
-      const total = memberSplits.reduce((sum, member) => sum + member.split, 0);
+      const total = memberSplits.reduce(
+        (sum, member) => sum + member.weight,
+        0
+      );
 
       if (splitType === "percentage" && total !== 100) {
         ctx.addIssue({

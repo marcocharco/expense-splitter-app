@@ -28,9 +28,10 @@ export type Group = {
 };
 
 export type ExpenseSplit = {
-  expense_id: string;
+  expense_id?: string;
   user: { id: string; name: string };
   amount: number;
+  weight: number;
 };
 
 export type Expense = {
@@ -55,5 +56,5 @@ export type NewExpense = {
   date: string;
   splitType: SplitType;
   category?: number;
-  memberSplits: { userId: string; split: number }[];
+  memberSplits: { userId: string; weight: number }[];
 };

@@ -56,7 +56,7 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
           category: undefined,
           splitType: "even",
           selectedMembers: user ? [user.id] : [],
-          memberSplits: groupMembers.map((m) => ({ userId: m.id, split: 0 })),
+          memberSplits: groupMembers.map((m) => ({ userId: m.id, weight: 0 })),
         };
 
   const form = useForm<FormValues>({

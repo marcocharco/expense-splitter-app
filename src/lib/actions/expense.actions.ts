@@ -2,16 +2,14 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { NewExpense } from "@/types";
-import { calculateSplitCosts } from "@/utils/splitCalculator";
+import { toDomainExpense } from "@/utils/expenseMapper";
 
 export async function addNewExpense(values: NewExpense, groupId: string) {
   const supabase = await createClient();
 
-  const splits = calculateSplitCosts({
-    type: values.splitType,
-    totalAmount: values.amount,
-    memberSplits: values.memberSplits,
-  });
+  if (values.splitType === "even") {
+    values.memberSplits.forEach((id) => (id.weight = 1));
+  }
 
   const { data: expense, error } = await supabase.rpc(
     "add_expense_with_splits",
@@ -23,11 +21,11 @@ export async function addNewExpense(values: NewExpense, groupId: string) {
       category_id: values.category === undefined ? null : values.category,
       date: values.date,
       split_type: values.splitType,
-      splits: splits,
+      splits: values.memberSplits,
     }
   );
 
   if (error) throw new Error(error.message);
 
-  return expense; // new expense as object
+  return toDomainExpense(expense); // new expense as object
 }

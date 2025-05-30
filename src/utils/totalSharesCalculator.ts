@@ -1,7 +1,7 @@
 export function calculateTotalShares(
   memberSplits: {
     userId: string;
-    split: number;
+    weight: number;
   }[],
   selectedMembers?: string[]
 ) {
@@ -10,5 +10,5 @@ export function calculateTotalShares(
       selectedMembers.includes(m.userId)
     );
   }
-  return memberSplits.reduce((acc, member) => acc + Number(member.split), 0);
+  return memberSplits.reduce((acc, member) => acc + Number(member.weight), 0);
 }

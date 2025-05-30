@@ -21,7 +21,7 @@ type MemberSplitRowProps = {
   splitType: SplitType;
   memberSplits: {
     userId: string;
-    split: number;
+    weight: number;
   }[];
   selectedMembers: string[];
   currentAmount: number;
@@ -80,7 +80,7 @@ const MemberSplitRow = ({
     (
       updated: {
         userId: string;
-        split: number;
+        weight: number;
       }[]
     ) => {
       const total = getSelectedTotal(updated, selectedMembers);
@@ -113,7 +113,7 @@ const MemberSplitRow = ({
   return (
     <FormField
       control={control}
-      name={`memberSplits.${memberIndex}.split`}
+      name={`memberSplits.${memberIndex}.weight`}
       render={({ field }) => (
         <>
           <span>
@@ -148,7 +148,7 @@ const MemberSplitRow = ({
                 const updated = [...memberSplits];
                 updated[memberIndex] = {
                   ...updated[memberIndex],
-                  split: numValue,
+                  weight: numValue,
                 };
 
                 checkTotal(updated);
@@ -161,7 +161,7 @@ const MemberSplitRow = ({
                     : Infinity;
 
                 if (numValue > maxValue) {
-                  setError(`memberSplits.${memberIndex}.split`, {
+                  setError(`memberSplits.${memberIndex}.weight`, {
                     type: "manual",
                     message:
                       splitType === "percentage"

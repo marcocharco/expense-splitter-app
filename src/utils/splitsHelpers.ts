@@ -2,12 +2,12 @@
 export const sum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
 
 export const getSelectedTotal = (
-  memberSplits: { userId: string; split: number }[],
+  memberSplits: { userId: string; weight: number }[],
   selectedIds: string[]
 ) =>
   sum(
     selectedIds.map(
-      (id) => memberSplits.find((m) => m.userId === id)?.split || 0
+      (id) => memberSplits.find((m) => m.userId === id)?.weight || 0
     )
   );
 
