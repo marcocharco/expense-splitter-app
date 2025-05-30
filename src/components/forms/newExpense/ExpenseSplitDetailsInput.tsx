@@ -73,13 +73,17 @@ const ExpenseSplitDetailsInput = ({
   })();
   return (
     <>
+      <FormLabel className="form-label">Splits</FormLabel>
+      <FormField
+        control={control}
+        name="selectedMembers"
+        render={() => <FormMessage className="form-message" />}
+      />
       <FormField
         control={control}
         name="memberSplits"
         render={() => (
           <>
-            <FormLabel className="form-label">Splits</FormLabel>
-
             <FormMessage className="form-message" />
 
             {groupMembers.map((member) => {
@@ -113,130 +117,126 @@ const ExpenseSplitDetailsInput = ({
                     name={`memberSplits.${memberIndex}.split`}
                     render={({ field }) => (
                       <>
-                        {splitType !== "even" && (
-                          <div className="relative">
-                            <Input
-                              placeholder="0"
-                              type="number"
-                              inputMode="decimal"
-                              step="0.01"
-                              min="0"
-                              disabled={!isSelected}
-                              value={
-                                isSelected
-                                  ? field.value === 0
-                                    ? ""
-                                    : field.value
-                                  : ""
-                              }
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                if (value.includes(".")) {
-                                  const [, decimal] = value.split(".");
-                                  if (decimal && decimal.length > 2) {
-                                    return;
-                                  }
-                                }
-
-                                const numValue =
-                                  value === "" ? 0 : Number(value);
-
-                                // Get new splits array with this field's value updated
-                                const updatedSplits = [...memberSplits];
-                                updatedSplits[memberIndex] = {
-                                  ...updatedSplits[memberIndex],
-                                  split: numValue,
-                                };
-
-                                const included = selectedMembers.map(
-                                  (id) =>
-                                    updatedSplits.find((m) => m.userId === id)
-                                      ?.split || 0
-                                );
-                                const total = included.reduce(
-                                  (acc, val) => acc + val,
-                                  0
-                                );
-
-                                // Check overage
-                                const isOverTotal =
-                                  splitType === "percentage"
-                                    ? total > 100
-                                    : splitType === "custom"
-                                    ? total > currentAmount
-                                    : false;
-
-                                if (isOverTotal) {
-                                  setError("memberSplits", {
-                                    type: "manual",
-                                    message:
-                                      splitType === "percentage"
-                                        ? "Total percentage cannot exceed 100%"
-                                        : `Total splits cannot exceed amount ($${currentAmount})`,
-                                  });
-                                } else {
-                                  clearErrors("memberSplits");
-                                }
-
-                                const maxValue =
-                                  splitType === "percentage"
-                                    ? 100
-                                    : splitType === "custom"
-                                    ? currentAmount
-                                    : Infinity;
-
-                                if (numValue > maxValue) {
-                                  setError(
-                                    `memberSplits.${memberIndex}.split`,
-                                    {
-                                      type: "manual",
-                                      message:
-                                        splitType === "percentage"
-                                          ? "Percentage cannot exceed 100%"
-                                          : `Custom split cannot exceed total amount ($${currentAmount})`,
-                                    }
-                                  );
-                                  if (splitType === "percentage") return;
-                                }
-
-                                if (numValue < 0) {
+                        <div className="relative">
+                          <Input
+                            placeholder={
+                              isSelected && splitType !== "even" ? "0" : "-"
+                            }
+                            type="number"
+                            inputMode="decimal"
+                            step="0.01"
+                            min="0"
+                            disabled={!isSelected || splitType === "even"}
+                            value={
+                              isSelected
+                                ? field.value === 0
+                                  ? ""
+                                  : field.value
+                                : ""
+                            }
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (value.includes(".")) {
+                                const [, decimal] = value.split(".");
+                                if (decimal && decimal.length > 2) {
                                   return;
                                 }
+                              }
 
-                                // Update field
-                                field.onChange(numValue);
-                              }}
-                              onBlur={(e) => {
-                                let value = e.target.value;
+                              const numValue = value === "" ? 0 : Number(value);
 
-                                // Remove non-digit characters except decimal point
-                                value = value.replace(/[^\d.]/g, "");
+                              // Get new splits array with this field's value updated
+                              const updatedSplits = [...memberSplits];
+                              updatedSplits[memberIndex] = {
+                                ...updatedSplits[memberIndex],
+                                split: numValue,
+                              };
 
-                                // Remove leading zeros
-                                value = value.replace(/^0+(?=\d)/, "");
+                              const included = selectedMembers.map(
+                                (id) =>
+                                  updatedSplits.find((m) => m.userId === id)
+                                    ?.split || 0
+                              );
+                              const total = included.reduce(
+                                (acc, val) => acc + val,
+                                0
+                              );
 
-                                // Remove trailing zeros after decimal
-                                if (value.includes(".")) {
-                                  value = value.replace(/\.?0+$/, "");
-                                }
+                              // Check overage
+                              const isOverTotal =
+                                splitType === "percentage"
+                                  ? total > 100
+                                  : splitType === "custom"
+                                  ? total > currentAmount
+                                  : false;
 
-                                // Handle empty or just decimal point
-                                if (value === "" || value === ".") {
-                                  value = "";
-                                }
+                              if (isOverTotal) {
+                                setError("memberSplits", {
+                                  type: "manual",
+                                  message:
+                                    splitType === "percentage"
+                                      ? "Total percentage cannot exceed 100%"
+                                      : `Total splits cannot exceed amount ($${currentAmount})`,
+                                });
+                              } else {
+                                clearErrors("memberSplits");
+                              }
 
-                                // Update input and form
-                                e.target.value = value;
-                                field.onChange(parseFloat(value) || 0);
-                              }}
-                              className="w-32 pr-8 input-no-spinner"
-                              onWheel={(e) => e.currentTarget.blur()}
-                            />
-                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
-                              {splitCostLabel}
-                            </span>
-                          </div>
-                        )}
+                              const maxValue =
+                                splitType === "percentage"
+                                  ? 100
+                                  : splitType === "custom"
+                                  ? currentAmount
+                                  : Infinity;
+
+                              if (numValue > maxValue) {
+                                setError(`memberSplits.${memberIndex}.split`, {
+                                  type: "manual",
+                                  message:
+                                    splitType === "percentage"
+                                      ? "Percentage cannot exceed 100%"
+                                      : `Custom split cannot exceed total amount ($${currentAmount})`,
+                                });
+                                if (splitType === "percentage") return;
+                              }
+
+                              if (numValue < 0) {
+                                return;
+                              }
+
+                              // Update field
+                              field.onChange(numValue);
+                            }}
+                            onBlur={(e) => {
+                              let value = e.target.value;
+
+                              // Remove non-digit characters except decimal point
+                              value = value.replace(/[^\d.]/g, "");
+
+                              // Remove leading zeros
+                              value = value.replace(/^0+(?=\d)/, "");
+
+                              // Remove trailing zeros after decimal
+                              if (value.includes(".")) {
+                                value = value.replace(/\.?0+$/, "");
+                              }
+
+                              // Handle empty or just decimal point
+                              if (value === "" || value === ".") {
+                                value = "";
+                              }
+
+                              // Update input and form
+                              e.target.value = value;
+                              field.onChange(parseFloat(value) || 0);
+                            }}
+                            className="w-32 pr-8 input-no-spinner"
+                            onWheel={(e) => e.currentTarget.blur()}
+                          />
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
+                            {splitCostLabel}
+                          </span>
+                        </div>
                         <FormMessage className="form-message" />
                       </>
                     )}
