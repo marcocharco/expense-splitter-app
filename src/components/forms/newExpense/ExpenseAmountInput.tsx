@@ -29,7 +29,7 @@ const ExpenseAmountInput = ({ control }: ExpenseAmountInputProps) => {
   const { field } = useController({ name: "amount", control });
 
   const [displayValue, setDisplayValue] = useState(
-    field.value == 0 ? "" : field.value.toString()
+    field.value == 0 ? "" : currencyFormatter(field.value)
   );
 
   useEffect(() => {

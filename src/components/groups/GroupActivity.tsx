@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -11,59 +11,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useExpenses } from "@/context/ExpensesContext";
-import ExpenseDetailsCard from "./ExpenseDetailsCard";
 import { Expense } from "@/types";
+import UpdateExpenseSheet from "../forms/newExpense/UpdateExpenseSheet";
 
 const GroupActivity = () => {
   const { expenses } = useExpenses();
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const [currentExpense, setCurrentExpense] = useState<Expense | null>(null);
+  const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
+
+  const handleRowClick = (expense: Expense) => setSelectedExpense(expense);
 
   const currencyFormatter = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
   });
 
-  // update dialog modal when new expense is clicked
-  useEffect(() => {
-    if (!currentExpense) return;
-    const dialog = dialogRef.current;
-    dialog?.showModal();
-    dialog?.addEventListener("close", closeModal);
-
-    return () => dialog?.removeEventListener("close", closeModal);
-  }, [currentExpense]);
-
-  // Handle click outside of modal
-  const handleDialogClick = (e: React.MouseEvent<HTMLDialogElement>) => {
-    const dialogDimensions = dialogRef.current?.getBoundingClientRect();
-    if (!dialogDimensions) return;
-
-    if (
-      e.clientX < dialogDimensions.left ||
-      e.clientX > dialogDimensions.right ||
-      e.clientY < dialogDimensions.top ||
-      e.clientY > dialogDimensions.bottom
-    ) {
-      closeModal();
-    }
-  };
-
-  const closeModal = () => {
-    dialogRef.current?.close();
-    setCurrentExpense(null);
-  };
-
   return (
     <>
-      <dialog
-        ref={dialogRef}
-        className="expense-details-container"
-        onClick={handleDialogClick}
-      >
-        <ExpenseDetailsCard expense={currentExpense} />
-      </dialog>
-
       <Table>
         <TableCaption>A list of recent group activity.</TableCaption>
         <TableHeader>
@@ -90,7 +53,7 @@ const GroupActivity = () => {
             return (
               <TableRow
                 key={expense.id}
-                onClick={() => setCurrentExpense(expense)}
+                onClick={() => handleRowClick(expense)}
                 className="cursor-pointer"
               >
                 <TableCell className="font-medium">{expense.title}</TableCell>
@@ -110,6 +73,10 @@ const GroupActivity = () => {
           })}
         </TableBody>
       </Table>
+      <UpdateExpenseSheet
+        expense={selectedExpense}
+        onOpenChange={setSelectedExpense}
+      />
     </>
   );
 };

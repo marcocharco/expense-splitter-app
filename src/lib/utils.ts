@@ -33,7 +33,7 @@ export const ExpenseFormSchema = () =>
             split: z.number({ invalid_type_error: "" }).min(0),
           })
         )
-        .nonempty(),
+        .min(1, "At least one member must be selected."),
       selectedMembers: z.array(z.string()).refine((arr) => arr.length > 0, {
         message: "At least one member must be selected",
       }),

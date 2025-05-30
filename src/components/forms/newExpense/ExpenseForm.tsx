@@ -24,6 +24,7 @@ import ExpenseSplitDetailsInput from "./ExpenseSplitDetailsInput";
 import ExpenseCategoryInput from "./ExpenseCateogryInput";
 import { useExpenses } from "@/context/ExpensesContext";
 import { Expense } from "@/types";
+import { toFormValues } from "@/utils/expenseMapper";
 
 type ExpenseFormProps = {
   type: "newExpense" | "updateExpense";
@@ -41,21 +42,26 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
 
   type FormValues = z.infer<typeof formSchema>;
 
+  const defaultValues: FormValues =
+    type === "updateExpense"
+      ? toFormValues({
+          expense: initialExpense!,
+          members: groupMembers,
+        })
+      : {
+          amount: 0,
+          title: "",
+          paidBy: user?.id ?? "",
+          date: new Date().toISOString(),
+          category: undefined,
+          splitType: "even",
+          selectedMembers: user ? [user.id] : [],
+          memberSplits: groupMembers.map((m) => ({ userId: m.id, split: 0 })),
+        };
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      amount: 0.0,
-      title: "",
-      paidBy: user?.id,
-      date: new Date().toISOString(),
-      category: undefined,
-      splitType: "even",
-      memberSplits: groupMembers.map((member) => ({
-        userId: member.id,
-        split: 0,
-      })),
-      selectedMembers: user ? [user.id] : [],
-    },
+    defaultValues,
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -88,9 +94,9 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
         className="space-y-8"
         autoComplete="off"
       >
-        <ExpenseAmountInput control={form.control} />
-
         <ExpenseTitleInput control={form.control} />
+
+        <ExpenseAmountInput control={form.control} />
 
         <ExpensePaidByInput
           groupMembers={groupMembers}
