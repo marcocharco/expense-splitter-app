@@ -196,7 +196,7 @@ const ExpenseSplitDetailsInput = ({
                                           : `Custom split cannot exceed total amount ($${currentAmount})`,
                                     }
                                   );
-                                  return;
+                                  if (splitType === "percentage") return;
                                 }
 
                                 if (numValue < 0) {
