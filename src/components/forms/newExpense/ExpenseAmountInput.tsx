@@ -1,5 +1,8 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { z } from "zod";
-import { Control } from "react-hook-form";
+import { Control, useController } from "react-hook-form";
 
 import { ExpenseFormSchema } from "@/lib/utils";
 
@@ -15,7 +18,28 @@ type ExpenseAmountInputProps = {
   control: Control<z.infer<ReturnType<typeof ExpenseFormSchema>>>;
 };
 
+const currencyFormatter = (amount: number) =>
+  amount.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+  });
+
 const ExpenseAmountInput = ({ control }: ExpenseAmountInputProps) => {
+  const { field } = useController({ name: "amount", control });
+
+  const [displayValue, setDisplayValue] = useState(
+    field.value == 0 ? "" : field.value.toString()
+  );
+
+  useEffect(() => {
+    if (!field.value) {
+      setDisplayValue("");
+    }
+    if (field.value === 0) {
+      setDisplayValue("");
+    }
+  }, [field.value]);
   return (
     <FormField
       control={control}
@@ -26,15 +50,13 @@ const ExpenseAmountInput = ({ control }: ExpenseAmountInputProps) => {
           <div className="flex flex-col w-full">
             <FormControl>
               <Input
-                placeholder="0.00"
+                placeholder="$0.00"
                 className="input-class input-no-spinner"
-                type="number"
+                type="text"
                 inputMode="decimal"
-                step="0.01"
-                min="0"
                 id="amount"
                 {...field}
-                value={field.value === 0 ? "" : field.value}
+                value={displayValue}
                 onChange={(e) => {
                   const value = e.target.value;
                   // Only allow up to 2 decimal places
@@ -44,30 +66,21 @@ const ExpenseAmountInput = ({ control }: ExpenseAmountInputProps) => {
                       return;
                     }
                   }
-                  field.onChange(value === "" ? 0 : Number(value));
+                  setDisplayValue(value);
                 }}
-                onBlur={(e) => {
-                  let value = e.target.value;
+                onBlur={() => {
+                  const parsed = parseFloat(displayValue);
+                  const clean = isNaN(parsed) ? 0 : parsed;
 
-                  // Remove non-digit characters except decimal point
-                  value = value.replace(/[^\d.]/g, "");
-
-                  // Remove leading zeros
-                  value = value.replace(/^0+(?=\d)/, "");
-
-                  // Remove trailing zeros after decimal
-                  if (value.includes(".")) {
-                    value = value.replace(/\.?0+$/, "");
-                  }
-
-                  // Handle empty or just decimal point
-                  if (value === "" || value === ".") {
-                    value = "";
-                  }
-
-                  // Update input and form
-                  e.target.value = value;
-                  field.onChange(parseFloat(value) || 0);
+                  field.onChange(clean); // update form value
+                  setDisplayValue(
+                    clean > 0 ? currencyFormatter(clean) : "" // update display
+                  );
+                }}
+                onFocus={() => {
+                  setDisplayValue(
+                    field.value === 0 ? "" : field.value?.toString()
+                  );
                 }}
                 onWheel={(e) => e.currentTarget.blur()}
               />
