@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { useExpenses } from "@/context/ExpensesContext";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 const GroupBalances = () => {
   const { expenses } = useExpenses();
@@ -29,30 +30,22 @@ const GroupBalances = () => {
       </TableHeader>
       <TableBody>
         {group?.members.map((member) => {
-          const currencyFormatter = new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-          });
-
           const userBalance = memberBalances.get(member.id);
           const absValue = Math.abs(userBalance?.netOwing ?? 0);
 
           return (
             <TableRow key={member.id}>
               <TableCell>{member.name}</TableCell>
-              <TableCell className="text-right">
-                {currencyFormatter.format(userBalance?.totalOwing ?? 0)}
+              <TableCell className="text-right tabular-nums">
+                {formatCurrency(userBalance?.totalOwing ?? 0)}
               </TableCell>
-              <TableCell className="text-right">
-                {currencyFormatter.format(userBalance?.totalOwed ?? 0)}
+              <TableCell className="text-right tabular-nums">
+                {formatCurrency(userBalance?.totalOwed ?? 0)}
               </TableCell>
-              <TableCell className="text-right">
-                {/* {(userBalance?.netOwing ?? 0) < 0
-                  ? `( ${currencyFormatter.format(absValue)} )`
-                  : `${absValue}`} */}
+              <TableCell className="text-right tabular-nums">
                 {(userBalance?.netOwing ?? 0) < 0
-                  ? `is owed ${currencyFormatter.format(absValue)}`
-                  : `owes ${currencyFormatter.format(absValue)}`}
+                  ? `is owed ${formatCurrency(absValue)}`
+                  : `owes ${formatCurrency(absValue)}`}
               </TableCell>
             </TableRow>
           );

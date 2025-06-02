@@ -1,25 +1,21 @@
 import { Expense } from "@/types";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 type ExpenseDetailsCardProps = {
   expense: Expense | null;
 };
 
 const ExpenseDetailsCard = ({ expense }: ExpenseDetailsCardProps) => {
-  const formattedAmount = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
   return (
     <div className="expense-details-content">
       <h2 className="text-lg">{expense?.title}</h2>
-      <p>Total Amount: {expense && formattedAmount.format(expense?.amount)}</p>
+      <p>Total Amount: {expense && formatCurrency(expense?.amount)}</p>
       <p>Paid By: {expense?.paid_by.name}</p>
       <p>This expense was split {expense?.split_type}</p>
       {expense?.splits.map((split) => {
         return (
           <p key={split.user.id}>
-            {split.user.name}&apos;s Share:{" "}
-            {formattedAmount.format(split.amount)}
+            {split.user.name}&apos;s Share: {formatCurrency(split.amount)}
           </p>
         );
       })}
@@ -29,7 +25,7 @@ const ExpenseDetailsCard = ({ expense }: ExpenseDetailsCardProps) => {
           return (
             <p key={split.user.id}>
               {split.user.name} owes {expense.paid_by.name}{" "}
-              {formattedAmount.format(split.amount)}
+              {formatCurrency(split.amount)}
             </p>
           );
         }

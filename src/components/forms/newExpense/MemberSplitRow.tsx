@@ -13,6 +13,7 @@ import {
 import { useEffect, useCallback } from "react";
 import { calculateTotalShares } from "@/utils/totalSharesCalculator";
 import { calculateSplitCosts } from "@/utils/splitCalculator";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 type MemberSplitRowProps = {
   control: Control<z.infer<ReturnType<typeof ExpenseFormSchema>>>;
@@ -105,20 +106,13 @@ const MemberSplitRow = ({
     checkTotal(memberSplits);
   }, [splitType, checkTotal, memberSplits, clearErrors]);
 
-  const currencyFormatter = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
-
   return (
     <FormField
       control={control}
       name={`memberSplits.${memberIndex}.weight`}
       render={({ field }) => (
         <>
-          <span>
-            {currencyFormatter.format(isSelected ? splitAmount || 0 : 0)}
-          </span>
+          <span>{formatCurrency(isSelected ? splitAmount || 0 : 0)}</span>
           <div className="relative">
             <Input
               placeholder={isSelected && splitType !== "even" ? "0" : "-"}

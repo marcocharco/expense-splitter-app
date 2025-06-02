@@ -13,17 +13,13 @@ import {
 import { useExpenses } from "@/context/ExpensesContext";
 import { Expense } from "@/types";
 import UpdateExpenseSheet from "../forms/newExpense/UpdateExpenseSheet";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 const GroupActivity = () => {
   const { expenses } = useExpenses();
   const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
 
   const handleRowClick = (expense: Expense) => setSelectedExpense(expense);
-
-  const currencyFormatter = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
 
   return (
     <>
@@ -57,8 +53,8 @@ const GroupActivity = () => {
                 className="cursor-pointer"
               >
                 <TableCell className="font-medium">{expense.title}</TableCell>
-                <TableCell className="text-right pr-4 font-number">
-                  {currencyFormatter.format(expense.amount)}
+                <TableCell className="text-right pr-4 font-number tabular-nums">
+                  {formatCurrency(expense.amount)}
                 </TableCell>
                 <TableCell>{expense.paid_by.name}</TableCell>
                 <TableCell>{formattedDate}</TableCell>
