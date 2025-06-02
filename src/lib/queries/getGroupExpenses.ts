@@ -13,7 +13,6 @@ export async function getGroupExpenses(groupId: string) {
       title,
       amount,
       date,
-      status,
       group_id,
       settlement_id,
       split_type,

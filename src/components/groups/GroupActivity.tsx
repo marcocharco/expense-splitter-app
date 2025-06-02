@@ -63,7 +63,9 @@ const GroupActivity = () => {
                     ? expense.category.icon + "  " + expense.category.name
                     : "-"}
                 </TableCell>
-                <TableCell>{expense.status}</TableCell>
+                <TableCell>
+                  {expense.settlement_id ? "Settlement" : "Unpaid"}
+                </TableCell>
               </TableRow>
             );
           })}

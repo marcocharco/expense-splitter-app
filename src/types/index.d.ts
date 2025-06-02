@@ -42,7 +42,6 @@ export type Expense = {
   date: string;
   category: { id: number; name: string; icon: string } | null;
   settlement_id: string | null;
-  status: string;
   splits: ExpenseSplit[];
   split_type: SplitType;
 };
