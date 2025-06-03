@@ -3,6 +3,7 @@ import { DM_Sans, Raleway, Inter } from "next/font/google";
 import "./globals.css";
 import { UserProvider } from "@/context/UserContext";
 import { getUserProfileServer } from "@/lib/queries/getUserProfileServer";
+import ReactQueryProvider from "@/app/ReactQueryProvider";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -37,7 +38,9 @@ export default async function Layout({
       className={`${dmSans.variable} ${raleway.variable} ${inter.variable}`}
     >
       <body>
-        <UserProvider initialUser={user}>{children}</UserProvider>
+        <ReactQueryProvider>
+          <UserProvider initialUser={user}>{children}</UserProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );
