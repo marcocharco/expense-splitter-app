@@ -9,14 +9,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useExpenses } from "@/context/ExpensesContext";
+import { useExpenses } from "@/hooks/useExpenses";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";
 import { formatCurrency } from "@/utils/formatCurrency";
 
 const GroupBalances = () => {
-  const { expenses } = useExpenses();
-  const memberBalances = calculateMemberBalances({ expenses });
   const group = useCurrentGroup();
+  const { expenses } = useExpenses(group?.id ?? "");
+  const memberBalances = calculateMemberBalances({ expenses });
   return (
     <Table>
       <TableCaption>Total owed and owing for each group member.</TableCaption>

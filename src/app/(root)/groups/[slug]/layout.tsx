@@ -1,7 +1,11 @@
 import { getGroupBySlug } from "@/lib/queries/getGroupBySlug";
 import { CurrentGroupProvider } from "@/context/CurrentGroupContext";
-import { ExpensesProvider } from "@/context/ExpensesContext";
-import { getGroupExpenses } from "@/lib/queries/getGroupExpenses";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import { getGroupExpenses } from "@/lib/queries/getGroupExpensesServer";
 
 export default async function GroupLayout({
   children,
@@ -14,10 +18,18 @@ export default async function GroupLayout({
   const group = await getGroupBySlug(slug);
   if (!group) return <div>Group not found</div>;
 
-  const expenses = await getGroupExpenses(group?.id);
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ["groupExpenses", group.id],
+    queryFn: () => getGroupExpenses(group.id),
+  });
+
   return (
     <CurrentGroupProvider group={group}>
-      <ExpensesProvider initialExpenses={expenses}>{children}</ExpensesProvider>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        {children}
+      </HydrationBoundary>
     </CurrentGroupProvider>
   );
 }

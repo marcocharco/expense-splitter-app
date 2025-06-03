@@ -10,13 +10,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useExpenses } from "@/context/ExpensesContext";
+import { useExpenses } from "@/hooks/useExpenses";
 import { Expense } from "@/types";
 import UpdateExpenseSheet from "../forms/newExpense/UpdateExpenseSheet";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { useCurrentGroup } from "@/context/CurrentGroupContext";
 
 const GroupActivity = () => {
-  const { expenses } = useExpenses();
+  const group = useCurrentGroup();
+  const { expenses } = useExpenses(group?.id ?? "");
   const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
 
   const handleRowClick = (expense: Expense) => setSelectedExpense(expense);

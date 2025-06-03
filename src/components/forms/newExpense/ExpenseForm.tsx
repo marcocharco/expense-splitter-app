@@ -10,8 +10,6 @@ import { ExpenseFormSchema } from "@/lib/utils";
 import { useUser } from "@/context/UserContext";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";
 
-import { addNewExpense } from "@/lib/actions/expense.actions";
-
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 
@@ -22,9 +20,9 @@ import ExpenseDateInput from "./ExpenseDateInput";
 import ExpenseSplitTypeInput from "./ExpenseSplitTypeInput";
 import ExpenseSplitDetailsInput from "./ExpenseSplitDetailsInput";
 import ExpenseCategoryInput from "./ExpenseCateogryInput";
-import { useExpenses } from "@/context/ExpensesContext";
 import { Expense } from "@/types";
 import { toFormValues } from "@/utils/expenseMapper";
+import { useExpenses } from "@/hooks/useExpenses";
 
 type ExpenseFormProps = {
   type: "newExpense" | "updateExpense";
@@ -36,7 +34,7 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
   const { user } = useUser();
   const groupData = useCurrentGroup();
   const groupMembers = groupData?.members ?? [];
-  const { addExpense } = useExpenses();
+  const { addExpense } = useExpenses(groupData?.id ?? "");
 
   const formSchema = ExpenseFormSchema();
 
@@ -59,9 +57,13 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
           memberSplits: groupMembers.map((m) => ({ userId: m.id, weight: 0 })),
         };
 
+  const disabled =
+    initialExpense && initialExpense?.settlement_id ? true : false;
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
+    disabled,
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -74,11 +76,7 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
     );
     setIsLoading(true);
     try {
-      const newExpense = await addNewExpense(
-        { ...rest, memberSplits: filteredSplits },
-        groupData?.id as string
-      );
-      addExpense(newExpense);
+      await addExpense({ ...rest, memberSplits: filteredSplits });
       onSuccess?.();
     } catch (error) {
       console.error(error);
