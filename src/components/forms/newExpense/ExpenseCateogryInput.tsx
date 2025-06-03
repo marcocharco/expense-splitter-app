@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+"use client";
 
 import {
   FormControl,
@@ -20,22 +20,17 @@ import { Control } from "react-hook-form";
 import { z } from "zod";
 import { ExpenseFormSchema } from "@/lib/utils";
 
+import { useQuery } from "@tanstack/react-query";
+
 type ExpenseFormInputProps = {
   control: Control<z.infer<ReturnType<typeof ExpenseFormSchema>>>;
 };
 
 const ExpenseCategoryInput = ({ control }: ExpenseFormInputProps) => {
-  const [categories, setCategories] = useState<
-    { id: string; name: string; icon: string }[]
-  >([]);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const result = await getExpenseCategories(); // This must return a promise
-      setCategories(result);
-    };
-    fetchCategories();
-  }, []);
+  const { data: categories } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => getExpenseCategories(),
+  });
 
   return (
     <FormField
@@ -53,7 +48,7 @@ const ExpenseCategoryInput = ({ control }: ExpenseFormInputProps) => {
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
-                {categories.map((category) => {
+                {categories?.map((category) => {
                   return (
                     <SelectItem
                       key={category.id}
