@@ -66,9 +66,13 @@ const ExpenseAmountInput = ({ control }: ExpenseAmountInputProps) => {
                       return;
                     }
                   }
+                  // Check if the value exceeds the maximum limit
+                  const parsed = parseFloat(value);
+                  if (parsed >= 1000000000) {
+                    return;
+                  }
                   setDisplayValue(value);
 
-                  const parsed = parseFloat(value);
                   field.onChange(isNaN(parsed) ? 0 : parsed);
                 }}
                 onBlur={() => {
