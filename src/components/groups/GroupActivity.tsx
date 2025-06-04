@@ -28,7 +28,7 @@ const GroupActivity = () => {
       <Table>
         <TableCaption>A list of recent group activity.</TableCaption>
         <TableHeader>
-          <TableRow>
+          <TableRow className="h-fit  hover:bg-background">
             <TableHead className="w-[20%]">Title</TableHead>
             <TableHead className="text-right w-[10%] pr-4">Amount</TableHead>
             <TableHead className="w-[15%]">Paid By</TableHead>
@@ -52,7 +52,7 @@ const GroupActivity = () => {
               <TableRow
                 key={expense.id}
                 onClick={() => handleRowClick(expense)}
-                className="cursor-pointer"
+                className="cursor-pointer h-12"
               >
                 <TableCell className="font-medium">{expense.title}</TableCell>
                 <TableCell className="text-right pr-4 font-number tabular-nums">
