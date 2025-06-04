@@ -43,6 +43,12 @@ const SettlementForm = () => {
     [expenses]
   );
 
+  const title = new Date().toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   const startSettlement = async () => {
     if (selectedIds.length === 0) return;
 
@@ -50,6 +56,7 @@ const SettlementForm = () => {
       groupId: group.id,
       expenseIds: selectedIds,
       userId: user.id,
+      title: title,
     });
 
     router.push(`/groups/${group?.slug}`);
