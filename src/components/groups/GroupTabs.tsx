@@ -26,7 +26,7 @@ const GroupTabs = () => {
         <p>Activity Logs</p>
       </TabsContent>
       <TabsContent value="expenses">
-        <GroupActivity />
+        <GroupExpenses />
       </TabsContent>
       <TabsContent value="balances">
         <GroupBalances />

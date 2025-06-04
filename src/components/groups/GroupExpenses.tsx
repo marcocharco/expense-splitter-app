@@ -16,7 +16,7 @@ import UpdateExpenseSheet from "../forms/newExpense/UpdateExpenseSheet";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";
 
-const GroupActivity = () => {
+const GroupExpenses = () => {
   const group = useCurrentGroup();
   const { expenses } = useExpenses(group?.id ?? "");
   const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
@@ -81,4 +81,4 @@ const GroupActivity = () => {
   );
 };
 
-export default GroupActivity;
+export default GroupExpenses;
