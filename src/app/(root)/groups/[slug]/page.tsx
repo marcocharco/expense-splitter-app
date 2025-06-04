@@ -1,11 +1,9 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-
-import { Scale } from "lucide-react";
 import GroupTabs from "@/components/groups/GroupTabs";
 
 import { getGroupBySlug } from "@/lib/queries/getGroupBySlug";
 import NewExpenseSheet from "@/components/forms/newExpense/NewExpenseSheet";
+import NewPaymentSheet from "@/components/forms/payment/NewPaymentSheet";
+import NewSettlementSheet from "@/components/forms/settlement/NewSettlementSheet";
 
 const GroupPage = async ({
   params,
@@ -31,12 +29,8 @@ const GroupPage = async ({
 
           <div className="flex flex-wrap gap-3 justify-end">
             <NewExpenseSheet />
-            <Link href="">
-              <Button variant="outline">
-                <Scale />
-                Settle expenses
-              </Button>
-            </Link>
+            <NewPaymentSheet />
+            <NewSettlementSheet />
           </div>
         </div>
 
