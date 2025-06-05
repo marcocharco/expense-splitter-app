@@ -9,7 +9,7 @@ export function calculateMemberBalances({
 }) {
   //total owe and owed for each member of a group
   const memberBalances = new Map<
-    string,
+    string, //userId
     { totalOwed: number; totalOwing: number; netOwing: number }
   >();
 

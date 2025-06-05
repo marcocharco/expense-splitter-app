@@ -11,7 +11,7 @@ export async function getGroupSettlements(groupId: string) {
       title,
       created_by:profile!created_by(id, name),
       status,
-      participants:settlement_participant(user:profile(id, name), amount_owed, amount_remaining)
+      participants:settlement_participant(user:profile(id, name), initial_balance, remaining_balance)
     `
     )
     .eq("group_id", groupId);
