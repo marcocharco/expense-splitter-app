@@ -19,7 +19,7 @@ import ExpensePaidByInput from "./ExpensePaidByInput";
 import ExpenseDateInput from "./ExpenseDateInput";
 import ExpenseSplitTypeInput from "./ExpenseSplitTypeInput";
 import ExpenseSplitDetailsInput from "./ExpenseSplitDetailsInput";
-import ExpenseCategoryInput from "./ExpenseCateogryInput";
+import ExpenseCategoryInput from "./ExpenseCategoryInput";
 import { Expense } from "@/types";
 import { toFormValues } from "@/utils/expenseMapper";
 import { useExpenses } from "@/hooks/useExpenses";
