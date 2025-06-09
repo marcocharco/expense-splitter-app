@@ -13,10 +13,10 @@ import { useCurrentGroup } from "@/context/CurrentGroupContext";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 
-import ExpenseAmountInput from "./ExpenseAmountInput";
+import AmountInput from "../AmountInput";
 import ExpenseTitleInput from "./ExpenseTitleInput";
-import ExpensePaidByInput from "./ExpensePaidByInput";
-import ExpenseDateInput from "./ExpenseDateInput";
+import MemberSelectInput from "../MemberSelectInput";
+import DatePickerInput from "../DatePickerInput";
 import ExpenseSplitTypeInput from "./ExpenseSplitTypeInput";
 import ExpenseSplitDetailsInput from "./ExpenseSplitDetailsInput";
 import ExpenseCategoryInput from "./ExpenseCategoryInput";
@@ -94,15 +94,17 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
       >
         <ExpenseTitleInput control={form.control} />
 
-        <ExpenseAmountInput control={form.control} />
+        <AmountInput control={form.control} name="amount" />
 
-        <ExpensePaidByInput
+        <MemberSelectInput
+          control={form.control}
+          name="paidBy"
+          formType="expense"
           groupMembers={groupMembers}
           currentUserId={user?.id ?? ""}
-          control={form.control}
         />
 
-        <ExpenseDateInput control={form.control} />
+        <DatePickerInput control={form.control} name="date" />
 
         <ExpenseCategoryInput control={form.control} />
 

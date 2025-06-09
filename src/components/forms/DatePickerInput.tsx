@@ -15,20 +15,21 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 
-import { Control } from "react-hook-form";
+import { Control, FieldValues, Path } from "react-hook-form";
 
-import { z } from "zod";
-import { ExpenseFormSchema } from "@/lib/utils";
-
-type ExpenseDateInputProps = {
-  control: Control<z.infer<ReturnType<typeof ExpenseFormSchema>>>;
+type DatePickerInputProps<T extends FieldValues, N extends Path<T>> = {
+  control: Control<T>;
+  name: N;
 };
 
-const ExpenseDateInput = ({ control }: ExpenseDateInputProps) => {
+const DatePickerInput = <T extends FieldValues, N extends Path<T>>({
+  control,
+  name,
+}: DatePickerInputProps<T, N>) => {
   return (
     <FormField
       control={control}
-      name="date"
+      name={name}
       render={({ field }) => (
         <>
           <FormLabel className="form-label">Date</FormLabel>
@@ -73,4 +74,4 @@ const ExpenseDateInput = ({ control }: ExpenseDateInputProps) => {
   );
 };
 
-export default ExpenseDateInput;
+export default DatePickerInput;

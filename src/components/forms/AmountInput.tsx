@@ -1,10 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { z } from "zod";
-import { Control, useController } from "react-hook-form";
-
-import { ExpenseFormSchema } from "@/lib/utils";
+import { Control, FieldValues, Path, useController } from "react-hook-form";
 
 import { Input } from "@/components/ui/input";
 import {
@@ -13,23 +10,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { formatCurrency } from "@/utils/formatCurrency";
 
-type ExpenseAmountInputProps = {
-  control: Control<z.infer<ReturnType<typeof ExpenseFormSchema>>>;
+type AmountInputProps<T extends FieldValues, N extends Path<T>> = {
+  control: Control<T>;
+  name: N;
 };
 
-const currencyFormatter = (amount: number) =>
-  amount.toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-  });
-
-const ExpenseAmountInput = ({ control }: ExpenseAmountInputProps) => {
-  const { field } = useController({ name: "amount", control });
+const AmountInput = <T extends FieldValues, N extends Path<T>>({
+  control,
+  name,
+}: AmountInputProps<T, N>) => {
+  const { field } = useController({ name: name, control });
 
   const [displayValue, setDisplayValue] = useState(
-    field.value == 0 ? "" : currencyFormatter(field.value)
+    field.value == 0 ? "" : formatCurrency(field.value)
   );
 
   useEffect(() => {
@@ -43,7 +38,7 @@ const ExpenseAmountInput = ({ control }: ExpenseAmountInputProps) => {
   return (
     <FormField
       control={control}
-      name="amount"
+      name={name}
       render={({ field }) => (
         <div className="form-item">
           <FormLabel className="form-label">Amount</FormLabel>
@@ -81,7 +76,7 @@ const ExpenseAmountInput = ({ control }: ExpenseAmountInputProps) => {
 
                   field.onChange(clean); // update form value
                   setDisplayValue(
-                    clean > 0 ? currencyFormatter(clean) : "" // update display
+                    clean > 0 ? formatCurrency(clean) : "" // update display
                   );
                 }}
                 onFocus={() => {
@@ -100,4 +95,4 @@ const ExpenseAmountInput = ({ control }: ExpenseAmountInputProps) => {
   );
 };
 
-export default ExpenseAmountInput;
+export default AmountInput;

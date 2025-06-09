@@ -11,37 +11,51 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ExpenseFormSchema } from "@/lib/utils";
 
 import { Member } from "@/types";
-import { Control } from "react-hook-form";
-import { z } from "zod";
+import { useMemo } from "react";
+import { Control, FieldValues, Path } from "react-hook-form";
 
-type ExpensePaidByInputProps = {
+type MemberSelectInputProps<T extends FieldValues, N extends Path<T>> = {
+  control: Control<T>;
+  name: N;
   groupMembers: Member[];
   currentUserId: string;
-  control: Control<z.infer<ReturnType<typeof ExpenseFormSchema>>>;
+  formType: "expense" | "payment";
 };
 
-const ExpensePaidByInput = ({
+const MemberSelectInput = <T extends FieldValues, N extends Path<T>>({
+  control,
+  name,
   groupMembers,
   currentUserId,
-  control,
-}: ExpensePaidByInputProps) => {
+  formType,
+}: MemberSelectInputProps<T, N>) => {
+  const filteredMembers = useMemo(() => {
+    let list = groupMembers;
+
+    if (formType === "payment" && currentUserId) {
+      list = list.filter((m) => m.id !== currentUserId);
+    }
+
+    return list;
+  }, [groupMembers, formType, currentUserId]);
   return (
     <FormField
       control={control}
-      name="paidBy"
+      name={name}
       render={({ field }) => (
         <>
-          <FormLabel className="form-label">Paid By</FormLabel>
+          <FormLabel className="form-label">
+            {formType === "expense" ? "Paid By" : "Paid To"}
+          </FormLabel>
           <FormControl>
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select who paid" />
+                <SelectValue placeholder="Select a member" />
               </SelectTrigger>
               <SelectContent>
-                {groupMembers.map((member) => (
+                {filteredMembers.map((member) => (
                   <SelectItem key={member.id} value={member.id}>
                     {member.name} {member.id === currentUserId && "(you)"}
                   </SelectItem>
@@ -56,4 +70,4 @@ const ExpensePaidByInput = ({
   );
 };
 
-export default ExpensePaidByInput;
+export default MemberSelectInput;
