@@ -35,6 +35,7 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
   const groupData = useCurrentGroup();
   const groupMembers = groupData?.members ?? [];
   const { addExpense } = useExpenses(groupData?.id ?? "");
+  const { editExpense } = useExpenses(groupData?.id ?? "");
 
   const formSchema = ExpenseFormSchema();
 
@@ -76,8 +77,16 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
     );
     setIsLoading(true);
     try {
-      await addExpense({ ...rest, memberSplits: filteredSplits });
-      onSuccess?.();
+      if (type === "newExpense") {
+        await addExpense({ ...rest, memberSplits: filteredSplits });
+        onSuccess?.();
+      } else if (type === "updateExpense" && initialExpense) {
+        await editExpense({
+          values: { ...rest, memberSplits: filteredSplits },
+          expenseId: initialExpense.id,
+        });
+        onSuccess?.();
+      }
     } catch (error) {
       console.error(error);
     } finally {
