@@ -31,7 +31,7 @@ const SettlementForm = () => {
     });
 
   const unpaid = useMemo(
-    () => expenses.filter((e) => !e.settlement_id),
+    () => expenses.filter((e) => !e.settlement),
     [expenses]
   );
 

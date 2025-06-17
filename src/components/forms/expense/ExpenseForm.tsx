@@ -59,7 +59,7 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
         };
 
   const disabled =
-    initialExpense && initialExpense?.settlement_id ? true : false;
+    initialExpense && initialExpense?.settlement?.id ? true : false;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -127,7 +127,11 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
           clearErrors={form.clearErrors}
         />
 
-        <Button type="submit" className="form-btn" disabled={isLoading}>
+        <Button
+          type="submit"
+          className="form-btn"
+          disabled={disabled || isLoading}
+        >
           {type === "newExpense" ? "Add Expense" : "Update Expense"}
         </Button>
       </form>

@@ -41,7 +41,7 @@ export type Expense = {
   paid_by: { id: string; name: string };
   date: string;
   category: { id: number; name: string; icon: string } | null;
-  settlement_id: string | null;
+  settlement?: { id: string; status: string };
   splits: ExpenseSplit[];
   split_type: SplitType;
 };

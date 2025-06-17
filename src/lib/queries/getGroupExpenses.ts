@@ -14,7 +14,7 @@ export async function getGroupExpenses(groupId: string) {
       amount,
       date,
       group_id,
-      settlement_id,
+      settlement(id, status),
       split_type,
       category:expense_category (
         id, name, icon

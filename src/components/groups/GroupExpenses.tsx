@@ -66,7 +66,11 @@ const GroupExpenses = () => {
                     : "-"}
                 </TableCell>
                 <TableCell>
-                  {expense.settlement_id ? "Settlement" : "Unpaid"}
+                  {expense.settlement
+                    ? expense.settlement.status === "open"
+                      ? "In Settlement"
+                      : "Paid"
+                    : "Unpaid"}
                 </TableCell>
               </TableRow>
             );
