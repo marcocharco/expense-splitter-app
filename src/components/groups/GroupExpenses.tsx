@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import { useExpenses } from "@/hooks/useExpenses";
 import { Expense } from "@/types";
-import UpdateExpenseSheet from "../forms/newExpense/UpdateExpenseSheet";
+import UpdateExpenseSheet from "../forms/expense/UpdateExpenseSheet";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";
 
