@@ -1,39 +1,28 @@
 "use server";
 
-import { Expense } from "@/types";
-import { calculateMemberBalances } from "@/utils/groupBalanceCalculator";
 import { createClient } from "@/utils/supabase/server";
 
 export async function startNewSettlement({
   groupId,
-  selectedExpenses,
-  initiator, //user.id
+  currentUser,
   title,
+  selectedExpenseIds,
+  balances,
 }: {
   groupId: string;
-  selectedExpenses: Expense[];
-  initiator: string;
+  currentUser: string;
   title: string;
+  selectedExpenseIds: string[];
+  balances: { user_id: string; net_balance: number }[];
 }) {
   const supabase = await createClient();
 
-  const selectedExpenseIds = selectedExpenses.map((expense) => expense.id);
-
-  const balances = calculateMemberBalances({ expenses: selectedExpenses });
-
-  const balancesPayload = Array.from(balances.entries()).map(
-    ([user_id, balance]) => ({
-      user_id,
-      net_balance: balance.netOwing,
-    })
-  );
-
   const { data, error } = await supabase.rpc("start_settlement", {
     _group_id: groupId,
-    _initiator: initiator,
+    _initiator: currentUser,
     _title: title,
     _expense_ids: selectedExpenseIds,
-    _balances: balancesPayload,
+    _balances: balances,
   });
 
   if (error) throw new Error(error.message);

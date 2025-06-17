@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useExpenses } from "@/hooks/useExpenses";
@@ -9,9 +8,10 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import { startNewSettlement } from "@/lib/actions/settlement.actions";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";
 import { useUser } from "@/context/UserContext";
+import { calculateMemberBalances } from "@/utils/groupBalanceCalculator";
+import { useQueryClient } from "@tanstack/react-query";
 
 const SettlementForm = () => {
-  const router = useRouter();
   const { user } = useUser();
   const group = useCurrentGroup();
   if (!user || !group) {
@@ -19,6 +19,7 @@ const SettlementForm = () => {
   }
 
   const { expenses } = useExpenses(group.id);
+  const queryClient = useQueryClient();
 
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
@@ -49,14 +50,26 @@ const SettlementForm = () => {
   const startSettlement = async () => {
     if (selectedExpenses.length === 0) return;
 
-    await startNewSettlement({
-      groupId: group.id,
-      initiator: user.id,
-      selectedExpenses: selectedExpenses,
-      title: title,
+    const selectedExpenseIds = selectedExpenses.map((expense) => expense.id);
+    const balances = calculateMemberBalances({
+      expenses: selectedExpenses,
     });
 
-    router.push(`/groups/${group.slug}`);
+    const balancesPayload = Array.from(balances.entries()).map(
+      ([user_id, balance]) => ({
+        user_id,
+        net_balance: balance.netOwing,
+      })
+    );
+
+    await startNewSettlement({
+      groupId: group.id,
+      currentUser: user.id,
+      title: title,
+      selectedExpenseIds: selectedExpenseIds,
+      balances: balancesPayload,
+    });
+    queryClient.invalidateQueries({ queryKey: ["groupExpenses", group.id] });
   };
 
   return (

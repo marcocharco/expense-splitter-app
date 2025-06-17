@@ -1,12 +1,6 @@
 import { Expense } from "@/types";
 
-export function calculateMemberBalances({
-  expenses,
-}: // groupMembers
-{
-  expenses: Expense[];
-  // groupMembers: Member[]
-}) {
+export function calculateMemberBalances({ expenses }: { expenses: Expense[] }) {
   //total owe and owed for each member of a group
   const memberBalances = new Map<
     string, //userId
