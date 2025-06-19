@@ -40,3 +40,36 @@ export function calculateMemberBalances({ expenses }: { expenses: Expense[] }) {
 
   return memberBalances;
 }
+
+export function calculateNetBalances({ expenses }: { expenses: Expense[] }): {
+  userId: string;
+  netBalance: number;
+}[] {
+  const balances = new Map<string, number>(); // user_id -> net_balance
+
+  for (const expense of expenses) {
+    const paidById = expense.paid_by.id;
+
+    for (const split of expense.splits) {
+      const userId = split.user.id;
+      const amount = split.amount;
+
+      if (userId !== paidById) {
+        // payer gets owed money
+        balances.set(paidById, (balances.get(paidById) || 0) - amount);
+
+        // split participant owes money
+        balances.set(userId, (balances.get(userId) || 0) + amount);
+      }
+    }
+  }
+
+  const balancesPayload = Array.from(balances.entries()).map(
+    ([userId, netBalance]) => ({
+      userId,
+      netBalance,
+    })
+  );
+
+  return balancesPayload;
+}

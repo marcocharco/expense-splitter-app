@@ -8,7 +8,7 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import { startNewSettlement } from "@/lib/actions/settlement.actions";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";
 import { useUser } from "@/context/UserContext";
-import { calculateMemberBalances } from "@/utils/groupBalanceCalculator";
+import { calculateNetBalances } from "@/utils/groupBalanceCalculator";
 import { useQueryClient } from "@tanstack/react-query";
 
 const SettlementForm = () => {
@@ -51,23 +51,17 @@ const SettlementForm = () => {
     if (selectedExpenses.length === 0) return;
 
     const selectedExpenseIds = selectedExpenses.map((expense) => expense.id);
-    const balances = calculateMemberBalances({
+
+    const balances = calculateNetBalances({
       expenses: selectedExpenses,
     });
-
-    const balancesPayload = Array.from(balances.entries()).map(
-      ([user_id, balance]) => ({
-        user_id,
-        net_balance: balance.netOwing,
-      })
-    );
 
     await startNewSettlement({
       groupId: group.id,
       currentUser: user.id,
-      title: title,
-      selectedExpenseIds: selectedExpenseIds,
-      balances: balancesPayload,
+      title,
+      selectedExpenseIds,
+      balances,
     });
     queryClient.invalidateQueries({ queryKey: ["groupExpenses", group.id] });
   };

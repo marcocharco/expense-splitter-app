@@ -13,7 +13,7 @@ export async function startNewSettlement({
   currentUser: string;
   title: string;
   selectedExpenseIds: string[];
-  balances: { user_id: string; net_balance: number }[];
+  balances: { userId: string; netBalance: number }[];
 }) {
   const supabase = await createClient();
 
