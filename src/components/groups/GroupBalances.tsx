@@ -9,14 +9,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useExpenses } from "@/hooks/useExpenses";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { useBalanceInputs } from "@/hooks/useBalanceInputs";
+import { useMemo } from "react";
 
 const GroupBalances = () => {
   const group = useCurrentGroup();
-  const { expenses } = useExpenses(group?.id ?? "");
-  const memberBalances = calculateMemberBalances({ expenses });
+  const { data } = useBalanceInputs(group?.id ?? "");
+  const memberBalances = useMemo(() => {
+    if (!data?.expenses || !data?.payments) return new Map();
+    return calculateMemberBalances({
+      expenses: data.expenses,
+      payments: data.payments,
+    });
+  }, [data?.expenses, data?.payments]);
   return (
     <Table>
       <TableCaption>Total owed and owing for each group member.</TableCaption>
