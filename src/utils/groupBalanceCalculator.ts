@@ -75,9 +75,18 @@ export function calculateMemberBalances({ expenses, payments }: BalanceInputs) {
     memberBalances.set(payment.paid_to, paidToBalance);
   });
 
-  // positive net balance means the member owes money to the group
-  // negative net balance means the member is owed money by the group
+  // Ensure no negative owed/owing: transfer negatives to the other side
   memberBalances.forEach((balance) => {
+    if (balance.totalOwed < 0) {
+      balance.totalOwing += Math.abs(balance.totalOwed);
+      balance.totalOwed = 0;
+    }
+    if (balance.totalOwing < 0) {
+      balance.totalOwed += Math.abs(balance.totalOwing);
+      balance.totalOwing = 0;
+    }
+    // positive net balance means the member owes money to the group
+    // negative net balance means the member is owed money by the group
     balance.netOwing = balance.totalOwing - balance.totalOwed;
   });
 
@@ -88,6 +97,7 @@ export function calculateNetBalances({ expenses }: { expenses: Expense[] }): {
   userId: string;
   netBalance: number;
 }[] {
+  // used for settlements
   const balances = new Map<string, number>(); // user_id -> net_balance
 
   for (const expense of expenses) {
