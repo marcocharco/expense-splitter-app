@@ -96,6 +96,20 @@ const PaymentForm = () => {
   };
 
   const paidTo = useWatch({ control: form.control, name: "paidTo" });
+  const openSettlements = settlements.filter((settlement) => {
+    const paidToParticipant = settlement.participants.find(
+      (participant) => participant.user.id === paidTo
+    );
+    const currentUserParticipant = settlement.participants.find(
+      (participant) => participant.user.id === user.id
+    );
+    return (
+      paidToParticipant &&
+      currentUserParticipant &&
+      paidToParticipant.remaining_balance < 0 &&
+      currentUserParticipant.remaining_balance > 0
+    );
+  });
   const unpaidExpenses = expenses.filter((expense) => {
     return (
       expense.paid_by.id === paidTo &&
@@ -151,7 +165,9 @@ const PaymentForm = () => {
             {/* <TabsTrigger value="expense">Expense</TabsTrigger> */}
           </TabsList>
           <TabsContent value="settlement">
-            {settlements && settlements.length > 0 && (
+            {paidTo == "" ? (
+              <span>Choose a payment recepient</span>
+            ) : openSettlements.length > 0 ? (
               <div className="space-y-2">
                 <FormLabel className="form-label">
                   Choose Settlement{" "}
@@ -159,7 +175,7 @@ const PaymentForm = () => {
                     (optional)
                   </span>
                 </FormLabel>
-                {settlements.map((settlement) => (
+                {openSettlements.map((settlement) => (
                   <div key={settlement.id} className="flex items-center gap-2">
                     <input
                       type="radio"
@@ -173,7 +189,10 @@ const PaymentForm = () => {
                       htmlFor={`settlement-${settlement.id}`}
                       className="text-sm"
                     >
-                      {settlement.title}
+                      {settlement.title} - You Owe $
+                      {settlement.participants.find(
+                        (participant) => participant.user.id === user.id
+                      )?.remaining_balance || ""}
                     </label>
                   </div>
                 ))}
@@ -191,6 +210,8 @@ const PaymentForm = () => {
                   </label>
                 </div>
               </div>
+            ) : (
+              <span>No open settlements</span>
             )}
           </TabsContent>
           <TabsContent value="balance">

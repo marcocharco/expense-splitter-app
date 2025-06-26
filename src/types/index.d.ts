@@ -59,3 +59,21 @@ export type NewExpense = {
   category?: number;
   memberSplits: { userId: string; weight: number }[];
 };
+
+export type Settlement = {
+  id: string;
+  title: string;
+  created_by: {
+    id: string;
+    name: string;
+  };
+  status: "open" | "closed";
+  participants: {
+    user: {
+      id: string;
+      name: string;
+    };
+    initial_balance: number;
+    remaining_balance: number;
+  }[];
+};

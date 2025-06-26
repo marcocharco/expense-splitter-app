@@ -1,3 +1,4 @@
+import { Settlement } from "@/types";
 import { createClient } from "@/utils/supabase/client";
 
 export async function getGroupSettlements(groupId: string) {
@@ -14,7 +15,8 @@ export async function getGroupSettlements(groupId: string) {
       participants:settlement_participant(user:profile(id, name), initial_balance, remaining_balance)
     `
     )
-    .eq("group_id", groupId);
+    .eq("group_id", groupId)
+    .overrideTypes<Settlement[], { merge: false }>();
 
   // console.log(data);
   if (error) throw new Error(error.message);
