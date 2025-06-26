@@ -32,6 +32,8 @@ export type ExpenseSplit = {
   user: { id: string; name: string };
   amount: number;
   weight: number;
+  initial_owing: number;
+  remaining_owing: number;
 };
 
 export type Expense = {

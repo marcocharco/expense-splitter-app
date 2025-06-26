@@ -21,14 +21,27 @@ export function toFormValues({ expense, members }: toFormValuesProps) {
   };
 }
 
-export function toDomainExpense(db: Expense): Expense {
-  const sumW = db.splits.reduce((s, r) => s + r.weight, 0);
+export function toDomainExpense(dbExpense: Expense): Expense {
+  const totalWeight = dbExpense.splits.reduce(
+    (sum, split) => sum + split.weight,
+    0
+  );
+
   return {
-    ...db,
-    splits: db.splits.map((r) => ({
-      user: { id: r.user.id, name: r.user.name },
-      amount: (db.amount * r.weight) / sumW,
-      weight: db.split_type === "even" ? 0 : r.weight,
-    })),
+    ...dbExpense,
+    splits: dbExpense.splits.map((split) => {
+      const splitAmount = (dbExpense.amount * split.weight) / totalWeight;
+
+      return {
+        user: {
+          id: split.user.id,
+          name: split.user.name,
+        },
+        amount: splitAmount,
+        weight: dbExpense.split_type === "even" ? 0 : split.weight,
+        initial_owing: split.initial_owing,
+        remaining_owing: split.remaining_owing,
+      };
+    }),
   };
 }

@@ -16,6 +16,20 @@ import UpdateExpenseSheet from "../forms/expense/UpdateExpenseSheet";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";
 
+function getPaymentStatus(expense: Expense) {
+  console.log(expense);
+  if (expense.settlement) {
+    if (expense.settlement.status === "closed") return "Paid";
+    return "In Settlement";
+  }
+
+  const total = expense.splits.length;
+  const paid = expense.splits.filter((s) => s.remaining_owing === 0).length;
+  if (paid === total) return "Paid";
+  if (paid === 0) return "Unpaid";
+  return `${paid}/${total} Paid`;
+}
+
 const GroupExpenses = () => {
   const group = useCurrentGroup();
   const { expenses } = useExpenses(group?.id ?? "");
@@ -65,13 +79,7 @@ const GroupExpenses = () => {
                     ? expense.category.icon + "  " + expense.category.name
                     : "-"}
                 </TableCell>
-                <TableCell>
-                  {expense.settlement
-                    ? expense.settlement.status === "open"
-                      ? "In Settlement"
-                      : "Paid"
-                    : "Unpaid"}
-                </TableCell>
+                <TableCell>{getPaymentStatus(expense)}</TableCell>
               </TableRow>
             );
           })}
