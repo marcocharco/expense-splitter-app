@@ -18,7 +18,7 @@ const GroupSettlements = () => {
     queryFn: () => getGroupSettlements(group.id),
   });
 
-  console.log(settlements);
+  // console.log(settlements);
 
   return (
     <>

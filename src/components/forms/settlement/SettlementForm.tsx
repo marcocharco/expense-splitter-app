@@ -11,7 +11,7 @@ import { useUser } from "@/context/UserContext";
 import { calculateNetBalances } from "@/utils/groupBalanceCalculator";
 import { useQueryClient } from "@tanstack/react-query";
 
-const SettlementForm = () => {
+const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const { user } = useUser();
   const group = useCurrentGroup();
   if (!user || !group) {
@@ -64,6 +64,7 @@ const SettlementForm = () => {
       balances,
     });
     queryClient.invalidateQueries({ queryKey: ["groupExpenses", group.id] });
+    onSuccess();
   };
 
   return (

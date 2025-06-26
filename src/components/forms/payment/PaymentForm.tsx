@@ -22,7 +22,7 @@ import { useExpenses } from "@/hooks/useExpenses";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Expense, ExpenseSplit } from "@/types";
 
-const PaymentForm = () => {
+const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const { user } = useUser();
   const group = useCurrentGroup();
 
@@ -88,6 +88,8 @@ const PaymentForm = () => {
         });
       }
       queryClient.invalidateQueries({ queryKey: ["groupBalances", group.id] });
+      queryClient.invalidateQueries({ queryKey: ["groupExpenses", group.id] });
+      onSuccess();
     } catch (error) {
       console.error(error);
     } finally {

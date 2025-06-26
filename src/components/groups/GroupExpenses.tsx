@@ -17,7 +17,6 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";
 
 function getPaymentStatus(expense: Expense) {
-  console.log(expense);
   if (expense.settlement) {
     if (expense.settlement.status === "closed") return "Paid";
     return "In Settlement";

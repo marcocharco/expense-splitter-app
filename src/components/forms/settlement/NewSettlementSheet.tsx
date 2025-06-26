@@ -27,7 +27,7 @@ const NewSettlementSheet = () => {
           </SheetTitle>
           <SheetDescription>Settle group balances</SheetDescription>
         </SheetHeader>
-        <SettlementForm />
+        <SettlementForm onSuccess={() => setOpen(false)} />
       </SheetContent>
     </Sheet>
   );

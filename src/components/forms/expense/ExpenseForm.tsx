@@ -27,7 +27,7 @@ import { useExpenses } from "@/hooks/useExpenses";
 type ExpenseFormProps = {
   type: "newExpense" | "updateExpense";
   initialExpense?: Expense;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 };
 
 const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
@@ -79,13 +79,13 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
     try {
       if (type === "newExpense") {
         await addExpense({ ...rest, memberSplits: filteredSplits });
-        onSuccess?.();
+        onSuccess();
       } else if (type === "updateExpense" && initialExpense) {
         await editExpense({
           values: { ...rest, memberSplits: filteredSplits },
           expenseId: initialExpense.id,
         });
-        onSuccess?.();
+        onSuccess();
       }
     } catch (error) {
       console.error(error);

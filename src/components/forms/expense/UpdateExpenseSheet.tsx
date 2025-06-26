@@ -18,6 +18,7 @@ const UpdateExpenseSheet = ({
   onOpenChange: (e: Expense | null) => void;
 }) => {
   return (
+    // open or closed determined by whether or not a current expense is selected
     <Sheet
       open={Boolean(expense)}
       onOpenChange={(isOpen) => !isOpen && onOpenChange(null)}

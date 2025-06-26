@@ -26,7 +26,7 @@ const NewPaymentSheet = () => {
           <SheetTitle className="text-4xl font-medium">New Payment</SheetTitle>
           <SheetDescription>Log a payment to a group member.</SheetDescription>
         </SheetHeader>
-        <PaymentForm />
+        <PaymentForm onSuccess={() => setOpen(false)} />
       </SheetContent>
     </Sheet>
   );
