@@ -96,6 +96,7 @@ const PaymentForm = () => {
   };
 
   const paidTo = useWatch({ control: form.control, name: "paidTo" });
+
   const openSettlements = settlements.filter((settlement) => {
     const paidToParticipant = settlement.participants.find(
       (participant) => participant.user.id === paidTo
@@ -111,10 +112,15 @@ const PaymentForm = () => {
     );
   });
   const unpaidExpenses = expenses.filter((expense) => {
+    const currentUserSplit = expense.splits.find(
+      (split) => split.user.id === user.id
+    );
+    // expenses not in a settlement
     return (
       expense.paid_by.id === paidTo &&
-      expense.splits.some((split) => split.user.id === user.id) &&
-      expense.settlement === null
+      currentUserSplit &&
+      expense.settlement === null &&
+      currentUserSplit.remaining_owing > 0
     );
   });
 
@@ -217,7 +223,7 @@ const PaymentForm = () => {
           <TabsContent value="balance">
             {paidTo == "" ? (
               <span>Choose a payment recepient</span>
-            ) : (
+            ) : unpaidExpenses.length > 0 ? (
               <>
                 <FormLabel className="form-label">
                   Choose Expenses
@@ -246,12 +252,15 @@ const PaymentForm = () => {
                         htmlFor={`expense-${expense.id}`}
                         className="text-sm"
                       >
-                        {expense.title} {split ? `- ${split.amount}` : null}
+                        {expense.title}{" "}
+                        {split ? `- You owe $${split.remaining_owing}` : null}
                       </label>
                     </div>
                   );
                 })}
               </>
+            ) : (
+              <span>No unpaid expenses</span>
             )}
           </TabsContent>
           {/* <TabsContent value="expense">
