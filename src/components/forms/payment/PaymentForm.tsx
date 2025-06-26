@@ -16,7 +16,7 @@ import MemberSelectInput from "../MemberSelectInput";
 import DatePickerInput from "../DatePickerInput";
 import NoteInput from "../NoteInput";
 import { getGroupSettlements } from "@/lib/queries/getGroupSettlements";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useExpenses } from "@/hooks/useExpenses";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -32,6 +32,7 @@ const PaymentForm = () => {
 
   const groupMembers = group.members;
   const { expenses } = useExpenses(group.id);
+  const queryClient = useQueryClient();
 
   const { data: settlements = [] } = useQuery({
     queryKey: ["group-settlements", group.id],
@@ -86,6 +87,7 @@ const PaymentForm = () => {
           note: values.note,
         });
       }
+      queryClient.invalidateQueries({ queryKey: ["groupBalances", group.id] });
     } catch (error) {
       console.error(error);
     } finally {
