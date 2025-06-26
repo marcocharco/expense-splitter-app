@@ -105,7 +105,7 @@ export function calculateNetBalances({ expenses }: { expenses: Expense[] }): {
 
     for (const split of expense.splits) {
       const userId = split.user.id;
-      const amount = split.amount;
+      const amount = split.remaining_owing;
 
       if (userId !== paidById) {
         // payer gets owed money
