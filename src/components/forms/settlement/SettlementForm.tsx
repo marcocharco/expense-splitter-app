@@ -31,10 +31,13 @@ const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
       return next;
     });
 
-  const unpaid = useMemo(
-    () => expenses.filter((e) => !e.settlement),
-    [expenses]
-  );
+  const unpaid = useMemo(() => {
+    return expenses.filter(
+      (expense) =>
+        !expense.settlement &&
+        expense.splits.some((split) => split.remaining_owing > 0)
+    );
+  }, [expenses]);
 
   const selectedExpenses = useMemo(
     () => unpaid.filter((e) => selected.has(e.id)),
