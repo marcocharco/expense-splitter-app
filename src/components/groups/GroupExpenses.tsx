@@ -15,6 +15,7 @@ import { Expense } from "@/types";
 import UpdateExpenseSheet from "../forms/expense/UpdateExpenseSheet";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";
+import { formatDisplayDate } from "@/utils/formatDate";
 
 function getPaymentStatus(expense: Expense) {
   if (expense.settlement) {
@@ -52,14 +53,7 @@ const GroupExpenses = () => {
         </TableHeader>
         <TableBody>
           {expenses?.map((expense) => {
-            const formattedDate = new Date(expense.date).toLocaleDateString(
-              "en-US",
-              {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              }
-            );
+            const formattedDate = formatDisplayDate(expense.date);
 
             return (
               <TableRow

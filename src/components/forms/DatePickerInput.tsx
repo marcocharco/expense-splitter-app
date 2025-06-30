@@ -16,6 +16,7 @@ import {
 import { CalendarIcon } from "lucide-react";
 
 import { Control, FieldValues, Path } from "react-hook-form";
+import { DateToYMD, formatDisplayDate, YMDToDate } from "@/utils/formatDate";
 
 type DatePickerInputProps<T extends FieldValues, N extends Path<T>> = {
   control: Control<T>;
@@ -45,11 +46,7 @@ const DatePickerInput = <T extends FieldValues, N extends Path<T>>({
                 >
                   <CalendarIcon />
                   {field.value ? (
-                    new Date(field.value).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })
+                    formatDisplayDate(field.value)
                   ) : (
                     <span>Pick a date</span>
                   )}
@@ -58,9 +55,9 @@ const DatePickerInput = <T extends FieldValues, N extends Path<T>>({
               <PopoverContent className="w-auto p-0">
                 <Calendar
                   mode="single"
-                  selected={field.value ? new Date(field.value) : undefined}
+                  selected={YMDToDate(field.value)}
                   onSelect={(date) => {
-                    field.onChange(date ? date.toISOString() : "");
+                    field.onChange(date ? DateToYMD(date) : "");
                   }}
                   initialFocus
                 />

@@ -21,6 +21,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useExpenses } from "@/hooks/useExpenses";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Expense, ExpenseSplit } from "@/types";
+import { DateToYMD } from "@/utils/formatDate";
 
 const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const { user } = useUser();
@@ -47,7 +48,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const defaultValues: FormValues = {
     amount: 0,
     paidTo: "",
-    date: new Date().toISOString(),
+    date: DateToYMD(new Date()),
     note: "",
   };
 

@@ -23,6 +23,7 @@ import ExpenseCategoryInput from "./ExpenseCategoryInput";
 import { Expense } from "@/types";
 import { toFormValues } from "@/utils/expenseMapper";
 import { useExpenses } from "@/hooks/useExpenses";
+import { DateToYMD } from "@/utils/formatDate";
 
 type ExpenseFormProps = {
   type: "newExpense" | "updateExpense";
@@ -51,7 +52,7 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
           amount: 0,
           title: "",
           paidBy: user?.id ?? "",
-          date: new Date().toISOString(),
+          date: DateToYMD(new Date()),
           category: undefined,
           splitType: "even",
           selectedMembers: user ? [user.id] : [],
