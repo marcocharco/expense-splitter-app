@@ -6,13 +6,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const authFormSchema = (type: "sign-in" | "sign-up") =>
-  z.object({
-    name: type === "sign-in" ? z.string().optional() : z.string().max(255),
-    email: z.string().email().max(255),
-    password: type === "sign-in" ? z.string() : z.string().min(8),
-  });
-
 // const SplitTypes = ["even", "percentage", "shares", "custom"] as const;
 
 // export const ExpenseFormSchema = () =>

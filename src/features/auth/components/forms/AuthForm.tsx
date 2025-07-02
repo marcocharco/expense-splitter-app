@@ -9,9 +9,9 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import AuthInput from "./AuthInput";
-import { authFormSchema } from "@/lib/utils";
+import { authFormSchema } from "../../schemas/authFormSchema";
 import Link from "next/link";
-import { signIn, signUp } from "@/lib/actions/user.actions";
+import { signIn, signUp } from "@/features/auth/server/auth.actions";
 import { useUser } from "@/context/UserContext";
 import { getUserProfile } from "@/lib/queries/getUserProfile";
 
