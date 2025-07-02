@@ -12,7 +12,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-import ExpenseForm from "./ExpenseForm";
+import ExpenseForm from "./forms/ExpenseForm";
 
 const NewExpenseSheet = () => {
   const [open, setOpen] = useState(false);

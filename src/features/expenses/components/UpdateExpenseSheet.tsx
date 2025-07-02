@@ -7,7 +7,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-import ExpenseForm from "./ExpenseForm";
+import ExpenseForm from "./forms/ExpenseForm";
 import { Expense } from "@/types";
 
 const UpdateExpenseSheet = ({

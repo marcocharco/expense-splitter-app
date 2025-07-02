@@ -5,7 +5,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { getGroupExpenses } from "@/lib/queries/getGroupExpensesServer";
+import { getGroupExpenses } from "@/features/expenses/queries/getGroupExpensesServer";
 
 export default async function GroupLayout({
   children,

@@ -10,9 +10,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useExpenses } from "@/hooks/useExpenses";
+import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import { Expense } from "@/types";
-import UpdateExpenseSheet from "../forms/expense/UpdateExpenseSheet";
+import UpdateExpenseSheet from "@/features/expenses/components/UpdateExpenseSheet";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";
 import { formatDisplayDate } from "@/utils/formatDate";
@@ -30,7 +30,7 @@ function getPaymentStatus(expense: Expense) {
   return `${paid}/${total} Paid`;
 }
 
-const GroupExpenses = () => {
+const ExpenseList = () => {
   const group = useCurrentGroup();
   const { expenses } = useExpenses(group?.id ?? "");
   const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
@@ -86,4 +86,4 @@ const GroupExpenses = () => {
   );
 };
 
-export default GroupExpenses;
+export default ExpenseList;

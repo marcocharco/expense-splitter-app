@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ExpenseFormSchema } from "@/lib/utils";
+import { ExpenseFormSchema } from "../../schemas/expenseFormSchema";
 
 import { useUser } from "@/context/UserContext";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";
@@ -13,16 +13,16 @@ import { useCurrentGroup } from "@/context/CurrentGroupContext";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 
-import AmountInput from "../AmountInput";
+import AmountInput from "@/components/forms/AmountInput";
 import ExpenseTitleInput from "./ExpenseTitleInput";
-import MemberSelectInput from "../MemberSelectInput";
-import DatePickerInput from "../DatePickerInput";
+import MemberSelectInput from "@/components/forms/MemberSelectInput";
+import DatePickerInput from "@/components/forms/DatePickerInput";
 import ExpenseSplitTypeInput from "./ExpenseSplitTypeInput";
 import ExpenseSplitDetailsInput from "./ExpenseSplitDetailsInput";
 import ExpenseCategoryInput from "./ExpenseCategoryInput";
 import { Expense } from "@/types";
-import { toFormValues } from "@/utils/expenseMapper";
-import { useExpenses } from "@/hooks/useExpenses";
+import { toFormValues } from "@/features/expenses/utils/expenseMapper";
+import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import { DateToYMD } from "@/utils/formatDate";
 
 type ExpenseFormProps = {

@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getExpenseCategories } from "@/lib/queries/getExpenseCategories";
+import { getExpenseCategories } from "@/features/expenses/queries/getExpenseCategories";
 
 import { Control } from "react-hook-form";
 

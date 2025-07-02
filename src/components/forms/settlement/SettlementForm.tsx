@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useExpenses } from "@/hooks/useExpenses";
+import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { startNewSettlement } from "@/lib/actions/settlement.actions";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";

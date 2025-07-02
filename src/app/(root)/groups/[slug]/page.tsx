@@ -1,7 +1,7 @@
 import GroupTabs from "@/components/groups/GroupTabs";
 
 import { getGroupBySlug } from "@/lib/queries/getGroupBySlug";
-import NewExpenseSheet from "@/components/forms/expense/NewExpenseSheet";
+import NewExpenseSheet from "@/features/expenses/components/NewExpenseSheet";
 import NewPaymentSheet from "@/components/forms/payment/NewPaymentSheet";
 import NewSettlementSheet from "@/components/forms/settlement/NewSettlementSheet";
 

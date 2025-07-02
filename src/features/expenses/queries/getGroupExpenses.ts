@@ -1,5 +1,5 @@
 import { Expense } from "@/types";
-import { toDomainExpense } from "@/utils/expenseMapper";
+import { toDomainExpense } from "@/features/expenses/utils/expenseMapper";
 import { createClient } from "@/utils/supabase/client";
 
 export async function getGroupExpenses(groupId: string) {

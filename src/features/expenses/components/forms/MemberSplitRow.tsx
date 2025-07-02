@@ -9,10 +9,10 @@ import {
   getSelectedTotal,
   isOverTotalLimit,
   errorMsgForLimit,
-} from "@/utils/splitsHelpers";
+} from "@/features/expenses/utils/splitsHelpers";
 import { useEffect, useCallback } from "react";
-import { calculateTotalShares } from "@/utils/totalSharesCalculator";
-import { calculateSplitCosts } from "@/utils/splitCalculator";
+import { calculateTotalShares } from "@/features/expenses/utils/totalSharesCalculator";
+import { calculateSplitCosts } from "@/features/expenses/utils/splitCalculator";
 import { formatCurrency } from "@/utils/formatCurrency";
 
 type MemberSplitRowProps = {

@@ -1,5 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import GroupExpenses from "./GroupExpenses";
+import ExpenseList from "../../features/expenses/components/ExpenseList";
 import GroupBalances from "./GroupBalances";
 import GroupSettlements from "./GroupSettlements";
 
@@ -27,7 +27,7 @@ const GroupTabs = () => {
         <p>Activity Logs</p>
       </TabsContent>
       <TabsContent value="expenses">
-        <GroupExpenses />
+        <ExpenseList />
       </TabsContent>
       <TabsContent value="balances">
         <GroupBalances />

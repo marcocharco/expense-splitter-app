@@ -13,7 +13,7 @@ import {
   getSelectedTotal,
   isOverTotalLimit,
   errorMsgForLimit,
-} from "@/utils/splitsHelpers";
+} from "@/features/expenses/utils/splitsHelpers";
 
 type ExpenseSplitDetailsInputProps = {
   groupMembers: Member[];

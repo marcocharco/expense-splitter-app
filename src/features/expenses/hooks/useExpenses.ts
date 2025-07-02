@@ -1,7 +1,10 @@
 "use client";
 
-import { addNewExpense, updateExpense } from "@/lib/actions/expense.actions";
-import { getGroupExpenses } from "@/lib/queries/getGroupExpenses";
+import {
+  addNewExpense,
+  updateExpense,
+} from "@/features/expenses/server/expense.actions";
+import { getGroupExpenses } from "@/features/expenses/queries/getGroupExpenses";
 import { NewExpense } from "@/types";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
