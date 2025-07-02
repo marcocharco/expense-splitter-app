@@ -11,7 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import SettlementForm from "./SettlementForm";
+import SettlementForm from "./forms/SettlementForm";
 
 const NewSettlementSheet = () => {
   const [open, setOpen] = useState(false);

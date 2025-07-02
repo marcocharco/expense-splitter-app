@@ -15,7 +15,7 @@ import { Form, FormLabel } from "@/components/ui/form";
 import MemberSelectInput from "@/components/forms/MemberSelectInput";
 import DatePickerInput from "@/components/forms/DatePickerInput";
 import NoteInput from "@/components/forms/NoteInput";
-import { getGroupSettlements } from "@/lib/queries/getGroupSettlements";
+import { getGroupSettlements } from "@/features/settlements/queries/getGroupSettlements";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useExpenses } from "@/features/expenses/hooks/useExpenses";

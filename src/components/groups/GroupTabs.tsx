@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ExpenseList from "../../features/expenses/components/ExpenseList";
 import GroupBalances from "./GroupBalances";
-import GroupSettlements from "./GroupSettlements";
+import SettlementList from "../../features/settlements/components/SettlementList";
 
 const GroupTabs = () => {
   return (
@@ -37,7 +37,7 @@ const GroupTabs = () => {
       </TabsContent>
       <TabsContent value="settlements">
         {/* <p>List of Settlements</p> */}
-        <GroupSettlements />
+        <SettlementList />
       </TabsContent>
     </Tabs>
   );

@@ -1,9 +1,9 @@
 "use client";
 import { useCurrentGroup } from "@/context/CurrentGroupContext";
-import { getGroupSettlements } from "@/lib/queries/getGroupSettlements";
+import { getGroupSettlements } from "@/features/settlements/queries/getGroupSettlements";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-const GroupSettlements = () => {
+const SettlementList = () => {
   const group = useCurrentGroup();
   if (!group) {
     throw new Error();
@@ -33,4 +33,4 @@ const GroupSettlements = () => {
   );
 };
 
-export default GroupSettlements;
+export default SettlementList;
