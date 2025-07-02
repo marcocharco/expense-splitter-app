@@ -12,7 +12,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-import PaymentForm from "./PaymentForm";
+import PaymentForm from "./forms/PaymentForm";
 
 const NewPaymentSheet = () => {
   const [open, setOpen] = useState(false);

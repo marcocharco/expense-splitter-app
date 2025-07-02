@@ -4,17 +4,17 @@ import { useUser } from "@/context/UserContext";
 import {
   addNewExpensePayment,
   addNewSettlementPayment,
-} from "@/lib/actions/payment.actions";
-import { PaymentFormSchema } from "@/lib/utils";
+} from "@/features/payments/server/payment.actions";
+import { PaymentFormSchema } from "../../schemas/paymentFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import AmountInput from "@/components/forms/AmountInput";
 import { Form, FormLabel } from "@/components/ui/form";
-import MemberSelectInput from "../MemberSelectInput";
-import DatePickerInput from "../DatePickerInput";
-import NoteInput from "../NoteInput";
+import MemberSelectInput from "@/components/forms/MemberSelectInput";
+import DatePickerInput from "@/components/forms/DatePickerInput";
+import NoteInput from "@/components/forms/NoteInput";
 import { getGroupSettlements } from "@/lib/queries/getGroupSettlements";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
