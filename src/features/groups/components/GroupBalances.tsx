@@ -1,5 +1,5 @@
 "use client";
-import { calculateMemberBalances } from "@/utils/groupBalanceCalculator";
+import { calculateMemberBalances } from "@/features/groups/utils/groupBalanceCalculator";
 import {
   Table,
   TableBody,
@@ -9,9 +9,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useCurrentGroup } from "@/context/CurrentGroupContext";
+import { useCurrentGroup } from "@/features/groups/context/CurrentGroupContext";
 import { formatCurrency } from "@/utils/formatCurrency";
-import { useBalanceInputs } from "@/hooks/useBalanceInputs";
+import { useBalanceInputs } from "@/features/groups/hooks/useBalanceInputs";
 import { useMemo } from "react";
 
 const GroupBalances = () => {

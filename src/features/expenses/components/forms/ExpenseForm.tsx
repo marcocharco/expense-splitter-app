@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ExpenseFormSchema } from "../../schemas/expenseFormSchema";
 
 import { useUser } from "@/context/UserContext";
-import { useCurrentGroup } from "@/context/CurrentGroupContext";
+import { useCurrentGroup } from "@/features/groups/context/CurrentGroupContext";
 
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";

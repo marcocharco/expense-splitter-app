@@ -1,5 +1,5 @@
 "use client";
-import { useCurrentGroup } from "@/context/CurrentGroupContext";
+import { useCurrentGroup } from "@/features/groups/context/CurrentGroupContext";
 import { getGroupSettlements } from "@/features/settlements/queries/getGroupSettlements";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 

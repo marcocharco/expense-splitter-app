@@ -1,6 +1,6 @@
-import GroupTabs from "@/components/groups/GroupTabs";
+import GroupTabs from "@/features/groups/components/GroupTabs";
 
-import { getGroupBySlug } from "@/lib/queries/getGroupBySlug";
+import { getGroupBySlug } from "@/features/groups/queries/getGroupBySlug";
 import NewExpenseSheet from "@/features/expenses/components/NewExpenseSheet";
 import NewPaymentSheet from "@/features/payments/components/NewPaymentSheet";
 import NewSettlementSheet from "@/features/settlements/components/NewSettlementSheet";

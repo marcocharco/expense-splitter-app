@@ -6,9 +6,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { startNewSettlement } from "@/features/settlements/server/settlement.actions";
-import { useCurrentGroup } from "@/context/CurrentGroupContext";
+import { useCurrentGroup } from "@/features/groups/context/CurrentGroupContext";
 import { useUser } from "@/context/UserContext";
-import { calculateNetBalances } from "@/utils/groupBalanceCalculator";
+import { calculateNetBalances } from "@/features/groups/utils/groupBalanceCalculator";
 import { useQueryClient } from "@tanstack/react-query";
 
 const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {

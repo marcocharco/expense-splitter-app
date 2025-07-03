@@ -1,4 +1,4 @@
-import GroupList from "@/components/root/GroupList";
+import GroupList from "@/features/groups/components/GroupList";
 import Header from "@/components/root/Header";
 
 const Home = () => {

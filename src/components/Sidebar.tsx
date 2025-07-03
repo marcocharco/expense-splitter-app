@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { signOut } from "@/features/auth/server/auth.actions";
-import { useUserGroups } from "@/context/UserGroupsContext";
+import { useUserGroups } from "@/features/groups/context/UserGroupsContext";
 import { useUser } from "@/context/UserContext";
 
 const Sidebar = () => {

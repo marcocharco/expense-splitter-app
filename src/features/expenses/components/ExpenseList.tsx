@@ -14,7 +14,7 @@ import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import { Expense } from "@/types";
 import UpdateExpenseSheet from "@/features/expenses/components/UpdateExpenseSheet";
 import { formatCurrency } from "@/utils/formatCurrency";
-import { useCurrentGroup } from "@/context/CurrentGroupContext";
+import { useCurrentGroup } from "@/features/groups/context/CurrentGroupContext";
 import { formatDisplayDate } from "@/utils/formatDate";
 
 function getPaymentStatus(expense: Expense) {

@@ -1,6 +1,6 @@
 import Sidebar from "@/components/Sidebar";
-import { UserGroupsProvider } from "@/context/UserGroupsContext";
-import { getUserGroups } from "@/lib/queries/getUserGroups";
+import { UserGroupsProvider } from "@/features/groups/context/UserGroupsContext";
+import { getUserGroups } from "@/features/groups/queries/getUserGroups";
 
 export default async function RootLayout({
   children,
