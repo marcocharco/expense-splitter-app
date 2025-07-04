@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { signOut } from "@/features/auth/server/auth.actions";
 import { useUserGroups } from "@/features/groups/context/UserGroupsContext";
-import { useUser } from "@/context/UserContext";
+import { useUser } from "@/features/users/context/UserContext";
 
 const Sidebar = () => {
   const { groups } = useUserGroups();

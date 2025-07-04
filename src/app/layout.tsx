@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { DM_Sans, Raleway, Inter } from "next/font/google";
 import "./globals.css";
-import { UserProvider } from "@/context/UserContext";
-import { getUserProfileServer } from "@/lib/queries/getUserProfileServer";
+import { UserProvider } from "@/features/users/context/UserContext";
+import { getUserProfileServer } from "@/features/users/queries/getUserProfileServer";
 import ReactQueryProvider from "@/components/ReactQueryProvider";
 
 const dmSans = DM_Sans({

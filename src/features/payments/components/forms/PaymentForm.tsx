@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useCurrentGroup } from "@/features/groups/context/CurrentGroupContext";
-import { useUser } from "@/context/UserContext";
+import { useUser } from "@/features/users/context/UserContext";
 import {
   addNewExpensePayment,
   addNewSettlementPayment,

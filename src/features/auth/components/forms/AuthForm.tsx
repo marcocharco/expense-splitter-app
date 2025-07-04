@@ -12,8 +12,8 @@ import AuthInput from "./AuthInput";
 import { authFormSchema } from "../../schemas/authFormSchema";
 import Link from "next/link";
 import { signIn, signUp } from "@/features/auth/server/auth.actions";
-import { useUser } from "@/context/UserContext";
-import { getUserProfile } from "@/lib/queries/getUserProfile";
+import { useUser } from "@/features/users/context/UserContext";
+import { getUserProfile } from "@/features/users/queries/getUserProfile";
 
 const AuthForm = ({ type }: { type: "sign-in" | "sign-up" }) => {
   const [isLoading, setIsLoading] = useState(false);

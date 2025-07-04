@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useUser } from "@/context/UserContext";
+import { useUser } from "@/features/users/context/UserContext";
 
 const Header = () => {
   const { user } = useUser();
