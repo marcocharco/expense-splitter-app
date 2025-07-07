@@ -14,7 +14,7 @@ import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 
 import AmountInput from "@/components/forms/AmountInput";
-import ExpenseTitleInput from "@/features/expenses/components/forms/ExpenseTitleInput";
+import TitleInput from "@/components/forms/TitleInput";
 import MemberSelectInput from "@/components/forms/MemberSelectInput";
 import DatePickerInput from "@/components/forms/DatePickerInput";
 import ExpenseSplitTypeInput from "@/features/expenses/components/forms/ExpenseSplitTypeInput";
@@ -102,7 +102,12 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
         className="space-y-8"
         autoComplete="off"
       >
-        <ExpenseTitleInput control={form.control} />
+        <TitleInput
+          control={form.control}
+          name="title"
+          label="Title"
+          placeholder="e.g. Grocery bill, Flight tickets, etc."
+        />
 
         <AmountInput control={form.control} name="amount" />
 
