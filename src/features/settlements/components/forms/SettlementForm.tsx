@@ -8,7 +8,7 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import { startNewSettlement } from "@/features/settlements/server/settlement.actions";
 import { useCurrentGroup } from "@/features/groups/context/CurrentGroupContext";
 import { useUser } from "@/features/users/context/UserContext";
-import { calculateNetBalances } from "@/features/groups/utils/groupBalanceCalculator";
+import { calculateSettlementBalances } from "@/features/settlements/utils/settlementBalanceCalculator";
 import { useQueryClient } from "@tanstack/react-query";
 
 const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
@@ -55,7 +55,7 @@ const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
     const selectedExpenseIds = selectedExpenses.map((expense) => expense.id);
 
-    const balances = calculateNetBalances({
+    const balances = calculateSettlementBalances({
       expenses: selectedExpenses,
     });
 
