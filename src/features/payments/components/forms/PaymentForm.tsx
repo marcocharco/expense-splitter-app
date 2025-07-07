@@ -5,7 +5,7 @@ import {
   addNewExpensePayment,
   addNewSettlementPayment,
 } from "@/features/payments/server/payment.actions";
-import { PaymentFormSchema } from "../../schemas/paymentFormSchema";
+import { PaymentFormSchema } from "@/features/payments/schemas/paymentFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";

@@ -1,6 +1,6 @@
 "use client";
 
-import GroupCard from "./GroupCard";
+import GroupCard from "@/features/groups/components/GroupCard";
 import { useUserGroups } from "@/features/groups/context/UserGroupsContext";
 
 const GroupList = () => {

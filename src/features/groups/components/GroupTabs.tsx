@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ExpenseList from "../../expenses/components/ExpenseList";
-import GroupBalances from "./GroupBalances";
-import SettlementList from "../../settlements/components/SettlementList";
+import ExpenseList from "@/features/expenses/components/ExpenseList";
+import GroupBalances from "@/features/groups/components/GroupBalances";
+import SettlementList from "@/features/settlements/components/SettlementList";
 
 const GroupTabs = () => {
   return (

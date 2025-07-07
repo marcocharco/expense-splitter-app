@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Control, FieldPath } from "react-hook-form";
 
 import { z } from "zod";
-import { authFormSchema } from "../../schemas/authFormSchema";
+import { authFormSchema } from "@/features/auth/schemas/authFormSchema";
 
 interface CustomInputProps {
   control: Control<z.infer<ReturnType<typeof authFormSchema>>>;

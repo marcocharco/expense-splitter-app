@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { ExpenseFormSchema } from "@/lib/utils";
+import { ExpenseFormSchema } from "@/features/expenses/schemas/expenseFormSchema";
 import { Control } from "react-hook-form";
 import { z } from "zod";
 

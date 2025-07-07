@@ -8,8 +8,8 @@ import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import AuthInput from "./AuthInput";
-import { authFormSchema } from "../../schemas/authFormSchema";
+import AuthInput from "@/features/auth/components/forms/AuthInput";
+import { authFormSchema } from "@/features/auth/schemas/authFormSchema";
 import Link from "next/link";
 import { signIn, signUp } from "@/features/auth/server/auth.actions";
 import { useUser } from "@/features/users/context/UserContext";

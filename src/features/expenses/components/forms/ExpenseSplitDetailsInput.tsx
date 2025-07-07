@@ -3,11 +3,11 @@ import { Control, UseFormReturn, useWatch } from "react-hook-form";
 
 import { Member } from "@/types";
 
-import { ExpenseFormSchema } from "@/lib/utils";
+import { ExpenseFormSchema } from "@/features/expenses/schemas/expenseFormSchema";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { FormField, FormLabel, FormMessage } from "@/components/ui/form";
-import MemberSplitRow from "./MemberSplitRow";
+import MemberSplitRow from "@/features/expenses/components/forms/MemberSplitRow";
 
 import {
   getSelectedTotal,

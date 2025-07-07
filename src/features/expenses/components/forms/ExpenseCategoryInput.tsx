@@ -18,7 +18,7 @@ import { getExpenseCategories } from "@/features/expenses/queries/getExpenseCate
 import { Control } from "react-hook-form";
 
 import { z } from "zod";
-import { ExpenseFormSchema } from "@/lib/utils";
+import { ExpenseFormSchema } from "@/features/expenses/schemas/expenseFormSchema";
 
 import { useQuery } from "@tanstack/react-query";
 

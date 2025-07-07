@@ -1,6 +1,6 @@
 import { FormField, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ExpenseFormSchema } from "@/lib/utils";
+import { ExpenseFormSchema } from "@/features/expenses/schemas/expenseFormSchema";
 import { Member, SplitType } from "@/types";
 import { Control, UseFormReturn } from "react-hook-form";
 import { z } from "zod";

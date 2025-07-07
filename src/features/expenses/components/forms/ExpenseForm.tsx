@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ExpenseFormSchema } from "../../schemas/expenseFormSchema";
+import { ExpenseFormSchema } from "@/features/expenses/schemas/expenseFormSchema";
 
 import { useUser } from "@/features/users/context/UserContext";
 import { useCurrentGroup } from "@/features/groups/context/CurrentGroupContext";
@@ -14,12 +14,12 @@ import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 
 import AmountInput from "@/components/forms/AmountInput";
-import ExpenseTitleInput from "./ExpenseTitleInput";
+import ExpenseTitleInput from "@/features/expenses/components/forms/ExpenseTitleInput";
 import MemberSelectInput from "@/components/forms/MemberSelectInput";
 import DatePickerInput from "@/components/forms/DatePickerInput";
-import ExpenseSplitTypeInput from "./ExpenseSplitTypeInput";
-import ExpenseSplitDetailsInput from "./ExpenseSplitDetailsInput";
-import ExpenseCategoryInput from "./ExpenseCategoryInput";
+import ExpenseSplitTypeInput from "@/features/expenses/components/forms/ExpenseSplitTypeInput";
+import ExpenseSplitDetailsInput from "@/features/expenses/components/forms/ExpenseSplitDetailsInput";
+import ExpenseCategoryInput from "@/features/expenses/components/forms/ExpenseCategoryInput";
 import { Expense } from "@/types";
 import { toFormValues } from "@/features/expenses/utils/expenseMapper";
 import { useExpenses } from "@/features/expenses/hooks/useExpenses";

@@ -1,5 +1,5 @@
 import { SplitType } from "@/types";
-import { calculateTotalShares } from "./totalSharesCalculator";
+import { calculateTotalShares } from "@/features/expenses/utils/totalSharesCalculator";
 
 export type splitInput = {
   type: SplitType;

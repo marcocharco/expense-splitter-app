@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { Control } from "react-hook-form";
 
-import { ExpenseFormSchema } from "@/lib/utils";
+import { ExpenseFormSchema } from "@/features/expenses/schemas/expenseFormSchema";
 
 import {
   FormControl,

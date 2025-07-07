@@ -1,9 +1,14 @@
-import { PaymentFormSchema } from "@/lib/utils";
+import { PaymentFormSchema } from "@/features/payments/schemas/paymentFormSchema";
 import React from "react";
 import { Control } from "react-hook-form";
 import { z } from "zod";
-import { FormControl, FormField, FormLabel, FormMessage } from "../ui/form";
-import { Input } from "../ui/input";
+import {
+  FormControl,
+  FormField,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 type NoteInputProps = {
   control: Control<z.infer<ReturnType<typeof PaymentFormSchema>>>;
