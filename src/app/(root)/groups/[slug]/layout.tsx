@@ -12,7 +12,7 @@ export default async function GroupLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
   const group = await getGroupBySlug(slug);

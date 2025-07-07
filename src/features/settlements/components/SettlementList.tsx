@@ -1,19 +1,14 @@
 "use client";
 import { useCurrentGroup } from "@/features/groups/context/CurrentGroupContext";
 import { getGroupSettlements } from "@/features/settlements/queries/getGroupSettlements";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const SettlementList = () => {
   const group = useCurrentGroup();
   if (!group) {
     throw new Error();
   }
-  const queryClient = useQueryClient();
-  const {
-    data: settlements,
-    isLoading,
-    isError,
-  } = useQuery({
+  const { data: settlements } = useQuery({
     queryKey: ["groupSettlements", group.id],
     queryFn: () => getGroupSettlements(group.id),
   });

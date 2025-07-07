@@ -8,7 +8,7 @@ import NewSettlementSheet from "@/features/settlements/components/NewSettlementS
 const GroupPage = async ({
   params,
 }: Readonly<{
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }>) => {
   const { slug } = await params;
   const group = await getGroupBySlug(slug);

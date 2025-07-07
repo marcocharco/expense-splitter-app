@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 // import ExpenseForm from "@/components/forms/newExpense/ExpenseForm";
 
-const AddExpense = async ({ params }: { params: { slug: string } }) => {
-  // const params = useParams();
-  // const groupSlug = params.slug;
+const AddExpense = async ({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) => {
   const { slug } = await params;
 
   return (
