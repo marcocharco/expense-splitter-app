@@ -6,6 +6,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { getGroupExpenses } from "@/features/expenses/queries/getGroupExpensesServer";
+import { getUnsettledTransactions } from "@/features/groups/queries/getUnsettledTransactionsServer";
 
 export default async function GroupLayout({
   children,
@@ -20,10 +21,17 @@ export default async function GroupLayout({
 
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery({
-    queryKey: ["groupExpenses", group.id],
-    queryFn: () => getGroupExpenses(group.id),
-  });
+  // prefetch group expenses and inputs for balance calculations
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: ["groupExpenses", group.id],
+      queryFn: () => getGroupExpenses(group.id),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["groupBalances", group.id],
+      queryFn: () => getUnsettledTransactions(group.id),
+    }),
+  ]);
 
   return (
     <CurrentGroupProvider group={group}>
