@@ -75,6 +75,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
           paid_by: user.id,
           paid_to: values.paidTo,
           amount: values.amount,
+          date: values.date,
           settlement_id: settlementId,
           note: values.note,
         });
@@ -84,6 +85,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
           paid_by: user.id,
           paid_to: values.paidTo,
           amount: values.amount,
+          date: values.date,
           selectedExpenseSplits: selectedExpenses,
           note: values.note,
         });

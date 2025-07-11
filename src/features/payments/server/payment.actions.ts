@@ -7,6 +7,7 @@ export async function addNewSettlementPayment({
   paid_by,
   paid_to,
   amount,
+  date,
   settlement_id,
   note,
 }: {
@@ -14,6 +15,7 @@ export async function addNewSettlementPayment({
   paid_by: string;
   paid_to: string;
   amount: number;
+  date: string;
   settlement_id?: string | null;
   note?: string | null;
 }) {
@@ -24,6 +26,7 @@ export async function addNewSettlementPayment({
     _paid_by: paid_by,
     _paid_to: paid_to,
     _amount: amount,
+    _date: date,
     _settlement_id: settlement_id,
     _note: note,
   });
@@ -38,6 +41,7 @@ export async function addNewExpensePayment({
   paid_by,
   paid_to,
   amount,
+  date,
   note,
   selectedExpenseSplits,
 }: {
@@ -45,6 +49,7 @@ export async function addNewExpensePayment({
   paid_by: string;
   paid_to: string;
   amount: number;
+  date: string;
   note?: string;
   selectedExpenseSplits: { expenseId: string; splitAmount: number }[];
 }) {
@@ -55,6 +60,7 @@ export async function addNewExpensePayment({
     _paid_by: paid_by,
     _paid_to: paid_to,
     _amount: amount,
+    _date: date,
     _note: note,
     _expenses: selectedExpenseSplits,
   });
