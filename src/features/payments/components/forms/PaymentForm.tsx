@@ -1,10 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useCurrentGroup } from "@/features/groups/context/CurrentGroupContext";
 import { useUser } from "@/features/users/context/UserContext";
-import {
-  addNewExpensePayment,
-  addNewSettlementPayment,
-} from "@/features/payments/server/payment.actions";
+import { usePayments } from "@/features/payments/hooks/usePayments";
 import { PaymentFormSchema } from "@/features/payments/schemas/paymentFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
@@ -16,7 +13,7 @@ import MemberSelectInput from "@/components/forms/MemberSelectInput";
 import DatePickerInput from "@/components/forms/DatePickerInput";
 import NoteInput from "@/components/forms/NoteInput";
 import { getGroupSettlements } from "@/features/settlements/queries/getGroupSettlements";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -33,7 +30,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   const groupMembers = group.members;
   const { expenses } = useExpenses(group.id);
-  const queryClient = useQueryClient();
+  const { addSettlementPayment, addExpensePayment } = usePayments(group.id);
 
   const { data: settlements = [] } = useQuery({
     queryKey: ["group-settlements", group.id],
@@ -70,8 +67,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
     setIsLoading(true);
     try {
       if (paymentType === "settlement") {
-        await addNewSettlementPayment({
-          groupId: group.id,
+        await addSettlementPayment({
           paid_by: user.id,
           paid_to: values.paidTo,
           amount: values.amount,
@@ -80,8 +76,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
           note: values.note,
         });
       } else if (paymentType === "balance") {
-        await addNewExpensePayment({
-          groupId: group.id,
+        await addExpensePayment({
           paid_by: user.id,
           paid_to: values.paidTo,
           amount: values.amount,
@@ -90,8 +85,6 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
           note: values.note,
         });
       }
-      queryClient.invalidateQueries({ queryKey: ["groupBalances", group.id] });
-      queryClient.invalidateQueries({ queryKey: ["groupExpenses", group.id] });
       onSuccess();
     } catch (error) {
       console.error(error);

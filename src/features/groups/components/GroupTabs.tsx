@@ -1,6 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ExpenseList from "@/features/expenses/components/ExpenseList";
 import GroupBalances from "@/features/groups/components/GroupBalances";
+import PaymentList from "@/features/payments/components/PaymentList";
 import SettlementList from "@/features/settlements/components/SettlementList";
 
 const GroupTabs = () => {
@@ -33,7 +34,8 @@ const GroupTabs = () => {
         <GroupBalances />
       </TabsContent>
       <TabsContent value="payments">
-        <p>List of Payments</p>
+        {/* <p>List of Payments</p> */}
+        <PaymentList />
       </TabsContent>
       <TabsContent value="settlements">
         {/* <p>List of Settlements</p> */}
