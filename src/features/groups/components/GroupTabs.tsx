@@ -1,10 +1,17 @@
+"use client";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ExpenseList from "@/features/expenses/components/ExpenseList";
+import { DataTable } from "@/components/DataTable";
+import { columns } from "@/features/expenses/components/TableColumns";
+import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import GroupBalances from "@/features/groups/components/GroupBalances";
 import PaymentList from "@/features/payments/components/PaymentList";
 import SettlementList from "@/features/settlements/components/SettlementList";
+import { useCurrentGroup } from "../context/CurrentGroupContext";
 
 const GroupTabs = () => {
+  const group = useCurrentGroup();
+  const { expenses } = useExpenses(group?.id ?? "");
   return (
     <Tabs defaultValue="expenses" className="w-full !gap-4">
       <TabsList className="flex gap-4">
@@ -28,7 +35,7 @@ const GroupTabs = () => {
         <p>Activity Logs</p>
       </TabsContent>
       <TabsContent value="expenses">
-        <ExpenseList />
+        <DataTable columns={columns} data={expenses} />
       </TabsContent>
       <TabsContent value="payments">
         <PaymentList />
