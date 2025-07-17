@@ -14,14 +14,14 @@ const GroupTabs = () => {
         <TabsTrigger value="expenses" className="px-2">
           Expenses
         </TabsTrigger>
-        <TabsTrigger value="balances" className="px-2">
-          Balances
-        </TabsTrigger>
         <TabsTrigger value="payments" className="px-2">
           Payments
         </TabsTrigger>
         <TabsTrigger value="settlements" className="px-2">
           Settlements
+        </TabsTrigger>
+        <TabsTrigger value="members" className="px-2">
+          Members
         </TabsTrigger>
       </TabsList>
       <TabsContent value="activity" className="justify-center">
@@ -30,16 +30,14 @@ const GroupTabs = () => {
       <TabsContent value="expenses">
         <ExpenseList />
       </TabsContent>
-      <TabsContent value="balances">
-        <GroupBalances />
-      </TabsContent>
       <TabsContent value="payments">
-        {/* <p>List of Payments</p> */}
         <PaymentList />
       </TabsContent>
       <TabsContent value="settlements">
-        {/* <p>List of Settlements</p> */}
         <SettlementList />
+      </TabsContent>
+      <TabsContent value="members">
+        <GroupBalances />
       </TabsContent>
     </Tabs>
   );
