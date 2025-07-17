@@ -11,10 +11,14 @@ function getPaymentStatus(expense: Expense) {
     return "In Settlement";
   }
 
-  const total = expense.splits.length;
-  const paid = expense.splits.filter((s) => s.remaining_owing === 0).length;
+  const total = expense.splits.filter(
+    (s) => expense.paid_by.id !== s.user.id
+  ).length;
+  const paid = expense.splits.filter(
+    (s) => s.remaining_owing === 0 && s.initial_owing > 0
+  ).length;
+
   if (paid === total) return "Paid";
-  if (paid === 0) return "Unpaid";
   return `${paid}/${total} Paid`;
 }
 
