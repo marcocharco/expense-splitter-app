@@ -56,6 +56,10 @@ export const createColumns = (
       const paidBy = row.original.paid_by;
       return <div>{paidBy.name}</div>;
     },
+    filterFn: (row, id, value) => {
+      const member = row.original.paid_by;
+      return value.includes(member?.id || "");
+    },
   },
   {
     accessorKey: "date",
@@ -73,6 +77,10 @@ export const createColumns = (
       const category = row.original.category;
       return <div>{category ? category.icon + "  " + category.name : "-"}</div>;
     },
+    filterFn: (row, id, value) => {
+      const category = row.original.category;
+      return value.includes(category?.id?.toString() || "");
+    },
   },
   {
     id: "status",
@@ -80,6 +88,20 @@ export const createColumns = (
     cell: ({ row }) => {
       const expense = row.original;
       return <div>{getPaymentStatus(expense)}</div>;
+    },
+    filterFn: (row, id, value) => {
+      const status = getPaymentStatus(row.original);
+
+      let statusCategory;
+      if (status === "Paid") {
+        statusCategory = "paid";
+      } else if (status === "In Settlement") {
+        statusCategory = "in settlement";
+      } else {
+        statusCategory = "unpaid";
+      }
+
+      return value.includes(statusCategory);
     },
   },
   {

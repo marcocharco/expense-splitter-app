@@ -19,6 +19,12 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import { X } from "lucide-react";
+import { DataTableFacetedFilter } from "./DataTableFacetedFilter";
+import { useQuery } from "@tanstack/react-query";
+import { getExpenseCategories } from "@/features/expenses/queries/getExpenseCategories";
+import { useCurrentGroup } from "@/features/groups/context/CurrentGroupContext";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -42,9 +48,46 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const isFiltered = table.getState().columnFilters.length > 0;
+
+  const groupData = useCurrentGroup();
+  const groupMembers = groupData?.members ?? [];
+
+  const members =
+    groupMembers.map((member) => ({
+      value: member.id,
+      label: member.name,
+    })) ?? [];
+
+  const statuses = [
+    {
+      value: "paid",
+      label: "Paid",
+    },
+    {
+      value: "unpaid",
+      label: "Unpaid",
+    },
+    {
+      value: "in settlement",
+      label: "In Settlement",
+    },
+  ];
+
+  const { data: categoriesDB } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => getExpenseCategories(),
+  });
+
+  const categories =
+    categoriesDB?.map((category) => ({
+      value: category.id.toString(),
+      label: `${category.icon} ${category.name}`,
+    })) ?? [];
+
   return (
     <>
-      <div className="flex items-center py-4">
+      <div className="flex items-end py-4 gap-2">
         <Input
           placeholder="Search expenses..."
           value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
@@ -53,6 +96,37 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
+        {table.getColumn("paid_by") && (
+          <DataTableFacetedFilter
+            column={table.getColumn("paid_by")}
+            title="Paid By"
+            options={members}
+          />
+        )}
+        {table.getColumn("category") && (
+          <DataTableFacetedFilter
+            column={table.getColumn("category")}
+            title="Category"
+            options={categories}
+          />
+        )}
+        {table.getColumn("status") && (
+          <DataTableFacetedFilter
+            column={table.getColumn("status")}
+            title="Status"
+            options={statuses}
+          />
+        )}
+        {isFiltered && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => table.resetColumnFilters()}
+          >
+            Reset
+            <X />
+          </Button>
+        )}
       </div>
       <Table>
         <TableHeader>
