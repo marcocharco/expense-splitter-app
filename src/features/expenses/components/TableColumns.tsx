@@ -69,6 +69,25 @@ export const createColumns = (
       const formattedDate = formatDisplayDate(date);
       return <div>{formattedDate}</div>;
     },
+    filterFn: (row, id, value) => {
+      if (!value) return true;
+
+      const { type, date, startDate, endDate } = value;
+      const rowDate = new Date(row.getValue("date") as string);
+
+      switch (type) {
+        case "before":
+          return date ? rowDate < date : true;
+        case "after":
+          return date ? rowDate > date : true;
+        case "between":
+          return startDate && endDate
+            ? rowDate >= startDate && rowDate <= endDate
+            : true;
+        default:
+          return true;
+      }
+    },
   },
   {
     accessorKey: "category",

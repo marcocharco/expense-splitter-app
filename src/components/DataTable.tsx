@@ -22,6 +22,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { X } from "lucide-react";
 import { DataTableFacetedFilter } from "./DataTableFacetedFilter";
+import { DataTableDateFilter } from "./DataTableDateFilter";
 import { useQuery } from "@tanstack/react-query";
 import { getExpenseCategories } from "@/features/expenses/queries/getExpenseCategories";
 import { useCurrentGroup } from "@/features/groups/context/CurrentGroupContext";
@@ -94,7 +95,7 @@ export function DataTable<TData, TValue>({
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="min-w-3xs w-3xs"
         />
         {table.getColumn("paid_by") && (
           <DataTableFacetedFilter
@@ -117,6 +118,9 @@ export function DataTable<TData, TValue>({
             options={statuses}
           />
         )}
+        {table.getColumn("date") && (
+          <DataTableDateFilter column={table.getColumn("date")} title="Date" />
+        )}
         {isFiltered && (
           <Button
             variant="ghost"
@@ -134,7 +138,11 @@ export function DataTable<TData, TValue>({
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id} colSpan={header.colSpan}>
+                  <TableHead
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    className={header.id === "title" ? "w-3xs" : undefined}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -158,7 +166,11 @@ export function DataTable<TData, TValue>({
                   <TableCell
                     key={cell.id}
                     className={
-                      cell.column.id === "actions" ? "w-[40px] px-2" : undefined
+                      cell.column.id === "actions"
+                        ? "w-[40px] px-2"
+                        : cell.column.id === "title"
+                        ? "w-3xs"
+                        : undefined
                     }
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
