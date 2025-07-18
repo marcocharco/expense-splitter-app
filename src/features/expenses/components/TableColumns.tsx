@@ -4,6 +4,16 @@ import { Expense } from "@/types";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { formatDisplayDate } from "@/utils/formatDate";
 import { ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 function getPaymentStatus(expense: Expense) {
   if (expense.settlement) {
@@ -22,7 +32,9 @@ function getPaymentStatus(expense: Expense) {
   return `${paid}/${total} Paid`;
 }
 
-export const columns: ColumnDef<Expense>[] = [
+export const createColumns = (
+  onEditExpense: (expense: Expense) => void
+): ColumnDef<Expense>[] => [
   {
     accessorKey: "title",
     header: "Title",
@@ -70,4 +82,32 @@ export const columns: ColumnDef<Expense>[] = [
       return <div>{getPaymentStatus(expense)}</div>;
     },
   },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const expense = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem>View details</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onEditExpense(expense)}>
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
 ];
+
+// For backward compatibility
+export const columns = createColumns(() => {});

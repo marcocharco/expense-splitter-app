@@ -59,8 +59,12 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
           memberSplits: groupMembers.map((m) => ({ userId: m.id, weight: 0 })),
         };
 
+  const unpaid =
+    initialExpense?.splits.filter((s) => s.remaining_owing != 0).length === 0;
+
+  // disabled if in settlement or is paid (no users with remaining owings)
   const disabled =
-    initialExpense && initialExpense?.settlement?.id ? true : false;
+    initialExpense && initialExpense?.settlement?.id ? true : unpaid;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),

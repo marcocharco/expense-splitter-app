@@ -15,10 +15,9 @@ const UpdateExpenseSheet = ({
   onOpenChange,
 }: {
   expense: Expense | null;
-  onOpenChange: (e: Expense | null) => void;
+  onOpenChange: (expense: Expense | null) => void;
 }) => {
   return (
-    // open or closed determined by whether or not a current expense is selected
     <Sheet
       open={Boolean(expense)}
       onOpenChange={(isOpen) => !isOpen && onOpenChange(null)}
@@ -35,7 +34,7 @@ const UpdateExpenseSheet = ({
             </SheetHeader>
             <ExpenseForm
               type="updateExpense"
-              initialExpense={expense!}
+              initialExpense={expense}
               onSuccess={() => onOpenChange(null)}
             />
           </>
