@@ -152,9 +152,12 @@ const MemberSplitRow = ({
                     ? 100
                     : splitType === "custom"
                     ? currentAmount
+                    : splitType === "shares"
+                    ? 99999
                     : Infinity;
 
                 if (numValue > maxValue) {
+                  if (splitType === "shares") return;
                   setError(`memberSplits.${memberIndex}.weight`, {
                     type: "manual",
                     message:
@@ -191,10 +194,6 @@ const MemberSplitRow = ({
                   value = "";
                 }
 
-                // Update input and form
-                if (Number(value) > 100) {
-                  value = value.slice(0, -1);
-                }
                 field.onChange(parseFloat(value) || 0);
               }}
               className="w-32 pr-8 input-no-spinner"
