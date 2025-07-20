@@ -20,7 +20,7 @@ import {
 import { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { X } from "lucide-react";
+import { X, Search } from "lucide-react";
 import { DataTableFacetedFilter } from "./DataTableFacetedFilter";
 import { DataTableDateFilter } from "./DataTableDateFilter";
 import { useQuery } from "@tanstack/react-query";
@@ -89,14 +89,27 @@ export function DataTable<TData, TValue>({
   return (
     <>
       <div className="flex items-end py-4 gap-2">
-        <Input
-          placeholder="Search expenses..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
-          className="min-w-3xs w-3xs"
-        />
+        <div className="relative">
+          <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Search expenses..."
+            value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("title")?.setFilterValue(event.target.value)
+            }
+            className="min-w-3xs w-3xs pl-8 pr-8"
+          />
+          {(table.getColumn("title")?.getFilterValue() as string) && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="absolute right-0 top-1/2 h-full -translate-y-1/2 px-2 hover:bg-transparent"
+              onClick={() => table.getColumn("title")?.setFilterValue("")}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
         {table.getColumn("paid_by") && (
           <DataTableFacetedFilter
             column={table.getColumn("paid_by")}
