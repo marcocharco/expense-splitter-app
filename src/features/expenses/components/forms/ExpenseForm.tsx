@@ -59,17 +59,16 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
           memberSplits: groupMembers.map((m) => ({ userId: m.id, weight: 0 })),
         };
 
-  const unpaid =
-    initialExpense?.splits.filter((s) => s.remaining_owing != 0).length === 0;
+  // const unpaid =
+  //   initialExpense?.splits.filter((s) => s.remaining_owing != 0).length === 0;
 
-  // disabled if in settlement or is paid (no users with remaining owings)
-  const disabled =
-    initialExpense && initialExpense?.settlement?.id ? true : unpaid;
+  // // disabled if in settlement or is paid (no users with remaining owings)
+  // const disabled =
+  //   initialExpense && initialExpense?.settlement?.id ? true : unpaid;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
-    disabled,
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -137,11 +136,7 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
           clearErrors={form.clearErrors}
         />
 
-        <Button
-          type="submit"
-          className="form-btn"
-          disabled={disabled || isLoading}
-        >
+        <Button type="submit" className="form-btn" disabled={isLoading}>
           {type === "newExpense" ? "Add Expense" : "Update Expense"}
         </Button>
       </form>

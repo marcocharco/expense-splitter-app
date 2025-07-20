@@ -128,6 +128,14 @@ export const createColumns = (
     cell: ({ row }) => {
       const expense = row.original;
 
+      const unpaid =
+        expense.splits.filter(
+          (s) => s.remaining_owing === 0 && s.initial_owing > 0
+        ).length > 0;
+
+      // disabled if in settlement or is paid (>1 users have paid)
+      const editingDisabled = expense?.settlement?.id ? true : unpaid;
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -138,9 +146,11 @@ export const createColumns = (
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem>View details</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onEditExpense(expense)}>
-              Edit
-            </DropdownMenuItem>
+            {!editingDisabled && (
+              <DropdownMenuItem onClick={() => onEditExpense(expense)}>
+                Edit
+              </DropdownMenuItem>
+            )}
             <DropdownMenuSeparator />
             <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
           </DropdownMenuContent>
