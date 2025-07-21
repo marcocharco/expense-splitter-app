@@ -10,16 +10,18 @@ import PaymentList from "@/features/payments/components/PaymentList";
 import SettlementList from "@/features/settlements/components/SettlementList";
 import UpdateExpenseSheet from "@/features/expenses/components/UpdateExpenseSheet";
 import { useCurrentGroup } from "../context/CurrentGroupContext";
+import { useUser } from "@/features/users/context/UserContext";
 import { Expense } from "@/types";
 
 const GroupTabs = () => {
   const group = useCurrentGroup();
+  const { user } = useUser();
   const { expenses } = useExpenses(group?.id ?? "");
   const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
 
   const columns = createColumns((expense: Expense) => {
     setSelectedExpense(expense);
-  });
+  }, user?.id);
 
   return (
     <>

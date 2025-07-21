@@ -32,8 +32,16 @@ function getPaymentStatus(expense: Expense) {
   return `${paid}/${total} Paid`;
 }
 
+function getUserShare(expense: Expense, currentUserId: string) {
+  const userSplit = expense.splits.find(
+    (split) => split.user.id === currentUserId
+  );
+  return userSplit ? userSplit.amount : null;
+}
+
 export const createColumns = (
-  onEditExpense: (expense: Expense) => void
+  onEditExpense: (expense: Expense) => void,
+  currentUserId?: string
 ): ColumnDef<Expense>[] => [
   {
     accessorKey: "title",
@@ -47,6 +55,26 @@ export const createColumns = (
       const formattedAmount = formatCurrency(amount);
 
       return <div className="text-right pr-4">{formattedAmount}</div>;
+    },
+  },
+  {
+    id: "yourShare",
+    header: () => <div className="text-right pr-4">Your Share</div>,
+    cell: ({ row }) => {
+      if (!currentUserId) return;
+
+      const expense = row.original;
+      const userShare = getUserShare(expense, currentUserId);
+
+      if (userShare === null) {
+        return <div className="text-right pr-4">N/A</div>;
+      }
+
+      return (
+        <div className="text-right pr-4">
+          <span>{formatCurrency(userShare)}</span>
+        </div>
+      );
     },
   },
   {
