@@ -78,7 +78,7 @@ export const createColumns = (
     },
   },
   {
-    accessorKey: "paid_by",
+    accessorKey: "paidBy",
     header: "Paid By",
     cell: ({ row }) => {
       const paidBy = row.original.paid_by;

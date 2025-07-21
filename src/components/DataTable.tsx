@@ -110,9 +110,9 @@ export function DataTable<TData, TValue>({
             </Button>
           )}
         </div>
-        {table.getColumn("paid_by") && (
+        {table.getColumn("paidBy") && (
           <DataTableFacetedFilter
-            column={table.getColumn("paid_by")}
+            column={table.getColumn("paidBy")}
             title="Paid By"
             options={members}
           />
