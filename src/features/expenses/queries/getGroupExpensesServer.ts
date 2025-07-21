@@ -25,6 +25,7 @@ export async function getGroupExpenses(groupId: string) {
     )
     .eq("group_id", groupId)
     .order("date", { ascending: false })
+    .order("created_at", { ascending: false })
     .overrideTypes<Expense[], { merge: false }>();
 
   // console.log(data);
