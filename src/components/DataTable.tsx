@@ -5,6 +5,7 @@ import {
   flexRender,
   getFilteredRowModel,
   getCoreRowModel,
+  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 
@@ -18,7 +19,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { X, Search } from "lucide-react";
+import { X, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { DataTableFacetedFilter } from "./DataTableFacetedFilter";
 import { DataTableDateFilter } from "./DataTableDateFilter";
 import { useQuery } from "@tanstack/react-query";
@@ -43,6 +44,7 @@ export function DataTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
     state: {
       columnFilters,
     },
@@ -204,6 +206,24 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </div>
     </>
   );
 }
