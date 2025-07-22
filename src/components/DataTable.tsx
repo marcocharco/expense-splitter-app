@@ -2,7 +2,6 @@
 
 import {
   ColumnDef,
-  ColumnFiltersState,
   flexRender,
   getFilteredRowModel,
   getCoreRowModel,
@@ -17,7 +16,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { X, Search } from "lucide-react";
@@ -26,6 +24,7 @@ import { DataTableDateFilter } from "./DataTableDateFilter";
 import { useQuery } from "@tanstack/react-query";
 import { getExpenseCategories } from "@/features/expenses/queries/getExpenseCategories";
 import { useCurrentGroup } from "@/features/groups/context/CurrentGroupContext";
+import { useExpenseFilters } from "@/features/expenses/contexts/ExpenseFiltersContext";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -36,7 +35,7 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const { columnFilters, setColumnFilters } = useExpenseFilters();
 
   const table = useReactTable({
     data,

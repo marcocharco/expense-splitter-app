@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { getGroupExpenses } from "@/features/expenses/queries/getGroupExpensesServer";
 import { getUnsettledTransactions } from "@/features/groups/queries/getUnsettledTransactionsServer";
+import { ExpenseFiltersProvider } from "@/features/expenses/contexts/ExpenseFiltersContext";
 
 export default async function GroupLayout({
   children,
@@ -35,9 +36,11 @@ export default async function GroupLayout({
 
   return (
     <CurrentGroupProvider group={group}>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        {children}
-      </HydrationBoundary>
+      <ExpenseFiltersProvider>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          {children}
+        </HydrationBoundary>
+      </ExpenseFiltersProvider>
     </CurrentGroupProvider>
   );
 }
