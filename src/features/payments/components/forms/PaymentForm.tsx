@@ -33,7 +33,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const { addSettlementPayment, addExpensePayment } = usePayments(group.id);
 
   const { data: settlements = [] } = useQuery({
-    queryKey: ["group-settlements", group.id],
+    queryKey: ["groupSettlements", group.id],
     queryFn: () => getGroupSettlements(group.id),
   });
   const [settlementId, setSettlementId] = useState<string | null>(null);
