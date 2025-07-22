@@ -109,40 +109,45 @@ export function DataTable<TData, TValue>({
             </Button>
           )}
         </div>
-        {table.getColumn("paidBy") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("paidBy")}
-            title="Paid By"
-            options={members}
-          />
-        )}
-        {table.getColumn("category") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("category")}
-            title="Category"
-            options={categories}
-          />
-        )}
-        {table.getColumn("status") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("status")}
-            title="Status"
-            options={statuses}
-          />
-        )}
-        {table.getColumn("date") && (
-          <DataTableDateFilter column={table.getColumn("date")} title="Date" />
-        )}
-        {isFiltered && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => table.resetColumnFilters()}
-          >
-            Reset
-            <X />
-          </Button>
-        )}
+        <div className="flex overflow-x-auto gap-2 no-scrollbar">
+          {table.getColumn("paidBy") && (
+            <DataTableFacetedFilter
+              column={table.getColumn("paidBy")}
+              title="Paid By"
+              options={members}
+            />
+          )}
+          {table.getColumn("category") && (
+            <DataTableFacetedFilter
+              column={table.getColumn("category")}
+              title="Category"
+              options={categories}
+            />
+          )}
+          {table.getColumn("status") && (
+            <DataTableFacetedFilter
+              column={table.getColumn("status")}
+              title="Status"
+              options={statuses}
+            />
+          )}
+          {table.getColumn("date") && (
+            <DataTableDateFilter
+              column={table.getColumn("date")}
+              title="Date"
+            />
+          )}
+          {isFiltered && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => table.resetColumnFilters()}
+            >
+              Reset
+              <X />
+            </Button>
+          )}
+        </div>
       </div>
       <Table>
         <TableHeader>
