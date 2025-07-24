@@ -47,6 +47,9 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     state: {
       columnFilters,
+      columnVisibility: {
+        memberSplits: false, // Hide the memberSplits column
+      },
     },
   });
 
@@ -116,6 +119,13 @@ export function DataTable<TData, TValue>({
             <DataTableFacetedFilter
               column={table.getColumn("paidBy")}
               title="Paid By"
+              options={members}
+            />
+          )}
+          {table.getColumn("memberSplits") && (
+            <DataTableFacetedFilter
+              column={table.getColumn("memberSplits")}
+              title="Includes"
               options={members}
             />
           )}

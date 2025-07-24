@@ -58,7 +58,7 @@ export const createColumns = (
     },
   },
   {
-    id: "yourShare",
+    accessorKey: "yourShare",
     header: () => <div className="text-right pr-4">Your Share</div>,
     cell: ({ row }) => {
       if (!currentUserId) return;
@@ -130,7 +130,7 @@ export const createColumns = (
     },
   },
   {
-    id: "status",
+    accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
       const expense = row.original;
@@ -152,7 +152,7 @@ export const createColumns = (
     },
   },
   {
-    id: "actions",
+    accessorKey: "actions",
     cell: ({ row }) => {
       const expense = row.original;
 
@@ -185,6 +185,11 @@ export const createColumns = (
         </DropdownMenu>
       );
     },
+  },
+  {
+    id: "memberSplits",
+    accessorFn: (expense) => expense.splits.map((split) => split.user.id),
+    filterFn: "arrIncludesAll",
   },
 ];
 
