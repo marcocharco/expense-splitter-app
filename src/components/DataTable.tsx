@@ -24,7 +24,7 @@ import { DataTableFacetedFilter } from "./DataTableFacetedFilter";
 import { DataTableDateFilter } from "./DataTableDateFilter";
 import { useQuery } from "@tanstack/react-query";
 import { getExpenseCategories } from "@/features/expenses/queries/getExpenseCategories";
-import { useCurrentGroup } from "@/features/groups/context/CurrentGroupContext";
+import { useCurrentGroup } from "@/features/groups/contexts/CurrentGroupContext";
 import { useExpenseFilters } from "@/features/expenses/contexts/ExpenseFiltersContext";
 
 interface DataTableProps<TData, TValue> {

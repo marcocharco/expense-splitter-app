@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useCurrentGroup } from "@/features/groups/context/CurrentGroupContext";
+import { useCurrentGroup } from "@/features/groups/contexts/CurrentGroupContext";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { useBalanceInputs } from "@/features/groups/hooks/useBalanceInputs";
 import { useMemo } from "react";

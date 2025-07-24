@@ -9,7 +9,7 @@ import GroupBalances from "@/features/groups/components/GroupBalances";
 import PaymentList from "@/features/payments/components/PaymentList";
 import SettlementList from "@/features/settlements/components/SettlementList";
 import UpdateExpenseSheet from "@/features/expenses/components/UpdateExpenseSheet";
-import { useCurrentGroup } from "../context/CurrentGroupContext";
+import { useCurrentGroup } from "@/features/groups/contexts/CurrentGroupContext";
 import { useUser } from "@/features/users/context/UserContext";
 import { Expense } from "@/types";
 

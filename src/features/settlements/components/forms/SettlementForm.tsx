@@ -10,7 +10,7 @@ import { Form } from "@/components/ui/form";
 import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { startNewSettlement } from "@/features/settlements/server/settlement.actions";
-import { useCurrentGroup } from "@/features/groups/context/CurrentGroupContext";
+import { useCurrentGroup } from "@/features/groups/contexts/CurrentGroupContext";
 import { useUser } from "@/features/users/context/UserContext";
 import { calculateSettlementBalances } from "@/features/settlements/utils/settlementBalanceCalculator";
 import { useQueryClient } from "@tanstack/react-query";

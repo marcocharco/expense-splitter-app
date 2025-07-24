@@ -1,5 +1,5 @@
 "use client";
-import { useCurrentGroup } from "@/features/groups/context/CurrentGroupContext";
+import { useCurrentGroup } from "@/features/groups/contexts/CurrentGroupContext";
 import { useUser } from "@/features/users/context/UserContext";
 import { usePayments } from "@/features/payments/hooks/usePayments";
 import { formatCurrency } from "@/utils/formatCurrency";

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useCurrentGroup } from "@/features/groups/context/CurrentGroupContext";
+import { useCurrentGroup } from "@/features/groups/contexts/CurrentGroupContext";
 import { useUser } from "@/features/users/context/UserContext";
 import { usePayments } from "@/features/payments/hooks/usePayments";
 import { PaymentFormSchema } from "@/features/payments/schemas/paymentFormSchema";

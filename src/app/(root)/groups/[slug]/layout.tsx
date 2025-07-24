@@ -1,5 +1,5 @@
 import { getGroupBySlug } from "@/features/groups/queries/getGroupBySlug";
-import { CurrentGroupProvider } from "@/features/groups/context/CurrentGroupContext";
+import { CurrentGroupProvider } from "@/features/groups/contexts/CurrentGroupContext";
 import {
   dehydrate,
   HydrationBoundary,

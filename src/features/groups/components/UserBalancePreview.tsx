@@ -1,6 +1,6 @@
 "use client";
 import { calculateMemberBalances } from "@/features/groups/utils/groupBalanceCalculator";
-import { useCurrentGroup } from "@/features/groups/context/CurrentGroupContext";
+import { useCurrentGroup } from "@/features/groups/contexts/CurrentGroupContext";
 import { useUser } from "@/features/users/context/UserContext";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { useBalanceInputs } from "@/features/groups/hooks/useBalanceInputs";
