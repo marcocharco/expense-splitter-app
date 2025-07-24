@@ -24,12 +24,13 @@ import { useQuery } from "@tanstack/react-query";
 
 type ExpenseFormInputProps = {
   control: Control<z.infer<ReturnType<typeof ExpenseFormSchema>>>;
+  groupId: string;
 };
 
-const ExpenseCategoryInput = ({ control }: ExpenseFormInputProps) => {
+const ExpenseCategoryInput = ({ control, groupId }: ExpenseFormInputProps) => {
   const { data: categories } = useQuery({
-    queryKey: ["categories"],
-    queryFn: () => getExpenseCategories(),
+    queryKey: ["categories", groupId],
+    queryFn: () => getExpenseCategories(groupId),
   });
 
   return (

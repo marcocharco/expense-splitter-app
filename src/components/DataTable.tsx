@@ -80,8 +80,8 @@ export function DataTable<TData, TValue>({
   ];
 
   const { data: categoriesDB } = useQuery({
-    queryKey: ["categories"],
-    queryFn: () => getExpenseCategories(),
+    queryKey: ["categories", groupData.id],
+    queryFn: () => getExpenseCategories(groupData.id),
   });
 
   const categories =

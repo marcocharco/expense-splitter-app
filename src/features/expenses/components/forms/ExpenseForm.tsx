@@ -37,9 +37,9 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
   if (!user) {
     throw new Error("Missing user");
   }
-  const groupMembers = groupData.members ?? [];
-  const { addExpense } = useExpenses(groupData.id ?? "");
-  const { editExpense } = useExpenses(groupData.id ?? "");
+  const groupMembers = groupData.members;
+  const { addExpense } = useExpenses(groupData.id);
+  const { editExpense } = useExpenses(groupData.id);
 
   const formSchema = ExpenseFormSchema();
 
@@ -127,7 +127,7 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
 
         <DatePickerInput control={form.control} name="date" />
 
-        <ExpenseCategoryInput control={form.control} />
+        <ExpenseCategoryInput control={form.control} groupId={groupData.id} />
 
         <ExpenseSplitTypeInput control={form.control} />
 
