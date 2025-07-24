@@ -27,6 +27,7 @@ export function calculateMemberBalances({ expenses, payments }: BalanceInputs) {
     { totalOwed: number; totalOwing: number; netOwing: number }
   >();
 
+  // calculate by addition
   expenses.forEach((expense) => {
     const splits = expense.splits;
     const currentExpense = memberBalances.get(expense.paid_by) || {
@@ -34,11 +35,11 @@ export function calculateMemberBalances({ expenses, payments }: BalanceInputs) {
       totalOwing: 0,
       netOwing: 0,
     };
-    currentExpense.totalOwed += expense.amount;
     memberBalances.set(expense.paid_by, currentExpense);
     splits.forEach((split) => {
       const totalWeight = splits.reduce((sum, split) => sum + split.weight, 0);
-      const splitAmount = (expense.amount * split.weight) / totalWeight;
+      const splitAmount =
+        Math.round(((expense.amount * split.weight) / totalWeight) * 100) / 100;
 
       const currentSplit = memberBalances.get(split.user_id) || {
         totalOwed: 0,
@@ -46,14 +47,43 @@ export function calculateMemberBalances({ expenses, payments }: BalanceInputs) {
         netOwing: 0,
       };
       // remove paid by user's split from their total owed
-      if (split.user_id === expense.paid_by) {
-        currentSplit.totalOwed -= splitAmount;
-      } else {
+      if (split.user_id !== expense.paid_by) {
         currentSplit.totalOwing += splitAmount;
+        currentExpense.totalOwed += splitAmount;
       }
       memberBalances.set(split.user_id, currentSplit);
     });
   });
+
+  // calculate by subtraction
+  // expenses.forEach((expense) => {
+  //   const splits = expense.splits;
+  //   const currentExpense = memberBalances.get(expense.paid_by) || {
+  //     totalOwed: 0,
+  //     totalOwing: 0,
+  //     netOwing: 0,
+  //   };
+  //   currentExpense.totalOwed += expense.amount;
+  //   memberBalances.set(expense.paid_by, currentExpense);
+  //   splits.forEach((split) => {
+  //     const totalWeight = splits.reduce((sum, split) => sum + split.weight, 0);
+  //     const splitAmount =
+  //       Math.round(((expense.amount * split.weight) / totalWeight) * 100) / 100;
+
+  //     const currentSplit = memberBalances.get(split.user_id) || {
+  //       totalOwed: 0,
+  //       totalOwing: 0,
+  //       netOwing: 0,
+  //     };
+  //     // remove paid by user's split from their total owed
+  //     if (split.user_id === expense.paid_by) {
+  //       currentSplit.totalOwed -= splitAmount;
+  //     } else {
+  //       currentSplit.totalOwing += splitAmount;
+  //     }
+  //     memberBalances.set(split.user_id, currentSplit);
+  //   });
+  // });
 
   payments.forEach((payment) => {
     const paidByBalance = memberBalances.get(payment.paid_by) || {
