@@ -34,9 +34,12 @@ type ExpenseFormProps = {
 const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
   const { user } = useUser();
   const groupData = useCurrentGroup();
-  const groupMembers = groupData?.members ?? [];
-  const { addExpense } = useExpenses(groupData?.id ?? "");
-  const { editExpense } = useExpenses(groupData?.id ?? "");
+  if (!user) {
+    throw new Error("Missing user");
+  }
+  const groupMembers = groupData.members ?? [];
+  const { addExpense } = useExpenses(groupData.id ?? "");
+  const { editExpense } = useExpenses(groupData.id ?? "");
 
   const formSchema = ExpenseFormSchema();
 
@@ -51,7 +54,7 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
       : {
           amount: 0,
           title: "",
-          paidBy: user?.id ?? "",
+          paidBy: user.id ?? "",
           date: DateToYMD(new Date()),
           category: undefined,
           splitType: "even",
@@ -119,7 +122,7 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
           name="paidBy"
           formType="expense"
           groupMembers={groupMembers}
-          currentUserId={user?.id ?? ""}
+          currentUserId={user.id ?? ""}
         />
 
         <DatePickerInput control={form.control} name="date" />

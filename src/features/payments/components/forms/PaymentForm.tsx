@@ -24,8 +24,8 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const { user } = useUser();
   const group = useCurrentGroup();
 
-  if (!user || !group) {
-    throw new Error("Missing user or group");
+  if (!user) {
+    throw new Error("Missing user");
   }
 
   const groupMembers = group.members;

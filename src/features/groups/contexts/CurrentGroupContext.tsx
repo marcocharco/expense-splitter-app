@@ -5,7 +5,17 @@ import React, { createContext, useContext } from "react";
 
 const CurrentGroupContext = createContext<Group | null>(null);
 
-export const useCurrentGroup = () => useContext(CurrentGroupContext);
+export const useCurrentGroup = (): Group => {
+  const group = useContext(CurrentGroupContext);
+
+  if (!group) {
+    throw new Error(
+      "useCurrentGroup must be used within CurrentGroupProvider with a valid group"
+    );
+  }
+
+  return group;
+};
 
 export const CurrentGroupProvider = ({
   group,

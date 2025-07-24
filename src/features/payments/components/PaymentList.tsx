@@ -10,10 +10,6 @@ const PaymentList = () => {
   const group = useCurrentGroup();
   const { user } = useUser();
 
-  if (!group) {
-    throw new Error("Missing group");
-  }
-
   const { payments } = usePayments(group.id);
 
   if (!user) {

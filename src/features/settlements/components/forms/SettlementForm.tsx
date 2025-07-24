@@ -20,8 +20,8 @@ import { SettlementFormSchema } from "@/features/settlements/schemas/settlementF
 const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const { user } = useUser();
   const group = useCurrentGroup();
-  if (!user || !group) {
-    throw new Error("Missing user or group");
+  if (!user) {
+    throw new Error("Missing user");
   }
 
   const { expenses } = useExpenses(group.id);

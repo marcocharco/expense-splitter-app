@@ -56,7 +56,7 @@ export function DataTable<TData, TValue>({
   const isFiltered = table.getState().columnFilters.length > 0;
 
   const groupData = useCurrentGroup();
-  const groupMembers = groupData?.members ?? [];
+  const groupMembers = groupData.members ?? [];
 
   const members =
     groupMembers.map((member) => ({

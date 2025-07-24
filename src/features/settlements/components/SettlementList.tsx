@@ -5,9 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 
 const SettlementList = () => {
   const group = useCurrentGroup();
-  if (!group) {
-    throw new Error();
-  }
   const { data: settlements } = useQuery({
     queryKey: ["groupSettlements", group.id],
     queryFn: () => getGroupSettlements(group.id),
