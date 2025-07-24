@@ -86,7 +86,7 @@ export function DataTable<TData, TValue>({
 
   const categories =
     categoriesDB?.map((category) => ({
-      value: category.id.toString(),
+      value: category.id,
       label: `${category.icon} ${category.name}`,
     })) ?? [];
 

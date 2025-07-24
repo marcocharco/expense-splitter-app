@@ -41,20 +41,14 @@ const ExpenseCategoryInput = ({ control, groupId }: ExpenseFormInputProps) => {
         <>
           <FormLabel className="form-label">Category</FormLabel>
           <FormControl>
-            <Select
-              value={field.value?.toString()}
-              onValueChange={(value) => field.onChange(Number(value))}
-            >
+            <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
                 {categories?.map((category) => {
                   return (
-                    <SelectItem
-                      key={category.id}
-                      value={category.id.toString()}
-                    >
+                    <SelectItem key={category.id} value={category.id}>
                       {category.icon} {category.name}
                     </SelectItem>
                   );

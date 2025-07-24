@@ -126,7 +126,7 @@ export const createColumns = (
     },
     filterFn: (row, id, value) => {
       const category = row.original.category;
-      return value.includes(category?.id?.toString() || "");
+      return value.includes(category?.id || "");
     },
   },
   {

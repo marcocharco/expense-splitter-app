@@ -10,7 +10,7 @@ export async function addNewExpense(values: NewExpense, groupId: string) {
     values.memberSplits.forEach((id) => (id.weight = 1));
   }
 
-  const { error } = await supabase.rpc("add_expense_with_splits", {
+  const { error } = await supabase.rpc("insert_expense", {
     group_id: groupId,
     title: values.title,
     amount: values.amount,
