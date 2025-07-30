@@ -3,7 +3,7 @@ import { DM_Sans, Raleway, Inter } from "next/font/google";
 import "./globals.css";
 import { UserProvider } from "@/features/users/context/UserContext";
 import { getUserProfileServer } from "@/features/users/queries/getUserProfileServer";
-import ReactQueryProvider from "@/components/ReactQueryProvider";
+import ReactQueryProvider from "@/app/ReactQueryProvider";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",

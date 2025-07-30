@@ -1,13 +1,10 @@
 import { getGroupBySlug } from "@/features/groups/queries/getGroupBySlug";
 import { CurrentGroupProvider } from "@/features/groups/contexts/CurrentGroupContext";
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getGroupExpenses } from "@/features/expenses/queries/getGroupExpensesServer";
 import { getUnsettledTransactions } from "@/features/groups/queries/getUnsettledTransactionsServer";
 import { ExpenseFiltersProvider } from "@/features/expenses/contexts/ExpenseFiltersContext";
+import { getQueryClient } from "@/app/getQueryClient";
 
 export default async function GroupLayout({
   children,
@@ -20,7 +17,7 @@ export default async function GroupLayout({
   const group = await getGroupBySlug(slug);
   if (!group) return <div>Group not found</div>;
 
-  const queryClient = new QueryClient();
+  const queryClient = getQueryClient();
 
   // prefetch group expenses and inputs for balance calculations
   await Promise.all([

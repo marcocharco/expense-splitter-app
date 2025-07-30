@@ -18,8 +18,10 @@ export function useExpenses(groupId: string) {
 
   const addExpense = useMutation({
     mutationFn: (values: NewExpense) => addNewExpense(values, groupId),
-    onSuccess: () =>
-      qc.invalidateQueries({ queryKey: ["groupExpenses", groupId] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["groupExpenses", groupId] });
+      qc.invalidateQueries({ queryKey: ["groupBalances", groupId] });
+    },
   });
 
   const editExpense = useMutation({
@@ -30,8 +32,10 @@ export function useExpenses(groupId: string) {
       values: NewExpense;
       expenseId: string;
     }) => updateExpense(values, groupId, expenseId),
-    onSuccess: () =>
-      qc.invalidateQueries({ queryKey: ["groupExpenses", groupId] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["groupExpenses", groupId] });
+      qc.invalidateQueries({ queryKey: ["groupBalances", groupId] });
+    },
   });
 
   return {
