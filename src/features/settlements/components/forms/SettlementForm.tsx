@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Form } from "@/components/ui/form";
 import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import { formatCurrency } from "@/utils/formatCurrency";
@@ -16,6 +15,7 @@ import { calculateSettlementBalances } from "@/features/settlements/utils/settle
 import { useQueryClient } from "@tanstack/react-query";
 import TitleInput from "@/components/forms/TitleInput";
 import { SettlementFormSchema } from "@/features/settlements/schemas/settlementFormSchema";
+import MultiSelectInput from "@/components/forms/MultiSelectInput";
 
 const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const { user } = useUser();
@@ -44,18 +44,9 @@ const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
     defaultValues,
   });
 
-  const [selected, setSelected] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(false);
 
-  const toggle = (id: string, checked: boolean) =>
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (checked) next.add(id);
-      else next.delete(id);
-      return next;
-    });
-
-  const unpaid = useMemo(() => {
+  const unpaidExpenses = useMemo(() => {
     return expenses.filter(
       (expense) =>
         !expense.settlement &&
@@ -63,18 +54,27 @@ const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
     );
   }, [expenses]);
 
-  const selectedExpenses = useMemo(
-    () => unpaid.filter((e) => selected.has(e.id)),
-    [unpaid, selected]
-  );
+  // Transform expenses into items format for MultiSelectInput
+  const expenseItems = useMemo(() => {
+    return unpaidExpenses.map((expense) => ({
+      id: expense.id,
+      label: `${expense.title} - ${formatCurrency(expense.amount)}`,
+    }));
+  }, [unpaidExpenses]);
+
+  // Calculate selected expenses based on form values
+  const selectedExpenseIds = form.watch("selectedExpenseIds");
+  const selectedExpenses = useMemo(() => {
+    return unpaidExpenses.filter((expense) =>
+      selectedExpenseIds.includes(expense.id)
+    );
+  }, [unpaidExpenses, selectedExpenseIds]);
 
   const startSettlement = async (values: FormValues) => {
     if (selectedExpenses.length === 0) return;
 
     setIsLoading(true);
     try {
-      const selectedExpenseIds = selectedExpenses.map((expense) => expense.id);
-
       const balances = calculateSettlementBalances({
         expenses: selectedExpenses,
       });
@@ -83,7 +83,7 @@ const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
         groupId: group.id,
         currentUser: user.id,
         title: values.title,
-        selectedExpenseIds,
+        selectedExpenseIds: values.selectedExpenseIds,
         balances,
       });
       queryClient.invalidateQueries({ queryKey: ["groupExpenses", group.id] });
@@ -111,29 +111,17 @@ const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
         <div className="space-y-4">
           <h3 className="form-label">Select Expenses to Settle</h3>
-          {unpaid.length === 0 ? (
-            <p className="text-muted-foreground">
-              No unpaid expenses to settle.
-            </p>
-          ) : (
-            unpaid.map((expense) => (
-              <div key={expense.id} className="flex items-center gap-2">
-                <Checkbox
-                  checked={selected.has(expense.id)}
-                  onCheckedChange={(v) => toggle(expense.id, v === true)}
-                />
-                <span>{expense.title}</span>
-                <span className="text-muted-foreground">
-                  {formatCurrency(expense.amount)}
-                </span>
-              </div>
-            ))
-          )}
+
+          <MultiSelectInput<FormValues>
+            control={form.control}
+            name="selectedExpenseIds"
+            items={expenseItems}
+          />
         </div>
 
         <Button
           type="submit"
-          disabled={selected.size === 0 || isLoading}
+          disabled={selectedExpenses.length === 0 || isLoading}
           className="form-btn"
         >
           {isLoading ? "Creating Settlement..." : "Start Settlement"}
