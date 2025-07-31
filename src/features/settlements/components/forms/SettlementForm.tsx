@@ -87,6 +87,9 @@ const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
         balances,
       });
       queryClient.invalidateQueries({ queryKey: ["groupExpenses", group.id] });
+      queryClient.invalidateQueries({
+        queryKey: ["groupSettlements", group.id],
+      });
       onSuccess();
     } catch (error) {
       console.error(error);
