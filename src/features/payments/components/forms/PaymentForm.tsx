@@ -89,7 +89,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   // Transform expenses into items format for MultiSelectInput
   const expenseItems = useMemo(() => {
-    return unpaidExpenses.map((expense) => {
+    return unpaidExpenses.reverse().map((expense) => {
       const split = expense.splits.find(
         (split: ExpenseSplit) => split.user.id === user.id
       );
