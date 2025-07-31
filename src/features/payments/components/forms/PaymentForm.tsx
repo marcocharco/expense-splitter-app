@@ -4,7 +4,7 @@ import { useUser } from "@/features/users/context/UserContext";
 import { usePayments } from "@/features/payments/hooks/usePayments";
 import { PaymentFormSchema } from "@/features/payments/schemas/paymentFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import AmountInput from "@/components/forms/AmountInput";
@@ -16,9 +16,10 @@ import { getGroupSettlements } from "@/features/settlements/queries/getGroupSett
 import { useQuery } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useExpenses } from "@/features/expenses/hooks/useExpenses";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Expense, ExpenseSplit } from "@/types";
+import { ExpenseSplit } from "@/types";
 import { DateToYMD } from "@/utils/formatDate";
+import { formatCurrency } from "@/utils/formatCurrency";
+import MultiSelectInput from "@/components/forms/MultiSelectInput";
 
 const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const { user } = useUser();
@@ -44,7 +45,6 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const [settlementId, setSettlementId] = useState<string | null>(null);
 
   const formSchema = PaymentFormSchema();
-
   type FormValues = z.infer<typeof formSchema>;
 
   const defaultValues: FormValues = {
@@ -52,16 +52,13 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
     paidTo: "",
     date: DateToYMD(new Date()),
     note: "",
+    selectedExpenseIds: [],
   };
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
-
-  const [selectedExpenses, setSelectedExpenses] = useState<
-    { expenseId: string; splitAmount: number }[]
-  >([]);
 
   const [paymentType, setPaymentType] = useState<"settlement" | "balance">(
     "settlement"
@@ -71,6 +68,54 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
     paymentType === "settlement"
       ? isAddingSettlementPayment
       : isAddingExpensePayment;
+
+  const paidTo = useWatch({ control: form.control, name: "paidTo" });
+  const selectedExpenseIds = form.watch("selectedExpenseIds");
+
+  const unpaidExpenses = useMemo(() => {
+    return expenses.filter((expense) => {
+      const currentUserSplit = expense.splits.find(
+        (split) => split.user.id === user.id
+      );
+      // expenses not in a settlement
+      return (
+        expense.paid_by.id === paidTo &&
+        currentUserSplit &&
+        expense.settlement === null &&
+        currentUserSplit.remaining_owing > 0
+      );
+    });
+  }, [expenses, paidTo, user.id]);
+
+  // Transform expenses into items format for MultiSelectInput
+  const expenseItems = useMemo(() => {
+    return unpaidExpenses.map((expense) => {
+      const split = expense.splits.find(
+        (split: ExpenseSplit) => split.user.id === user.id
+      );
+      return {
+        id: expense.id,
+        label: `${expense.title} - You owe ${formatCurrency(
+          split?.remaining_owing || 0
+        )}`,
+      };
+    });
+  }, [unpaidExpenses, user.id]);
+
+  // Calculate selected expenses with split amounts
+  const selectedExpenses = useMemo(() => {
+    return unpaidExpenses
+      .filter((expense) => selectedExpenseIds.includes(expense.id))
+      .map((expense) => {
+        const split = expense.splits.find(
+          (split: ExpenseSplit) => split.user.id === user.id
+        );
+        return {
+          expenseId: expense.id,
+          splitAmount: split?.amount || 0,
+        };
+      });
+  }, [unpaidExpenses, selectedExpenseIds, user.id]);
 
   const onSubmit = async (values: FormValues) => {
     try {
@@ -99,8 +144,6 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
     }
   };
 
-  const paidTo = useWatch({ control: form.control, name: "paidTo" });
-
   const openSettlements = settlements.filter((settlement) => {
     const paidToParticipant = settlement.participants.find(
       (participant) => participant.user.id === paidTo
@@ -115,36 +158,6 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
       currentUserParticipant.remaining_balance > 0
     );
   });
-  const unpaidExpenses = expenses.filter((expense) => {
-    const currentUserSplit = expense.splits.find(
-      (split) => split.user.id === user.id
-    );
-    // expenses not in a settlement
-    return (
-      expense.paid_by.id === paidTo &&
-      currentUserSplit &&
-      expense.settlement === null &&
-      currentUserSplit.remaining_owing > 0
-    );
-  });
-
-  const handleExpenseCheck = (expense: Expense, checked: boolean) => {
-    if (checked) {
-      const split = expense.splits.find(
-        (split: ExpenseSplit) => split.user.id === user.id
-      );
-      if (split) {
-        setSelectedExpenses((prev) => [
-          ...prev,
-          { expenseId: expense.id, splitAmount: split.amount },
-        ]);
-      }
-    } else {
-      setSelectedExpenses((prev) =>
-        prev.filter((e) => e.expenseId !== expense.id)
-      );
-    }
-  };
 
   return (
     <Form {...form}>
@@ -169,10 +182,9 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
             setPaymentType(val as "settlement" | "balance")
           }
         >
-          <TabsList>
+          <TabsList className="w-fit">
             <TabsTrigger value="settlement">Settlement</TabsTrigger>
             <TabsTrigger value="balance">Balance</TabsTrigger>
-            {/* <TabsTrigger value="expense">Expense</TabsTrigger> */}
           </TabsList>
           <TabsContent value="settlement">
             {paidTo == "" ? (
@@ -228,7 +240,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
             {paidTo == "" ? (
               <span>Choose a payment recepient</span>
             ) : unpaidExpenses.length > 0 ? (
-              <>
+              <div className="space-y-4">
                 <FormLabel className="form-label">
                   Choose Expenses
                   <span className="text-muted-foreground font-normal text-sm">
@@ -236,40 +248,16 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
                     (select one or more)
                   </span>
                 </FormLabel>
-                {unpaidExpenses.map((expense: Expense) => {
-                  const checked = selectedExpenses.some(
-                    (e) => e.expenseId === expense.id
-                  );
-                  const split = expense.splits.find(
-                    (split: ExpenseSplit) => split.user.id === user.id
-                  );
-                  return (
-                    <div key={expense.id} className="flex items-center gap-2">
-                      <Checkbox
-                        id={`expense-${expense.id}`}
-                        checked={checked}
-                        onCheckedChange={(checked) =>
-                          handleExpenseCheck(expense, checked as boolean)
-                        }
-                      />
-                      <label
-                        htmlFor={`expense-${expense.id}`}
-                        className="text-sm"
-                      >
-                        {expense.title}{" "}
-                        {split ? `- You owe $${split.remaining_owing}` : null}
-                      </label>
-                    </div>
-                  );
-                })}
-              </>
+                <MultiSelectInput<FormValues>
+                  control={form.control}
+                  name="selectedExpenseIds"
+                  items={expenseItems}
+                />
+              </div>
             ) : (
               <span>No unpaid expenses</span>
             )}
           </TabsContent>
-          {/* <TabsContent value="expense">
-            Choose expenses to pay off (filtered by paid by)
-          </TabsContent> */}
         </Tabs>
 
         <DatePickerInput control={form.control} name="date" />
