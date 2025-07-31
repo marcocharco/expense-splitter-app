@@ -53,5 +53,7 @@ export function usePayments(groupId: string) {
     isError,
     addSettlementPayment: addSettlementPayment.mutateAsync,
     addExpensePayment: addExpensePayment.mutateAsync,
+    isAddingSettlementPayment: addSettlementPayment.isPending,
+    isAddingExpensePayment: addExpensePayment.isPending,
   };
 }

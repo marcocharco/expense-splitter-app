@@ -44,5 +44,7 @@ export function useExpenses(groupId: string) {
     isError,
     addExpense: addExpense.mutateAsync,
     editExpense: editExpense.mutateAsync,
+    isAddingExpense: addExpense.isPending,
+    isEditingExpense: editExpense.isPending,
   };
 }

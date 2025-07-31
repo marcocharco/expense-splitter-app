@@ -30,7 +30,12 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   const groupMembers = group.members;
   const { expenses } = useExpenses(group.id);
-  const { addSettlementPayment, addExpensePayment } = usePayments(group.id);
+  const {
+    addSettlementPayment,
+    addExpensePayment,
+    isAddingSettlementPayment,
+    isAddingExpensePayment,
+  } = usePayments(group.id);
 
   const { data: settlements = [] } = useQuery({
     queryKey: ["groupSettlements", group.id],
@@ -54,7 +59,6 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
     defaultValues,
   });
 
-  const [isLoading, setIsLoading] = useState(false);
   const [selectedExpenses, setSelectedExpenses] = useState<
     { expenseId: string; splitAmount: number }[]
   >([]);
@@ -63,8 +67,12 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
     "settlement"
   );
 
+  const isLoading =
+    paymentType === "settlement"
+      ? isAddingSettlementPayment
+      : isAddingExpensePayment;
+
   const onSubmit = async (values: FormValues) => {
-    setIsLoading(true);
     try {
       if (paymentType === "settlement") {
         await addSettlementPayment({
@@ -88,8 +96,6 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
       onSuccess();
     } catch (error) {
       console.error(error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
