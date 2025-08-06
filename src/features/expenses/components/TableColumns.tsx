@@ -153,6 +153,7 @@ export const createColumns = (
   },
   {
     accessorKey: "actions",
+    header: "",
     cell: ({ row }) => {
       const expense = row.original;
 
