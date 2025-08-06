@@ -27,39 +27,63 @@ const MultiSelectInput = <T extends FieldValues>({
 }: MultiSelectInputProps<T>) => {
   return (
     <>
-      {items.map((item) => (
-        <FormField
-          key={item.id}
-          control={control}
-          name={name}
-          render={({ field }) => {
-            return (
-              <FormItem
-                key={item.id}
-                className="flex flex-row items-center gap-2"
-              >
-                <FormControl>
-                  <Checkbox
-                    checked={field.value?.includes(item.id)}
-                    onCheckedChange={(checked) => {
-                      return checked
-                        ? field.onChange([...field.value, item.id])
-                        : field.onChange(
-                            field.value?.filter(
-                              (value: string) => value !== item.id
-                            )
-                          );
-                    }}
-                  />
-                </FormControl>
-                <FormLabel className="text-sm font-normal">
-                  {item.label}
-                </FormLabel>
-              </FormItem>
-            );
-          }}
-        />
-      ))}
+      <FormField
+        control={control}
+        name={name}
+        render={({ field }) => (
+          <>
+            <div className="flex flex-row items-center gap-2">
+              <Checkbox
+                checked={
+                  field.value.length === items.length
+                    ? true
+                    : field.value.length > 0
+                    ? "indeterminate"
+                    : false
+                }
+                onCheckedChange={(checked) => {
+                  return typeof checked === "boolean"
+                    ? checked
+                      ? field.onChange(items.map((item) => item.id))
+                      : field.onChange([])
+                    : field.onChange(items.map((item) => item.id));
+                }}
+              />
+              <label>
+                {field.value.length === items.length
+                  ? "Deselect All"
+                  : "Select All"}
+              </label>
+            </div>
+            {items.map((item) => {
+              return (
+                <FormItem
+                  key={item.id}
+                  className="flex flex-row items-center gap-2"
+                >
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value.includes(item.id)}
+                      onCheckedChange={(checked) => {
+                        return checked
+                          ? field.onChange([...field.value, item.id])
+                          : field.onChange(
+                              field.value?.filter(
+                                (value: string) => value !== item.id
+                              )
+                            );
+                      }}
+                    />
+                  </FormControl>
+                  <FormLabel className="text-sm font-normal">
+                    {item.label}
+                  </FormLabel>
+                </FormItem>
+              );
+            })}
+          </>
+        )}
+      />
     </>
   );
 };
