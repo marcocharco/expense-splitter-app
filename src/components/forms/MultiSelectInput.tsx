@@ -81,6 +81,9 @@ const MultiSelectInput = <T extends FieldValues>({
                 </FormItem>
               );
             })}
+            <div className="text-muted-foreground font-normal text-sm">
+              {field.value.length} items selected
+            </div>
           </>
         )}
       />
