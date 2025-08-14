@@ -21,7 +21,7 @@ export async function addNewSettlementPayment({
 }) {
   const supabase = await createClient();
 
-  const { data, error } = await supabase.rpc("add_settlement_payment", {
+  const { data, error } = await supabase.rpc("insert_payment_settlement", {
     _group_id: groupId,
     _paid_by: paid_by,
     _paid_to: paid_to,
@@ -55,7 +55,7 @@ export async function addNewExpensePayment({
 }) {
   const supabase = await createClient();
 
-  const { data, error } = await supabase.rpc("add_expense_payment", {
+  const { data, error } = await supabase.rpc("insert_payment_expense", {
     _group_id: groupId,
     _paid_by: paid_by,
     _paid_to: paid_to,
