@@ -20,10 +20,16 @@ export function calculateSettlementBalances({
 
       if (userId !== paidById) {
         // payer gets owed money
-        balances.set(paidById, (balances.get(paidById) || 0) - amount);
+        balances.set(
+          paidById,
+          Math.round(((balances.get(paidById) || 0) - amount) * 100) / 100
+        );
 
         // split participant owes money
-        balances.set(userId, (balances.get(userId) || 0) + amount);
+        balances.set(
+          userId,
+          Math.round(((balances.get(userId) || 0) + amount) * 100) / 100
+        );
       }
     }
   }
