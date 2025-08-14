@@ -197,27 +197,35 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
                     (optional)
                   </span>
                 </FormLabel>
-                {openSettlements.map((settlement) => (
-                  <div key={settlement.id} className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name="settlement"
-                      value={settlement.id}
-                      checked={settlementId === settlement.id}
-                      onChange={() => setSettlementId(settlement.id)}
-                      id={`settlement-${settlement.id}`}
-                    />
-                    <label
-                      htmlFor={`settlement-${settlement.id}`}
-                      className="text-sm"
+                {openSettlements.map((settlement) => {
+                  const currentUserAmountOwed =
+                    settlement.participants.find(
+                      (participant) => participant.user.id === user.id
+                    )?.remaining_balance || 0;
+
+                  return (
+                    <div
+                      key={settlement.id}
+                      className="flex items-center gap-2"
                     >
-                      {settlement.title} - You Owe $
-                      {settlement.participants.find(
-                        (participant) => participant.user.id === user.id
-                      )?.remaining_balance || ""}
-                    </label>
-                  </div>
-                ))}
+                      <input
+                        type="radio"
+                        name="settlement"
+                        value={settlement.id}
+                        checked={settlementId === settlement.id}
+                        onChange={() => setSettlementId(settlement.id)}
+                        id={`settlement-${settlement.id}`}
+                      />
+                      <label
+                        htmlFor={`settlement-${settlement.id}`}
+                        className="text-sm"
+                      >
+                        {settlement.title} - You Owe{" "}
+                        {formatCurrency(currentUserAmountOwed)}
+                      </label>
+                    </div>
+                  );
+                })}
                 <div className="flex items-center gap-2">
                   <input
                     type="radio"
