@@ -6,7 +6,13 @@ import { Member } from "@/types";
 import { ExpenseFormSchema } from "@/features/expenses/schemas/expenseFormSchema";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import { FormField, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import MemberSplitRow from "@/features/expenses/components/forms/MemberSplitRow";
 
 import {
@@ -64,40 +70,51 @@ const ExpenseSplitDetailsInput = ({
               const isSelected = selectedMembers.includes(member.id);
 
               return (
-                <div key={member.id} className="flex items-center space-x-4">
-                  <Checkbox
-                    id={member.id}
-                    checked={isSelected}
-                    onCheckedChange={(checked) => {
-                      const newValue = checked
-                        ? [...(selectedMembers || []), member.id]
-                        : selectedMembers.filter(
-                            (id: string) => id !== member.id
-                          );
+                <FormItem
+                  key={member.id}
+                  className="flex items-center space-x-4"
+                >
+                  <FormControl>
+                    <Checkbox
+                      id={member.id}
+                      checked={isSelected}
+                      onCheckedChange={(checked) => {
+                        const newValue = checked
+                          ? [...(selectedMembers || []), member.id]
+                          : selectedMembers.filter(
+                              (id: string) => id !== member.id
+                            );
 
-                      const total = getSelectedTotal(memberSplits, newValue);
-                      const overLimit = isOverTotalLimit(
-                        total,
-                        splitType,
-                        currentAmount
-                      );
+                        const total = getSelectedTotal(memberSplits, newValue);
+                        const overLimit = isOverTotalLimit(
+                          total,
+                          splitType,
+                          currentAmount
+                        );
 
-                      if (overLimit) {
-                        setError("memberSplits", {
-                          type: "manual",
-                          message:
-                            splitType === "custom" || splitType === "percentage"
-                              ? errorMsgForLimit(splitType, currentAmount)
-                              : "Invalid split type",
-                        });
-                      } else {
-                        clearErrors("memberSplits");
-                      }
+                        if (overLimit) {
+                          setError("memberSplits", {
+                            type: "manual",
+                            message:
+                              splitType === "custom" ||
+                              splitType === "percentage"
+                                ? errorMsgForLimit(splitType, currentAmount)
+                                : "Invalid split type",
+                          });
+                        } else {
+                          clearErrors("memberSplits");
+                        }
 
-                      setValue("selectedMembers", newValue);
-                    }}
-                  />
-                  <span className="w-32">{member.name}</span>
+                        setValue("selectedMembers", newValue);
+                      }}
+                    />
+                  </FormControl>
+                  <FormLabel
+                    htmlFor={member.id}
+                    className="w-32 font-normal text-base"
+                  >
+                    {member.name}
+                  </FormLabel>
                   <MemberSplitRow
                     control={control}
                     member={member}
@@ -109,7 +126,7 @@ const ExpenseSplitDetailsInput = ({
                     setError={setError}
                     clearErrors={clearErrors}
                   />
-                </div>
+                </FormItem>
               );
             })}
 
