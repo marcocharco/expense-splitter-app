@@ -8,7 +8,7 @@ export async function getExpenseCategories(groupId: string) {
     .select("id, name, icon, group_id")
     .eq("group_id", groupId);
 
-  console.log(data);
+  // console.log(data);
 
   if (error) throw new Error(error.message);
   return data;
