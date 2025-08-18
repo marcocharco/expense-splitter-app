@@ -28,6 +28,7 @@ export function usePayments(groupId: string) {
       qc.invalidateQueries({ queryKey: ["groupPayments", groupId] });
       qc.invalidateQueries({ queryKey: ["groupBalances", groupId] });
       qc.invalidateQueries({ queryKey: ["groupExpenses", groupId] });
+      qc.invalidateQueries({ queryKey: ["groupSettlements", groupId] });
     },
   });
 

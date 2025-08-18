@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,14 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import { formatCurrency } from "@/utils/formatCurrency";
-import { startNewSettlement } from "@/features/settlements/server/settlement.actions";
 import { useCurrentGroup } from "@/features/groups/contexts/CurrentGroupContext";
 import { useUser } from "@/features/users/context/UserContext";
 import { calculateSettlementBalances } from "@/features/settlements/utils/settlementBalanceCalculator";
-import { useQueryClient } from "@tanstack/react-query";
 import TitleInput from "@/components/forms/TitleInput";
 import { SettlementFormSchema } from "@/features/settlements/schemas/settlementFormSchema";
 import MultiSelectInput from "@/components/forms/MultiSelectInput";
+import { useSettlements } from "../../hooks/useSettlements";
 
 const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const { user } = useUser();
@@ -25,7 +24,8 @@ const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
   }
 
   const { expenses } = useExpenses(group.id);
-  const queryClient = useQueryClient();
+
+  const { startSettlement, isStartingSettlement } = useSettlements(group.id);
 
   const formSchema = SettlementFormSchema();
   type FormValues = z.infer<typeof formSchema>;
@@ -43,8 +43,6 @@ const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
     resolver: zodResolver(formSchema),
     defaultValues,
   });
-
-  const [isLoading, setIsLoading] = useState(false);
 
   const unpaidExpenses = useMemo(() => {
     return expenses.filter(
@@ -70,38 +68,31 @@ const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
     );
   }, [unpaidExpenses, selectedExpenseIds]);
 
-  const startSettlement = async (values: FormValues) => {
+  const onSubmit = async (values: FormValues) => {
     if (selectedExpenses.length === 0) return;
 
-    setIsLoading(true);
-    try {
-      const balances = calculateSettlementBalances({
-        expenses: selectedExpenses,
-      });
+    const balances = calculateSettlementBalances({
+      expenses: selectedExpenses,
+    });
 
-      await startNewSettlement({
-        groupId: group.id,
+    try {
+      await startSettlement({
         currentUser: user.id,
         title: values.title,
         selectedExpenseIds: values.selectedExpenseIds,
         balances,
       });
-      queryClient.invalidateQueries({ queryKey: ["groupExpenses", group.id] });
-      queryClient.invalidateQueries({
-        queryKey: ["groupSettlements", group.id],
-      });
+
       onSuccess();
     } catch (error) {
       console.error(error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(startSettlement)}
+        onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-8"
         autoComplete="off"
       >
@@ -128,10 +119,10 @@ const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
         <Button
           type="submit"
-          disabled={selectedExpenses.length === 0 || isLoading}
+          disabled={selectedExpenses.length === 0 || isStartingSettlement}
           className="form-btn"
         >
-          {isLoading ? "Creating Settlement..." : "Start Settlement"}
+          {isStartingSettlement ? "Creating Settlement..." : "Start Settlement"}
         </Button>
       </form>
     </Form>

@@ -12,14 +12,13 @@ import { Form, FormLabel } from "@/components/ui/form";
 import MemberSelectInput from "@/components/forms/MemberSelectInput";
 import DatePickerInput from "@/components/forms/DatePickerInput";
 import NoteInput from "@/components/forms/NoteInput";
-import { getGroupSettlements } from "@/features/settlements/queries/getGroupSettlements";
-import { useQuery } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import { ExpenseSplit } from "@/types";
 import { DateToYMD } from "@/utils/formatDate";
 import { formatCurrency } from "@/utils/formatCurrency";
 import MultiSelectInput from "@/components/forms/MultiSelectInput";
+import { useSettlements } from "@/features/settlements/hooks/useSettlements";
 
 const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const { user } = useUser();
@@ -37,11 +36,8 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
     isAddingSettlementPayment,
     isAddingExpensePayment,
   } = usePayments(group.id);
+  const { settlements } = useSettlements(group.id);
 
-  const { data: settlements = [] } = useQuery({
-    queryKey: ["groupSettlements", group.id],
-    queryFn: () => getGroupSettlements(group.id),
-  });
   const [settlementId, setSettlementId] = useState<string | null>(null);
 
   const formSchema = PaymentFormSchema();
