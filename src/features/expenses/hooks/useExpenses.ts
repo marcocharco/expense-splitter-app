@@ -3,6 +3,7 @@
 import {
   addNewExpense,
   updateExpense,
+  softDeleteExpense,
 } from "@/features/expenses/server/expense.actions";
 import { getGroupExpenses } from "@/features/expenses/queries/getGroupExpenses";
 import { NewExpense } from "@/types";
@@ -38,13 +39,24 @@ export function useExpenses(groupId: string) {
     },
   });
 
+  const deleteExpense = useMutation({
+    mutationFn: ({ expenseId }: { expenseId: string }) =>
+      softDeleteExpense(expenseId),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["groupExpenses", groupId] });
+      qc.invalidateQueries({ queryKey: ["groupBalances", groupId] });
+    },
+  });
+
   return {
     expenses: data ?? [],
     isLoading,
     isError,
     addExpense: addExpense.mutateAsync,
     editExpense: editExpense.mutateAsync,
+    deleteExpense: deleteExpense.mutateAsync,
     isAddingExpense: addExpense.isPending,
     isEditingExpense: editExpense.isPending,
+    isDeletingExpense: deleteExpense.isPending,
   };
 }

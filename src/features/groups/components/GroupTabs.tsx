@@ -18,10 +18,17 @@ const GroupTabs = () => {
   const { user } = useUser();
   const { expenses } = useExpenses(group?.id ?? "");
   const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
+  const { deleteExpense } = useExpenses(group?.id ?? "");
 
-  const columns = createColumns((expense: Expense) => {
-    setSelectedExpense(expense);
-  }, user?.id);
+  const columns = createColumns(
+    (expense: Expense) => {
+      setSelectedExpense(expense); // for editing
+    },
+    (expenseId: string) => {
+      deleteExpense({ expenseId }); // for deleting
+    },
+    user?.id
+  );
 
   return (
     <>

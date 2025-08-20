@@ -21,8 +21,10 @@ export async function getGroupExpenses(groupId: string) {
       ),
       paid_by:profile!paid_by(id, name),
       splits:expense_split(user:profile(id, name), weight, initial_owing, remaining_owing)
+      deleted_at
     `
     )
+    .is("deleted_at", null)
     .eq("group_id", groupId)
     .order("date", { ascending: false })
     .order("created_at", { ascending: false })

@@ -41,6 +41,7 @@ function getUserShare(expense: Expense, currentUserId: string) {
 
 export const createColumns = (
   onEditExpense: (expense: Expense) => void,
+  onDeleteExpense: (expenseId: string) => void,
   currentUserId?: string
 ): ColumnDef<Expense>[] => [
   {
@@ -163,7 +164,7 @@ export const createColumns = (
         ).length > 0;
 
       // disabled if in settlement or is paid (>1 users have paid)
-      const editingDisabled = expense?.settlement?.id ? true : unpaid;
+      const disableEdit = expense?.settlement?.id ? true : unpaid;
 
       return (
         <DropdownMenu>
@@ -175,13 +176,21 @@ export const createColumns = (
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem>View details</DropdownMenuItem>
-            {!editingDisabled && (
-              <DropdownMenuItem onClick={() => onEditExpense(expense)}>
-                Edit
-              </DropdownMenuItem>
+            <DropdownMenuItem>Duplicate</DropdownMenuItem>
+            {!disableEdit && (
+              <>
+                <DropdownMenuItem onClick={() => onEditExpense(expense)}>
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => onDeleteExpense(expense.id)}
+                >
+                  Delete
+                </DropdownMenuItem>
+              </>
             )}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -195,4 +204,7 @@ export const createColumns = (
 ];
 
 // For backward compatibility
-export const columns = createColumns(() => {});
+export const columns = createColumns(
+  () => {},
+  () => {}
+);

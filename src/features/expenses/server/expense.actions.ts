@@ -49,3 +49,12 @@ export async function updateExpense(
 
   if (error) throw new Error(error.message);
 }
+
+export async function softDeleteExpense(expenseId: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("soft_delete_expense", {
+    p_expense_id: expenseId,
+  });
+
+  if (error) throw new Error(error.message);
+}
