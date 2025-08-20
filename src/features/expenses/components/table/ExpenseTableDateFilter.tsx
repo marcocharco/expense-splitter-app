@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 
-interface DataTableDateFilterProps<TData, TValue> {
+interface ExpenseTableDateFilterProps<TData, TValue> {
   column?: Column<TData, TValue>;
   title?: string;
 }
@@ -34,10 +34,10 @@ interface DateFilter {
   endDate?: Date;
 }
 
-export function DataTableDateFilter<TData, TValue>({
+export function ExpenseTableDateFilter<TData, TValue>({
   column,
   title,
-}: DataTableDateFilterProps<TData, TValue>) {
+}: ExpenseTableDateFilterProps<TData, TValue>) {
   const [open, setOpen] = React.useState(false);
   const [filterType, setFilterType] = React.useState<DateFilterType>("after");
   const [date, setDate] = React.useState<Date>();

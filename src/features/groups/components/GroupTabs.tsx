@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DataTable } from "@/components/DataTable";
-import { createColumns } from "@/features/expenses/components/TableColumns";
+import { ExpenseTable } from "@/features/expenses/components/table/ExpenseTable";
+import { createExpenseTableColumns } from "@/features/expenses/components/table/ExpenseTableColumns";
 import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import GroupBalances from "@/features/groups/components/GroupBalances";
 import PaymentList from "@/features/payments/components/PaymentList";
@@ -20,7 +20,7 @@ const GroupTabs = () => {
   const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
   const { deleteExpense } = useExpenses(group?.id ?? "");
 
-  const columns = createColumns(
+  const columns = createExpenseTableColumns(
     (expense: Expense) => {
       setSelectedExpense(expense); // for editing
     },
@@ -54,7 +54,7 @@ const GroupTabs = () => {
           <p>Activity Logs</p>
         </TabsContent>
         <TabsContent value="expenses">
-          <DataTable columns={columns} data={expenses} />
+          <ExpenseTable columns={columns} data={expenses} />
         </TabsContent>
         <TabsContent value="payments">
           <PaymentList />

@@ -17,25 +17,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { X, Search, ChevronLeft, ChevronRight } from "lucide-react";
-import { DataTableFacetedFilter } from "./DataTableFacetedFilter";
-import { DataTableDateFilter } from "./DataTableDateFilter";
+import { ExpenseTableFacetedFilter } from "@/features/expenses/components/table/ExpenseTableFacetedFilter";
+import { ExpenseTableDateFilter } from "@/features/expenses/components/table/ExpenseTableDateFilter";
 import { useQuery } from "@tanstack/react-query";
 import { getExpenseCategories } from "@/features/expenses/queries/getExpenseCategories";
 import { useCurrentGroup } from "@/features/groups/contexts/CurrentGroupContext";
 import { useExpenseFilters } from "@/features/expenses/contexts/ExpenseFiltersContext";
 
-interface DataTableProps<TData, TValue> {
+interface ExpenseTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({
+export function ExpenseTable<TData, TValue>({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
+}: ExpenseTableProps<TData, TValue>) {
   const { columnFilters, setColumnFilters } = useExpenseFilters();
 
   const table = useReactTable({
@@ -116,35 +116,35 @@ export function DataTable<TData, TValue>({
         </div>
         <div className="flex overflow-x-auto gap-2 no-scrollbar">
           {table.getColumn("paidBy") && (
-            <DataTableFacetedFilter
+            <ExpenseTableFacetedFilter
               column={table.getColumn("paidBy")}
               title="Paid By"
               options={members}
             />
           )}
           {table.getColumn("memberSplits") && (
-            <DataTableFacetedFilter
+            <ExpenseTableFacetedFilter
               column={table.getColumn("memberSplits")}
               title="Includes"
               options={members}
             />
           )}
           {table.getColumn("category") && (
-            <DataTableFacetedFilter
+            <ExpenseTableFacetedFilter
               column={table.getColumn("category")}
               title="Category"
               options={categories}
             />
           )}
           {table.getColumn("status") && (
-            <DataTableFacetedFilter
+            <ExpenseTableFacetedFilter
               column={table.getColumn("status")}
               title="Status"
               options={statuses}
             />
           )}
           {table.getColumn("date") && (
-            <DataTableDateFilter
+            <ExpenseTableDateFilter
               column={table.getColumn("date")}
               title="Date"
             />

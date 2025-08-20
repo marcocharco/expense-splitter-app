@@ -39,7 +39,7 @@ function getUserShare(expense: Expense, currentUserId: string) {
   return userSplit ? userSplit.amount : null;
 }
 
-export const createColumns = (
+export const createExpenseTableColumns = (
   onEditExpense: (expense: Expense) => void,
   onDeleteExpense: (expenseId: string) => void,
   currentUserId?: string
@@ -204,7 +204,7 @@ export const createColumns = (
 ];
 
 // For backward compatibility
-export const columns = createColumns(
+export const columns = createExpenseTableColumns(
   () => {},
   () => {}
 );
