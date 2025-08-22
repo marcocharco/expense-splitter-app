@@ -54,7 +54,7 @@ const ExpenseSplitDetailsInput = ({
   });
 
   return (
-    <>
+    <div className="form-item">
       <FormLabel className="form-label">Splits</FormLabel>
       <FormField
         control={control}
@@ -65,7 +65,7 @@ const ExpenseSplitDetailsInput = ({
         control={control}
         name="memberSplits"
         render={() => (
-          <>
+          <div className="flex flex-col gap-y-4 mt-2">
             {groupMembers.map((member) => {
               const isSelected = selectedMembers.includes(member.id);
 
@@ -131,10 +131,10 @@ const ExpenseSplitDetailsInput = ({
             })}
 
             <FormMessage className="form-message" />
-          </>
+          </div>
         )}
       />
-    </>
+    </div>
   );
 };
 

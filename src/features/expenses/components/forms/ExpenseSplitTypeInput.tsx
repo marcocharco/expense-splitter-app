@@ -22,29 +22,33 @@ type ExpenseSplitTypeInputProps = {
 
 const ExpenseSplitTypeInput = ({ control }: ExpenseSplitTypeInputProps) => {
   return (
-    <FormField
-      control={control}
-      name="splitType"
-      render={({ field }) => (
-        <>
-          <FormLabel className="form-label">Split Type</FormLabel>
-          <FormControl>
-            <Select value={field.value} onValueChange={field.onChange}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select a split type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="even">Even</SelectItem>
-                <SelectItem value="percentage">Percentage</SelectItem>
-                <SelectItem value="shares">Shares</SelectItem>
-                <SelectItem value="custom">Custom</SelectItem>
-              </SelectContent>
-            </Select>
-          </FormControl>
-          <FormMessage className="form-message" />
-        </>
-      )}
-    />
+    <div className="form-item">
+      <FormField
+        control={control}
+        name="splitType"
+        render={({ field }) => (
+          <>
+            <FormLabel className="form-label">Split Type</FormLabel>
+            <FormControl>
+              <div className="input-class">
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger className="w-[240px]">
+                    <SelectValue placeholder="Select a split type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="even">Even</SelectItem>
+                    <SelectItem value="percentage">Percentage</SelectItem>
+                    <SelectItem value="shares">Shares</SelectItem>
+                    <SelectItem value="custom">Custom</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </FormControl>
+            <FormMessage className="form-message" />
+          </>
+        )}
+      />
+    </div>
   );
 };
 

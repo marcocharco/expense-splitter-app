@@ -41,32 +41,36 @@ const MemberSelectInput = <T extends FieldValues, N extends Path<T>>({
     return list;
   }, [groupMembers, formType, currentUserId]);
   return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <>
-          <FormLabel className="form-label">
-            {formType === "expense" ? "Paid By" : "Paid To"}
-          </FormLabel>
-          <FormControl>
-            <Select value={field.value} onValueChange={field.onChange}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select a member" />
-              </SelectTrigger>
-              <SelectContent>
-                {filteredMembers.map((member) => (
-                  <SelectItem key={member.id} value={member.id}>
-                    {member.name} {member.id === currentUserId && "(you)"}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </FormControl>
-          <FormMessage className="form-message" />
-        </>
-      )}
-    />
+    <div className="form-item">
+      <FormField
+        control={control}
+        name={name}
+        render={({ field }) => (
+          <>
+            <FormLabel className="form-label">
+              {formType === "expense" ? "Paid By" : "Paid To"}
+            </FormLabel>
+            <FormControl>
+              <div className="input-class">
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger className="w-[240px]">
+                    <SelectValue placeholder="Select a member" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {filteredMembers.map((member) => (
+                      <SelectItem key={member.id} value={member.id}>
+                        {member.name} {member.id === currentUserId && "(you)"}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </FormControl>
+            <FormMessage className="form-message" />
+          </>
+        )}
+      />
+    </div>
   );
 };
 
