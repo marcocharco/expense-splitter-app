@@ -10,7 +10,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { formatCurrency } from "@/utils/formatCurrency";
+import { validateNumericInput } from "@/utils/validateNumericInput";
 
 import { Parser } from "expr-eval";
 
@@ -77,47 +79,44 @@ const AmountInput = <T extends FieldValues, N extends Path<T>>({
                 {...field}
                 value={displayValue}
                 onChange={(e) => {
-                  const value = e.target.value.replace(/[^0-9. +*/()\-]/g, "");
+                  const { value, isValid } = validateNumericInput(
+                    e.target.value
+                  );
 
-                  // Only allow up to 2 decimal places, and only one decimal point per expression term
-                  if (value.includes(".")) {
-                    const terms = value.split(/[ +*/\-]/g);
-                    let badInputFlag = false;
-
-                    for (const term of terms) {
-                      // no more than one decimal per term in expression
-                      if (term.replace(/[^.]/g, "").length > 1) {
-                        badInputFlag = true;
-                        break;
-                      } else {
-                        // no more than two decimal places per term
-                        const [, decimal] = term.split(".");
-                        if (decimal && decimal.length > 2) {
-                          badInputFlag = true;
-                          break;
-                        }
-                      }
-                    }
-                    if (badInputFlag) return;
-                  }
-                  // Check if the value exceeds the maximum limit
-                  const parsed = parseFloat(value);
-                  if (parsed >= 1000000000) {
+                  if (!isValid) {
                     return;
                   }
+
+                  // Check if the value exceeds the maximum limit
+                  const numValue = parseFloat(value) || 0;
+                  if (numValue >= 1000000000) {
+                    return;
+                  }
+
                   setDisplayValue(value);
 
-                  field.onChange(isNaN(parsed) ? 0 : parsed);
+                  // allow input of negative numbers, but do not update split calculations
+                  // this allows users to input something like -10 + 20 and still get an expected result
+                  if (numValue < 0) {
+                    return;
+                  }
+
+                  field.onChange(numValue);
                 }}
                 onBlur={() => {
                   let completedValue = 0;
 
                   try {
-                    const rawResult = parser.evaluate(displayValue);
+                    const evaluatedResult = parser.evaluate(displayValue);
                     // Round to 2 decimal places to fix floating-point precision issues
-                    completedValue = Math.round(rawResult * 100) / 100;
+                    completedValue = Math.round(evaluatedResult * 100) / 100;
                   } catch {
                     completedValue = parseFloat(displayValue) || 0;
+                  }
+
+                  // check for negative values
+                  if (completedValue < 0) {
+                    completedValue = 0;
                   }
 
                   field.onChange(completedValue); // update form value
