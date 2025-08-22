@@ -1,11 +1,13 @@
+import { SettlementStatus, SplitType } from "@/types";
+
 export type BalanceInputs = {
   expenses: {
     id: string;
     amount: number;
-    split_type: "even" | "percentage" | "shares" | "custom";
+    split_type: SplitType;
     paid_by: string;
     settlement_id: string | null;
-    settlement_status: "draft" | "open" | "closed" | null;
+    settlement_status: SettlementStatus | null;
     splits: {
       user_id: string;
       weight: number;
@@ -17,7 +19,7 @@ export type BalanceInputs = {
     paid_to: string;
     amount: number;
     settlement_id: string | null;
-    settlement_status: "draft" | "open" | "closed" | null;
+    settlement_status: SettlementStatus | null;
   }[];
 };
 

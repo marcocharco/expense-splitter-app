@@ -43,10 +43,12 @@ export type Expense = {
   paid_by: { id: string; name: string };
   date: string;
   category: { id: string; name: string; icon: string } | null;
-  settlement?: { id: string; status: string };
+  settlement?: { id: string; status: SettlementStatus };
   splits: ExpenseSplit[];
   split_type: SplitType;
 };
+
+export type SettlementStatus = "open" | "closed";
 
 export type SplitType = "even" | "percentage" | "shares" | "custom";
 
@@ -67,7 +69,7 @@ export type Settlement = {
     id: string;
     name: string;
   };
-  status: "open" | "closed";
+  status: SettlementStatus;
   participants: {
     user: {
       id: string;
