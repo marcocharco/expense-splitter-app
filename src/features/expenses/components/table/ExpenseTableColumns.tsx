@@ -43,6 +43,7 @@ export const createExpenseTableColumns = (
   onEditExpense: (expense: Expense) => void,
   onDeleteExpense: (expenseId: string) => void,
   onDuplicateExpense: (expense: Expense) => void,
+  onViewExpense: (expense: Expense) => void,
   currentUserId?: string
 ): ColumnDef<Expense>[] => [
   {
@@ -176,7 +177,9 @@ export const createExpenseTableColumns = (
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>View details</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onViewExpense(expense)}>
+              View details
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onDuplicateExpense(expense)}>
               Duplicate
             </DropdownMenuItem>
@@ -208,6 +211,7 @@ export const createExpenseTableColumns = (
 
 // For backward compatibility
 export const columns = createExpenseTableColumns(
+  () => {},
   () => {},
   () => {},
   () => {}

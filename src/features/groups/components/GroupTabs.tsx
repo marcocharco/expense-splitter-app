@@ -13,6 +13,7 @@ import ExpenseForm from "@/features/expenses/components/forms/ExpenseForm";
 import { useCurrentGroup } from "@/features/groups/contexts/CurrentGroupContext";
 import { useUser } from "@/features/users/context/UserContext";
 import { Expense } from "@/types";
+import ExpenseDetailsSheet from "@/features/expenses/components/ExpenseDetailsSheet";
 
 const GroupTabs = () => {
   const group = useCurrentGroup();
@@ -22,6 +23,7 @@ const GroupTabs = () => {
   const [expenseToDuplicate, setExpenseToDuplicate] = useState<Expense | null>(
     null
   );
+  const [expenseToView, setExpenseToView] = useState<Expense | null>(null);
   const { deleteExpense } = useExpenses(group?.id ?? "");
 
   const columns = createExpenseTableColumns(
@@ -33,6 +35,9 @@ const GroupTabs = () => {
     },
     (expense: Expense) => {
       setExpenseToDuplicate(expense); // for duplicating
+    },
+    (expense: Expense) => {
+      setExpenseToView(expense); // for viewing details
     },
     user?.id
   );
@@ -74,6 +79,7 @@ const GroupTabs = () => {
         </TabsContent>
       </Tabs>
 
+      {/* Update Expense */}
       <UpdateFormDialog
         title="Update Expense"
         description={`Update ${expenseToUpdate?.title || "expense"}.`}
@@ -94,6 +100,7 @@ const GroupTabs = () => {
         }
       </UpdateFormDialog>
 
+      {/* Duplicate Expense */}
       <UpdateFormDialog
         title="Duplicate Expense"
         description={`Create a copy of "${
@@ -115,6 +122,11 @@ const GroupTabs = () => {
           )
         }
       </UpdateFormDialog>
+
+      <ExpenseDetailsSheet
+        expense={expenseToView}
+        onOpenChange={setExpenseToView}
+      />
     </>
   );
 };
