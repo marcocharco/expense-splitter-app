@@ -128,9 +128,11 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
           clearErrors={form.clearErrors}
         />
 
-        <Button type="submit" className="form-btn" disabled={isLoading}>
-          {type === "newExpense" ? "Add Expense" : "Update Expense"}
-        </Button>
+        <div className="flex justify-end">
+          <Button type="submit" className="form-btn" disabled={isLoading}>
+            {type === "newExpense" ? "Add Expense" : "Update Expense"}
+          </Button>
+        </div>
       </form>
     </Form>
   );

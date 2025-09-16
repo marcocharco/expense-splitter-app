@@ -8,7 +8,8 @@ import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import GroupBalances from "@/features/groups/components/GroupBalances";
 import PaymentList from "@/features/payments/components/PaymentList";
 import SettlementList from "@/features/settlements/components/SettlementList";
-import UpdateExpenseSheet from "@/features/expenses/components/UpdateExpenseSheet";
+import UpdateFormDialog from "@/components/ui/UpdateFormDialog";
+import ExpenseForm from "@/features/expenses/components/forms/ExpenseForm";
 import { useCurrentGroup } from "@/features/groups/contexts/CurrentGroupContext";
 import { useUser } from "@/features/users/context/UserContext";
 import { Expense } from "@/types";
@@ -67,10 +68,25 @@ const GroupTabs = () => {
         </TabsContent>
       </Tabs>
 
-      <UpdateExpenseSheet
-        expense={selectedExpense}
-        onOpenChange={setSelectedExpense}
-      />
+      <UpdateFormDialog
+        title="Update Expense"
+        description={`Update ${selectedExpense?.title || "expense"}.`}
+        open={Boolean(selectedExpense)}
+        onOpenChange={(isOpen) => !isOpen && setSelectedExpense(null)}
+      >
+        {(closeDialog) =>
+          selectedExpense && (
+            <ExpenseForm
+              type="updateExpense"
+              initialExpense={selectedExpense}
+              onSuccess={() => {
+                closeDialog();
+                setSelectedExpense(null);
+              }}
+            />
+          )
+        }
+      </UpdateFormDialog>
     </>
   );
 };

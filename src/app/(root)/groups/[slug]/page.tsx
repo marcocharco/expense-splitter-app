@@ -1,9 +1,6 @@
 import GroupTabs from "@/features/groups/components/GroupTabs";
-
 import { getGroupBySlug } from "@/features/groups/queries/getGroupBySlug";
-import NewExpenseSheet from "@/features/expenses/components/NewExpenseSheet";
-import NewPaymentSheet from "@/features/payments/components/NewPaymentSheet";
-import NewSettlementSheet from "@/features/settlements/components/NewSettlementSheet";
+import GroupActionButtons from "@/features/groups/components/GroupActionButtons";
 import UserBalancePreview from "@/features/groups/components/UserBalancePreview";
 
 const GroupPage = async ({
@@ -22,11 +19,7 @@ const GroupPage = async ({
         </div>
         <div className="flex flex-row justify-between items-end flex-wrap gap-2">
           <UserBalancePreview />
-          <div className="flex flex-wrap gap-3 justify-end">
-            <NewExpenseSheet />
-            <NewPaymentSheet />
-            <NewSettlementSheet />
-          </div>
+          <GroupActionButtons />
         </div>
 
         <GroupTabs />
