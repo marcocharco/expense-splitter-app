@@ -268,9 +268,11 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
         <NoteInput control={form.control} />
 
-        <Button type="submit" className="form-btn" disabled={isLoading}>
-          Submit Payment
-        </Button>
+        <div className="flex justify-end">
+          <Button type="submit" className="form-btn" disabled={isLoading}>
+            Submit Payment
+          </Button>
+        </div>
       </form>
     </Form>
   );

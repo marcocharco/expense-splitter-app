@@ -2,7 +2,7 @@
 
 import FormDialog from "@/components/ui/FormDialog";
 import ExpenseForm from "@/features/expenses/components/forms/ExpenseForm";
-import NewPaymentSheet from "@/features/payments/components/NewPaymentSheet";
+import PaymentForm from "@/features/payments/components/forms/PaymentForm";
 import NewSettlementSheet from "@/features/settlements/components/NewSettlementSheet";
 
 const GroupActionButtons = () => {
@@ -17,7 +17,13 @@ const GroupActionButtons = () => {
           <ExpenseForm type="newExpense" onSuccess={closeDialog} />
         )}
       </FormDialog>
-      <NewPaymentSheet />
+      <FormDialog
+        triggerText="New payment"
+        title="New Payment"
+        description="Log a payment to a group member."
+      >
+        {(closeDialog) => <PaymentForm onSuccess={closeDialog} />}
+      </FormDialog>
       <NewSettlementSheet />
     </div>
   );
