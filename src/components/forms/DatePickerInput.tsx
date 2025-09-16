@@ -37,7 +37,7 @@ const DatePickerInput = <T extends FieldValues, N extends Path<T>>({
             <FormLabel className="form-label">Date</FormLabel>
             <FormControl>
               <div className="input-class">
-                <Popover>
+                <Popover modal={true}>
                   <PopoverTrigger asChild>
                     <Button
                       variant={"outline"}
