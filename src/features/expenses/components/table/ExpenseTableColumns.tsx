@@ -32,11 +32,58 @@ function getPaymentStatus(expense: Expense) {
   return `${paid}/${total} Paid`;
 }
 
-function getUserShare(expense: Expense, currentUserId: string) {
+function getUserStatus(expense: Expense, currentUserId: string) {
   const userSplit = expense.splits.find(
     (split) => split.user.id === currentUserId
   );
-  return userSplit ? userSplit.amount : null;
+
+  if (!userSplit) {
+    return { type: "not_involved", amount: 0, text: "Not involved" };
+  }
+
+  const isPayer = expense.paid_by.id === currentUserId;
+
+  if (isPayer) {
+    // User paid the expense
+    const totalOwedToUser = expense.splits
+      .filter((split) => split.user.id !== currentUserId)
+      .reduce((sum, split) => sum + split.remaining_owing, 0);
+
+    if (totalOwedToUser > 0) {
+      return {
+        type: "owed",
+        amount: totalOwedToUser,
+        text: `You're owed ${formatCurrency(totalOwedToUser)}`,
+      };
+    } else {
+      return {
+        type: "paid",
+        amount: userSplit.initial_owing,
+        text: `You paid ${formatCurrency(userSplit.initial_owing)}`,
+      };
+    }
+  } else {
+    // User didn't pay the expense
+    if (userSplit.remaining_owing > 0) {
+      return {
+        type: "owes",
+        amount: userSplit.remaining_owing,
+        text: `You owe ${formatCurrency(userSplit.remaining_owing)}`,
+      };
+    } else if (userSplit.initial_owing > 0) {
+      return {
+        type: "paid_share",
+        amount: userSplit.initial_owing,
+        text: `Paid ${formatCurrency(userSplit.initial_owing)}`,
+      };
+    } else {
+      return {
+        type: "no_cost",
+        amount: 0,
+        text: "No cost to you",
+      };
+    }
+  }
 }
 
 export const createExpenseTableColumns = (
@@ -61,21 +108,36 @@ export const createExpenseTableColumns = (
     },
   },
   {
-    accessorKey: "yourShare",
-    header: () => <div className="text-right pr-4">Your Share</div>,
+    accessorKey: "yourStatus",
+    header: () => <div className="pr-4">Your Status</div>,
     cell: ({ row }) => {
       if (!currentUserId) return;
 
       const expense = row.original;
-      const userShare = getUserShare(expense, currentUserId);
+      const status = getUserStatus(expense, currentUserId);
 
-      if (userShare === null) {
-        return <div className="text-right pr-4">N/A</div>;
-      }
+      const getTextColor = (type: string) => {
+        switch (type) {
+          case "owed":
+            return "text-green-600"; // You're owed money
+          case "owes":
+            return "text-red-600"; // You owe money
+          case "paid":
+            return "text-blue-600"; // You paid (settled)
+          case "paid_share":
+            return "text-blue-600"; // You paid your share
+          case "not_involved":
+            return "text-gray-400";
+          case "no_cost":
+            return "text-gray-600";
+          default:
+            return "";
+        }
+      };
 
       return (
-        <div className="text-right pr-4">
-          <span>{formatCurrency(userShare)}</span>
+        <div className={`pr-4 ${getTextColor(status.type)}`}>
+          <span className="text-sm">{status.text}</span>
         </div>
       );
     },
