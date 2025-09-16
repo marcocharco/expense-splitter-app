@@ -19,6 +19,7 @@ import { DateToYMD } from "@/utils/formatDate";
 import { formatCurrency } from "@/utils/formatCurrency";
 import MultiSelectInput from "@/components/forms/MultiSelectInput";
 import { useSettlements } from "@/features/settlements/hooks/useSettlements";
+import { toast } from "sonner";
 
 const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const { user } = useUser();
@@ -134,6 +135,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
           note: values.note,
         });
       }
+      toast(`Successfully added payment of ${formatCurrency(values.amount)}`);
       onSuccess();
     } catch (error) {
       console.error(error);

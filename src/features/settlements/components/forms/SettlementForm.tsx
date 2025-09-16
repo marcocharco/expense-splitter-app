@@ -15,6 +15,7 @@ import TitleInput from "@/components/forms/TitleInput";
 import { SettlementFormSchema } from "@/features/settlements/schemas/settlementFormSchema";
 import MultiSelectInput from "@/components/forms/MultiSelectInput";
 import { useSettlements } from "../../hooks/useSettlements";
+import { toast } from "sonner";
 
 const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const { user } = useUser();
@@ -83,6 +84,7 @@ const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
         balances,
       });
 
+      toast(`Successfully added "${values.title}"`);
       onSuccess();
     } catch (error) {
       console.error(error);

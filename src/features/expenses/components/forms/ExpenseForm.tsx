@@ -23,6 +23,7 @@ import { Expense } from "@/types";
 import { toFormValues } from "@/features/expenses/utils/expenseMapper";
 import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import { DateToYMD } from "@/utils/formatDate";
+import { toast } from "sonner";
 
 type ExpenseFormProps = {
   type: "newExpense" | "updateExpense";
@@ -86,12 +87,14 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
     try {
       if (type === "newExpense") {
         await addExpense({ ...rest, memberSplits: filteredSplits });
+        toast(`Successfully added "${values.title}"`);
         onSuccess();
       } else if (type === "updateExpense" && initialExpense) {
         await editExpense({
           values: { ...rest, memberSplits: filteredSplits },
           expenseId: initialExpense.id,
         });
+        toast(`Successfully updated "${values.title}"`);
         onSuccess();
       }
     } catch (error) {
