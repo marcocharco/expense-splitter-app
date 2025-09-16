@@ -117,13 +117,17 @@ const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
           )}
         </div>
 
-        <Button
-          type="submit"
-          disabled={selectedExpenses.length === 0 || isStartingSettlement}
-          className="form-btn"
-        >
-          {isStartingSettlement ? "Creating Settlement..." : "Start Settlement"}
-        </Button>
+        <div className="flex justify-end">
+          <Button
+            type="submit"
+            disabled={selectedExpenses.length === 0 || isStartingSettlement}
+            className="form-btn"
+          >
+            {isStartingSettlement
+              ? "Creating Settlement..."
+              : "Start Settlement"}
+          </Button>
+        </div>
       </form>
     </Form>
   );

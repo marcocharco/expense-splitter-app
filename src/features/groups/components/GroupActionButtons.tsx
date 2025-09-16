@@ -3,7 +3,7 @@
 import FormDialog from "@/components/ui/FormDialog";
 import ExpenseForm from "@/features/expenses/components/forms/ExpenseForm";
 import PaymentForm from "@/features/payments/components/forms/PaymentForm";
-import NewSettlementSheet from "@/features/settlements/components/NewSettlementSheet";
+import SettlementForm from "@/features/settlements/components/forms/SettlementForm";
 
 const GroupActionButtons = () => {
   return (
@@ -24,7 +24,13 @@ const GroupActionButtons = () => {
       >
         {(closeDialog) => <PaymentForm onSuccess={closeDialog} />}
       </FormDialog>
-      <NewSettlementSheet />
+      <FormDialog
+        triggerText="Settle Expenses"
+        title="Settle Expenses"
+        description="Settle group balances"
+      >
+        {(closeDialog) => <SettlementForm onSuccess={closeDialog} />}
+      </FormDialog>
     </div>
   );
 };
