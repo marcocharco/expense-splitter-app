@@ -20,6 +20,7 @@ export async function getGroupPayments(groupId: string) {
     )
     .eq("group_id", groupId)
     .order("date", { ascending: false })
+    .order("created_at", { ascending: false })
     .overrideTypes<Payment[], { merge: false }>();
 
   // console.log(data);
