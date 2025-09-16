@@ -18,7 +18,7 @@ export const formatDisplayDate = (value: string): string => {
   return date
     ? date.toLocaleDateString("en-US", {
         year: "numeric",
-        month: "long",
+        month: "short",
         day: "numeric",
       })
     : "";
