@@ -42,6 +42,7 @@ function getUserShare(expense: Expense, currentUserId: string) {
 export const createExpenseTableColumns = (
   onEditExpense: (expense: Expense) => void,
   onDeleteExpense: (expenseId: string) => void,
+  onDuplicateExpense: (expense: Expense) => void,
   currentUserId?: string
 ): ColumnDef<Expense>[] => [
   {
@@ -176,7 +177,9 @@ export const createExpenseTableColumns = (
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem>View details</DropdownMenuItem>
-            <DropdownMenuItem>Duplicate</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onDuplicateExpense(expense)}>
+              Duplicate
+            </DropdownMenuItem>
             {!disableEdit && (
               <>
                 <DropdownMenuItem onClick={() => onEditExpense(expense)}>
@@ -205,6 +208,7 @@ export const createExpenseTableColumns = (
 
 // For backward compatibility
 export const columns = createExpenseTableColumns(
+  () => {},
   () => {},
   () => {}
 );

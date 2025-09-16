@@ -18,15 +18,21 @@ const GroupTabs = () => {
   const group = useCurrentGroup();
   const { user } = useUser();
   const { expenses } = useExpenses(group?.id ?? "");
-  const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
+  const [expenseToUpdate, setExpenseToUpdate] = useState<Expense | null>(null);
+  const [expenseToDuplicate, setExpenseToDuplicate] = useState<Expense | null>(
+    null
+  );
   const { deleteExpense } = useExpenses(group?.id ?? "");
 
   const columns = createExpenseTableColumns(
     (expense: Expense) => {
-      setSelectedExpense(expense); // for editing
+      setExpenseToUpdate(expense); // for editing
     },
     (expenseId: string) => {
       deleteExpense({ expenseId }); // for deleting
+    },
+    (expense: Expense) => {
+      setExpenseToDuplicate(expense); // for duplicating
     },
     user?.id
   );
@@ -70,18 +76,40 @@ const GroupTabs = () => {
 
       <UpdateFormDialog
         title="Update Expense"
-        description={`Update ${selectedExpense?.title || "expense"}.`}
-        open={Boolean(selectedExpense)}
-        onOpenChange={(isOpen) => !isOpen && setSelectedExpense(null)}
+        description={`Update ${expenseToUpdate?.title || "expense"}.`}
+        open={Boolean(expenseToUpdate)}
+        onOpenChange={(isOpen) => !isOpen && setExpenseToUpdate(null)}
       >
         {(closeDialog) =>
-          selectedExpense && (
+          expenseToUpdate && (
             <ExpenseForm
               type="updateExpense"
-              initialExpense={selectedExpense}
+              initialExpense={expenseToUpdate}
               onSuccess={() => {
                 closeDialog();
-                setSelectedExpense(null);
+                setExpenseToUpdate(null);
+              }}
+            />
+          )
+        }
+      </UpdateFormDialog>
+
+      <UpdateFormDialog
+        title="Duplicate Expense"
+        description={`Create a copy of "${
+          expenseToDuplicate?.title || "expense"
+        }".`}
+        open={Boolean(expenseToDuplicate)}
+        onOpenChange={(isOpen) => !isOpen && setExpenseToDuplicate(null)}
+      >
+        {(closeDialog) =>
+          expenseToDuplicate && (
+            <ExpenseForm
+              type="newExpense"
+              initialExpense={expenseToDuplicate}
+              onSuccess={() => {
+                closeDialog();
+                setExpenseToDuplicate(null);
               }}
             />
           )

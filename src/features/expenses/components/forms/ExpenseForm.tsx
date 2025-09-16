@@ -50,6 +50,15 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
           expense: initialExpense!,
           members: groupMembers,
         })
+      : initialExpense
+      ? {
+          // default to the current date for duplicate expenses
+          ...toFormValues({
+            expense: initialExpense,
+            members: groupMembers,
+          }),
+          date: DateToYMD(new Date()), // Reset to today's date
+        }
       : {
           amount: 0,
           title: "",
