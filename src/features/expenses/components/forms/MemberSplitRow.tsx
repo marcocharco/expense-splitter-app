@@ -154,8 +154,12 @@ const MemberSplitRow = ({
       control={control}
       name={`memberSplits.${memberIndex}.weight`}
       render={({ field }) => (
-        <>
-          <span>{formatCurrency(isSelected ? splitAmount || 0 : 0)}</span>
+        <div className="flex items-center space-x-4">
+          {/* Split amount previews */}
+          <span className="w-20 text-right text-sm text-muted-foreground">
+            {formatCurrency(isSelected ? splitAmount || 0 : 0)}
+          </span>
+          {/* Split inputs */}
           <div className="relative">
             <Input
               placeholder={isSelected && splitType !== "even" ? "0" : "-"}
@@ -226,12 +230,13 @@ const MemberSplitRow = ({
               className="w-32 pr-8 input-no-spinner"
               onWheel={(e) => e.currentTarget.blur()}
             />
+            {/* Symbol for type of split in preview box */}
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
               {splitCostLabel}
             </span>
           </div>
           <FormMessage className="form-message" />
-        </>
+        </div>
       )}
     />
   );

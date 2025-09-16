@@ -72,49 +72,54 @@ const ExpenseSplitDetailsInput = ({
               return (
                 <FormItem
                   key={member.id}
-                  className="flex items-center space-x-4"
+                  className="flex items-center justify-between"
                 >
-                  <FormControl>
-                    <Checkbox
-                      id={member.id}
-                      checked={isSelected}
-                      onCheckedChange={(checked) => {
-                        const newValue = checked
-                          ? [...(selectedMembers || []), member.id]
-                          : selectedMembers.filter(
-                              (id: string) => id !== member.id
-                            );
+                  <div className="flex items-center space-x-4">
+                    <FormControl>
+                      <Checkbox
+                        id={member.id}
+                        checked={isSelected}
+                        onCheckedChange={(checked) => {
+                          const newValue = checked
+                            ? [...(selectedMembers || []), member.id]
+                            : selectedMembers.filter(
+                                (id: string) => id !== member.id
+                              );
 
-                        const total = getSelectedTotal(memberSplits, newValue);
-                        const overLimit = isOverTotalLimit(
-                          total,
-                          splitType,
-                          currentAmount
-                        );
+                          const total = getSelectedTotal(
+                            memberSplits,
+                            newValue
+                          );
+                          const overLimit = isOverTotalLimit(
+                            total,
+                            splitType,
+                            currentAmount
+                          );
 
-                        if (overLimit) {
-                          setError("memberSplits", {
-                            type: "manual",
-                            message:
-                              splitType === "custom" ||
-                              splitType === "percentage"
-                                ? errorMsgForLimit(splitType, currentAmount)
-                                : "Invalid split type",
-                          });
-                        } else {
-                          clearErrors("memberSplits");
-                        }
+                          if (overLimit) {
+                            setError("memberSplits", {
+                              type: "manual",
+                              message:
+                                splitType === "custom" ||
+                                splitType === "percentage"
+                                  ? errorMsgForLimit(splitType, currentAmount)
+                                  : "Invalid split type",
+                            });
+                          } else {
+                            clearErrors("memberSplits");
+                          }
 
-                        setValue("selectedMembers", newValue);
-                      }}
-                    />
-                  </FormControl>
-                  <FormLabel
-                    htmlFor={member.id}
-                    className="w-32 font-normal text-base"
-                  >
-                    {member.name}
-                  </FormLabel>
+                          setValue("selectedMembers", newValue);
+                        }}
+                      />
+                    </FormControl>
+                    <FormLabel
+                      htmlFor={member.id}
+                      className="w-32 font-normal text-base"
+                    >
+                      {member.name}
+                    </FormLabel>
+                  </div>
                   <MemberSplitRow
                     control={control}
                     member={member}
