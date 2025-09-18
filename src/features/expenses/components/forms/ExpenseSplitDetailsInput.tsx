@@ -6,6 +6,7 @@ import { Member } from "@/types";
 import { ExpenseFormSchema } from "@/features/expenses/schemas/expenseFormSchema";
 
 import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 import {
   FormControl,
   FormField,
@@ -53,9 +54,45 @@ const ExpenseSplitDetailsInput = ({
     name: "memberSplits",
   });
 
+  const areAllMembersSelected = selectedMembers?.length === groupMembers.length;
+
+  const handleSelectAllToggle = () => {
+    const newValue = areAllMembersSelected
+      ? [] // Deselect all
+      : groupMembers.map((member) => member.id); // Select all
+
+    const total = getSelectedTotal(memberSplits, newValue);
+    const overLimit = isOverTotalLimit(total, splitType, currentAmount);
+
+    if (overLimit) {
+      setError("memberSplits", {
+        type: "manual",
+        message:
+          splitType === "custom" || splitType === "percentage"
+            ? errorMsgForLimit(splitType, currentAmount)
+            : "Invalid split type",
+      });
+    } else {
+      clearErrors("memberSplits");
+    }
+
+    setValue("selectedMembers", newValue);
+  };
+
   return (
     <div className="form-item">
-      <FormLabel className="form-label">Splits</FormLabel>
+      <div className="flex items-center justify-between">
+        <FormLabel className="form-label">Splits</FormLabel>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleSelectAllToggle}
+          className="text-xs"
+        >
+          {areAllMembersSelected ? "Deselect All" : "Select All"}
+        </Button>
+      </div>
       <FormField
         control={control}
         name="selectedMembers"
