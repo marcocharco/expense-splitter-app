@@ -96,4 +96,46 @@ function TabsContent({
   );
 }
 
-export { Tabs, TabsList, TabsTrigger, TabsContent };
+// Form-specific tabs with button styling
+function FormTabsList({
+  className,
+  ...props
+}: React.ComponentProps<typeof TabsPrimitive.List>) {
+  return (
+    <TabsPrimitive.List
+      data-slot="form-tabs-list"
+      className={cn(
+        "grid grid-cols-4 gap-1 rounded-lg bg-gray-0 p-1 h-full",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+function FormTabsTrigger({
+  className,
+  ...props
+}: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
+  return (
+    <TabsPrimitive.Trigger
+      data-slot="form-tabs-trigger"
+      className={cn(
+        "flex items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 min-w-0",
+        "text-gray-400 hover:text-gray-900",
+        "data-[state=active]:shadow-sm data-[state=active]:form-tab-active",
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+export {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+  FormTabsList,
+  FormTabsTrigger,
+};

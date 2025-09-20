@@ -86,6 +86,10 @@
   @apply flex items-baseline gap-2;
 }
 
+@utility form-tab-active {
+  @apply !text-main bg-main/10;
+}
+
 @utility input-class {
   @apply !text-sm !border-neutral-200 !h-12 my-2;
 }

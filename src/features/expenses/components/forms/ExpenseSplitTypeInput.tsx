@@ -4,13 +4,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Tabs, FormTabsList, FormTabsTrigger } from "@/components/ui/tabs";
 
 import { ExpenseFormSchema } from "@/features/expenses/schemas/expenseFormSchema";
 import { Control } from "react-hook-form";
@@ -34,17 +28,16 @@ const ExpenseSplitTypeInput = ({ control }: ExpenseSplitTypeInputProps) => {
             </div>
             <FormControl>
               <div className="input-class">
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger className="w-[240px]">
-                    <SelectValue placeholder="Select a split type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="even">Even</SelectItem>
-                    <SelectItem value="percentage">Percentage</SelectItem>
-                    <SelectItem value="shares">Shares</SelectItem>
-                    <SelectItem value="custom">Custom</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Tabs value={field.value} onValueChange={field.onChange}>
+                  <FormTabsList>
+                    <FormTabsTrigger value="even">Even</FormTabsTrigger>
+                    <FormTabsTrigger value="percentage">
+                      Percentage
+                    </FormTabsTrigger>
+                    <FormTabsTrigger value="shares">Shares</FormTabsTrigger>
+                    <FormTabsTrigger value="custom">Custom</FormTabsTrigger>
+                  </FormTabsList>
+                </Tabs>
               </div>
             </FormControl>
           </>
