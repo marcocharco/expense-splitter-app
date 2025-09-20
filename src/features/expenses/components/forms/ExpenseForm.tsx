@@ -106,44 +106,53 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8"
+        className="grid grid-cols-1 xl:grid-cols-2 gap-8 h-full"
         autoComplete="off"
       >
-        <TitleInput
-          control={form.control}
-          name="title"
-          label="Title"
-          placeholder="e.g. Grocery bill, Flight tickets, etc."
-        />
+        {/* left side (general expense info) */}
+        <div className="space-y-4">
+          <TitleInput
+            control={form.control}
+            name="title"
+            label="Title"
+            placeholder="e.g. Grocery bill, Flight tickets, etc."
+          />
 
-        <AmountInput control={form.control} name="amount" />
+          <AmountInput control={form.control} name="amount" />
 
-        <MemberSelectInput
-          control={form.control}
-          name="paidBy"
-          formType="expense"
-          groupMembers={groupMembers}
-          currentUserId={user.id ?? ""}
-        />
+          <MemberSelectInput
+            control={form.control}
+            name="paidBy"
+            formType="expense"
+            groupMembers={groupMembers}
+            currentUserId={user.id ?? ""}
+          />
 
-        <DatePickerInput control={form.control} name="date" />
+          <DatePickerInput control={form.control} name="date" />
 
-        <ExpenseCategoryInput control={form.control} groupId={groupData.id} />
+          <ExpenseCategoryInput control={form.control} groupId={groupData.id} />
+        </div>
 
-        <ExpenseSplitTypeInput control={form.control} />
+        {/* right side (split info) */}
+        <div className="flex flex-col space-y-4">
+          <div className="flex-1 space-y-4">
+            <ExpenseSplitTypeInput control={form.control} />
 
-        <ExpenseSplitDetailsInput
-          groupMembers={groupMembers}
-          control={form.control}
-          setValue={form.setValue}
-          setError={form.setError}
-          clearErrors={form.clearErrors}
-        />
+            <ExpenseSplitDetailsInput
+              groupMembers={groupMembers}
+              control={form.control}
+              setValue={form.setValue}
+              setError={form.setError}
+              clearErrors={form.clearErrors}
+            />
+          </div>
 
-        <div className="flex justify-end">
-          <Button type="submit" className="form-btn" disabled={isLoading}>
-            {type === "newExpense" ? "Add Expense" : "Update Expense"}
-          </Button>
+          {/* submit form button */}
+          <div className="flex justify-end mt-8">
+            <Button type="submit" className="form-btn" disabled={isLoading}>
+              {type === "newExpense" ? "Add Expense" : "Update Expense"}
+            </Button>
+          </div>
         </div>
       </form>
     </Form>

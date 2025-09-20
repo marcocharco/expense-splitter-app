@@ -28,7 +28,7 @@ export const UpdateFormDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-7xl w-[98vw] px-12 py-12 max-h-[80vh] overflow-y-auto">
+      <DialogContent className="!max-w-[70vw] !w-[60vw] px-12 py-12 max-h-[80vh] overflow-y-auto min-w-auto">
         <DialogHeader>
           <DialogTitle className="text-3xl font-medium">{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
