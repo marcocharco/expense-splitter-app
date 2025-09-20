@@ -12,7 +12,7 @@ import { Form, FormLabel } from "@/components/ui/form";
 import MemberSelectInput from "@/components/forms/MemberSelectInput";
 import DatePickerInput from "@/components/forms/DatePickerInput";
 import NoteInput from "@/components/forms/NoteInput";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import PaymentTypeInput from "./PaymentTypeInput";
 import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import { ExpenseSplit } from "@/types";
 import { DateToYMD } from "@/utils/formatDate";
@@ -161,119 +161,130 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8"
+        className="grid grid-cols-1 xl:grid-cols-2 gap-8 h-full"
         autoComplete="off"
       >
-        <AmountInput control={form.control} name={"amount"} />
-        <MemberSelectInput
-          control={form.control}
-          name="paidTo"
-          formType="payment"
-          groupMembers={groupMembers}
-          currentUserId={user.id}
-        />
+        {/* left side (payment details) */}
+        <div className="space-y-4">
+          <MemberSelectInput
+            control={form.control}
+            name="paidTo"
+            formType="payment"
+            groupMembers={groupMembers}
+            currentUserId={user.id}
+          />
 
-        <Tabs
-          defaultValue="settlement"
-          className="w-[400px]"
-          onValueChange={(val) =>
-            setPaymentType(val as "settlement" | "balance")
-          }
-        >
-          <TabsList className="w-fit">
-            <TabsTrigger value="settlement">Settlement</TabsTrigger>
-            <TabsTrigger value="balance">Balance</TabsTrigger>
-          </TabsList>
-          <TabsContent value="settlement">
-            {paidTo == "" ? (
-              <span>Choose a payment recepient</span>
-            ) : openSettlements.length > 0 ? (
-              <div className="space-y-2">
-                <FormLabel className="form-item-label">
-                  Choose Settlement{" "}
-                  <span className="text-muted-foreground font-normal text-sm">
-                    (optional)
-                  </span>
-                </FormLabel>
-                {openSettlements.map((settlement) => {
-                  const currentUserAmountOwed =
-                    settlement.participants.find(
-                      (participant) => participant.user.id === user.id
-                    )?.remaining_balance || 0;
+          <AmountInput control={form.control} name={"amount"} />
 
-                  return (
-                    <div
-                      key={settlement.id}
-                      className="flex items-center gap-2"
-                    >
-                      <input
-                        type="radio"
-                        name="settlement"
-                        value={settlement.id}
-                        checked={settlementId === settlement.id}
-                        onChange={() => setSettlementId(settlement.id)}
-                        id={`settlement-${settlement.id}`}
-                      />
-                      <label
-                        htmlFor={`settlement-${settlement.id}`}
-                        className="text-sm"
-                      >
-                        {settlement.title} - You Owe{" "}
-                        {formatCurrency(currentUserAmountOwed)}
-                      </label>
+          <DatePickerInput control={form.control} name="date" />
+
+          <NoteInput control={form.control} />
+        </div>
+
+        {/* right side (expense/settlemnt selection) */}
+        <div className="flex flex-col space-y-4">
+          <div className="flex-1 space-y-4">
+            <PaymentTypeInput
+              value={paymentType}
+              onValueChange={(val) =>
+                setPaymentType(val as "settlement" | "balance")
+              }
+            />
+
+            {/* Payment Type Content */}
+            <div className="space-y-4">
+              {paymentType === "settlement" ? (
+                <div>
+                  {paidTo === "" ? (
+                    <span>Choose a payment recipient</span>
+                  ) : openSettlements.length > 0 ? (
+                    <div className="space-y-2">
+                      <FormLabel className="form-item-label">
+                        Choose Settlement{" "}
+                        <span className="text-muted-foreground font-normal text-sm">
+                          (optional)
+                        </span>
+                      </FormLabel>
+                      {openSettlements.map((settlement) => {
+                        const currentUserAmountOwed =
+                          settlement.participants.find(
+                            (participant) => participant.user.id === user.id
+                          )?.remaining_balance || 0;
+
+                        return (
+                          <div
+                            key={settlement.id}
+                            className="flex items-center gap-2"
+                          >
+                            <input
+                              type="radio"
+                              name="settlement"
+                              value={settlement.id}
+                              checked={settlementId === settlement.id}
+                              onChange={() => setSettlementId(settlement.id)}
+                              id={`settlement-${settlement.id}`}
+                            />
+                            <label
+                              htmlFor={`settlement-${settlement.id}`}
+                              className="text-sm"
+                            >
+                              {settlement.title} - You Owe{" "}
+                              {formatCurrency(currentUserAmountOwed)}
+                            </label>
+                          </div>
+                        );
+                      })}
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name="settlement"
+                          value=""
+                          checked={settlementId === null}
+                          onChange={() => setSettlementId(null)}
+                          id="settlement-none"
+                        />
+                        <label htmlFor="settlement-none" className="text-sm">
+                          None (General Payment)
+                        </label>
+                      </div>
                     </div>
-                  );
-                })}
-                <div className="flex items-center gap-2">
-                  <input
-                    type="radio"
-                    name="settlement"
-                    value=""
-                    checked={settlementId === null}
-                    onChange={() => setSettlementId(null)}
-                    id="settlement-none"
-                  />
-                  <label htmlFor="settlement-none" className="text-sm">
-                    None (General Payment)
-                  </label>
+                  ) : (
+                    <span>No open settlements</span>
+                  )}
                 </div>
-              </div>
-            ) : (
-              <span>No open settlements</span>
-            )}
-          </TabsContent>
-          <TabsContent value="balance">
-            {paidTo == "" ? (
-              <span>Choose a payment recepient</span>
-            ) : unpaidExpenses.length > 0 ? (
-              <div className="space-y-4">
-                <FormLabel className="form-item-label">
-                  Choose Expenses
-                  <span className="text-muted-foreground font-normal text-sm">
-                    {" "}
-                    (select one or more)
-                  </span>
-                </FormLabel>
-                <MultiSelectInput<FormValues>
-                  control={form.control}
-                  name="selectedExpenseIds"
-                  items={expenseItems}
-                />
-              </div>
-            ) : (
-              <span>No unpaid expenses</span>
-            )}
-          </TabsContent>
-        </Tabs>
+              ) : (
+                <div>
+                  {paidTo === "" ? (
+                    <span>Choose a payment recipient</span>
+                  ) : unpaidExpenses.length > 0 ? (
+                    <div className="space-y-4">
+                      <FormLabel className="form-item-label">
+                        Choose Expenses
+                        <span className="text-muted-foreground font-normal text-sm">
+                          {" "}
+                          (select one or more)
+                        </span>
+                      </FormLabel>
+                      <MultiSelectInput<FormValues>
+                        control={form.control}
+                        name="selectedExpenseIds"
+                        items={expenseItems}
+                      />
+                    </div>
+                  ) : (
+                    <span>No unpaid expenses</span>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
 
-        <DatePickerInput control={form.control} name="date" />
-
-        <NoteInput control={form.control} />
-
-        <div className="flex justify-end">
-          <Button type="submit" className="form-btn" disabled={isLoading}>
-            Submit Payment
-          </Button>
+          {/* Submit Button */}
+          <div className="flex justify-end mt-8">
+            <Button type="submit" className="form-btn" disabled={isLoading}>
+              Submit Payment
+            </Button>
+          </div>
         </div>
       </form>
     </Form>

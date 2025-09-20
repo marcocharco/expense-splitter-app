@@ -21,12 +21,16 @@ const NoteInput = ({ control }: NoteInputProps) => {
       name="note"
       render={({ field }) => (
         <div className="form-item">
-          <FormLabel className="form-item-label">
-            Note
-            <span className="text-muted-foreground font-normal text-sm">
-              (optional)
-            </span>
-          </FormLabel>
+          <div className="form-label-row">
+            <FormLabel className="form-item-label">
+              Note
+              <span className="text-muted-foreground font-normal text-sm">
+                {" "}
+                (optional)
+              </span>
+            </FormLabel>
+            <FormMessage className="form-item-message" />
+          </div>
           <div className="flex flex-col w-full">
             <FormControl>
               <Input
@@ -39,7 +43,6 @@ const NoteInput = ({ control }: NoteInputProps) => {
                 onChange={field.onChange}
               />
             </FormControl>
-            <FormMessage className="form-item-message" />
           </div>
         </div>
       )}
