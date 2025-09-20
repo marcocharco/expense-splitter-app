@@ -40,7 +40,10 @@ const ExpenseCategoryInput = ({ control, groupId }: ExpenseFormInputProps) => {
         name="category"
         render={({ field }) => (
           <>
-            <FormLabel className="form-item-label">Category</FormLabel>
+            <div className="form-label-row">
+              <FormLabel className="form-item-label">Category</FormLabel>
+              <FormMessage className="form-item-message" />
+            </div>
             <FormControl>
               <div className="input-class">
                 <Select value={field.value} onValueChange={field.onChange}>
@@ -59,7 +62,6 @@ const ExpenseCategoryInput = ({ control, groupId }: ExpenseFormInputProps) => {
                 </Select>
               </div>
             </FormControl>
-            <FormMessage className="form-item-message" />
           </>
         )}
       />

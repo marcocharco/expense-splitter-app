@@ -28,7 +28,10 @@ const ExpenseSplitTypeInput = ({ control }: ExpenseSplitTypeInputProps) => {
         name="splitType"
         render={({ field }) => (
           <>
-            <FormLabel className="form-item-label">Split Type</FormLabel>
+            <div className="form-label-row">
+              <FormLabel className="form-item-label">Split Type</FormLabel>
+              <FormMessage className="form-item-message" />
+            </div>
             <FormControl>
               <div className="input-class">
                 <Select value={field.value} onValueChange={field.onChange}>
@@ -44,7 +47,6 @@ const ExpenseSplitTypeInput = ({ control }: ExpenseSplitTypeInputProps) => {
                 </Select>
               </div>
             </FormControl>
-            <FormMessage className="form-item-message" />
           </>
         )}
       />

@@ -82,7 +82,14 @@ const ExpenseSplitDetailsInput = ({
   return (
     <div className="form-item">
       <div className="flex items-center justify-between">
-        <FormLabel className="form-item-label">Splits</FormLabel>
+        <div className="form-label-row">
+          <FormLabel className="form-item-label">Splits</FormLabel>
+          <FormField
+            control={control}
+            name="selectedMembers"
+            render={() => <FormMessage className="form-item-message" />}
+          />
+        </div>
         <Button
           type="button"
           variant="outline"
@@ -93,11 +100,6 @@ const ExpenseSplitDetailsInput = ({
           {areAllMembersSelected ? "Deselect All" : "Select All"}
         </Button>
       </div>
-      <FormField
-        control={control}
-        name="selectedMembers"
-        render={() => <FormMessage className="form-item-message" />}
-      />
       <FormField
         control={control}
         name="memberSplits"

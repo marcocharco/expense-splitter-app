@@ -28,15 +28,18 @@ const TitleInput = <T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <div className="form-item">
-          <FormLabel className="form-item-label">
-            {label}
-            {isOptional && (
-              <span className="text-muted-foreground font-normal text-sm">
-                {" "}
-                (optional)
-              </span>
-            )}
-          </FormLabel>
+          <div className="form-label-row">
+            <FormLabel className="form-item-label">
+              {label}
+              {isOptional && (
+                <span className="text-muted-foreground font-normal text-sm">
+                  {" "}
+                  (optional)
+                </span>
+              )}
+            </FormLabel>
+            <FormMessage className="form-item-message" />
+          </div>
           <div className="flex flex-col w-full">
             <FormControl>
               <Input
@@ -49,7 +52,6 @@ const TitleInput = <T extends FieldValues>({
                 onChange={field.onChange}
               />
             </FormControl>
-            <FormMessage className="form-item-message" />
           </div>
         </div>
       )}

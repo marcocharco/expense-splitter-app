@@ -75,11 +75,15 @@
 }
 
 @utility form-item-label {
-  @apply !text-base w-full max-w-[280px] font-medium !text-neutral-900;
+  @apply !text-base w-auto max-w-[280px] font-medium !text-neutral-900 leading-none;
 }
 
 @utility form-item-message {
-  @apply !text-red-500 !text-sm !h-[20px];
+  @apply !text-red-500 !text-xs !h-auto leading-none;
+}
+
+@utility form-label-row {
+  @apply flex items-baseline gap-2;
 }
 
 @utility input-class {

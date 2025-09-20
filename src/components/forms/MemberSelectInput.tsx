@@ -47,9 +47,12 @@ const MemberSelectInput = <T extends FieldValues, N extends Path<T>>({
         name={name}
         render={({ field }) => (
           <>
-            <FormLabel className="form-item-label">
-              {formType === "expense" ? "Paid By" : "Paid To"}
-            </FormLabel>
+            <div className="form-label-row">
+              <FormLabel className="form-item-label">
+                {formType === "expense" ? "Paid By" : "Paid To"}
+              </FormLabel>
+              <FormMessage className="form-item-message" />
+            </div>
             <FormControl>
               <div className="input-class">
                 <Select value={field.value} onValueChange={field.onChange}>
@@ -66,7 +69,6 @@ const MemberSelectInput = <T extends FieldValues, N extends Path<T>>({
                 </Select>
               </div>
             </FormControl>
-            <FormMessage className="form-item-message" />
           </>
         )}
       />
