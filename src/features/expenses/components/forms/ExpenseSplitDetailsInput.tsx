@@ -154,7 +154,7 @@ const ExpenseSplitDetailsInput = ({
                       htmlFor={member.id}
                       className="w-32 font-normal text-base"
                     >
-                      {member.name}
+                      <span className="cursor-pointer">{member.name}</span>
                     </FormLabel>
                   </div>
                   <MemberSplitRow
