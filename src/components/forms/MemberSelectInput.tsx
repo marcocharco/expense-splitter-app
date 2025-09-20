@@ -22,6 +22,7 @@ type MemberSelectInputProps<T extends FieldValues, N extends Path<T>> = {
   groupMembers: Member[];
   currentUserId: string;
   formType: "expense" | "payment";
+  excludeUserId?: string;
 };
 
 const MemberSelectInput = <T extends FieldValues, N extends Path<T>>({
@@ -30,16 +31,20 @@ const MemberSelectInput = <T extends FieldValues, N extends Path<T>>({
   groupMembers,
   currentUserId,
   formType,
+  excludeUserId,
 }: MemberSelectInputProps<T, N>) => {
+  // Auto-determine width based on form type
+  const width = formType === "payment" ? "w-full" : "w-[240px]";
   const filteredMembers = useMemo(() => {
     let list = groupMembers;
 
-    if (formType === "payment" && currentUserId) {
-      list = list.filter((m) => m.id !== currentUserId);
+    // Simply exclude the specified user if provided
+    if (excludeUserId) {
+      list = list.filter((m) => m.id !== excludeUserId);
     }
 
     return list;
-  }, [groupMembers, formType, currentUserId]);
+  }, [groupMembers, excludeUserId]);
   return (
     <div className="form-item">
       <FormField
@@ -49,20 +54,20 @@ const MemberSelectInput = <T extends FieldValues, N extends Path<T>>({
           <>
             <div className="form-label-row">
               <FormLabel className="form-item-label">
-                {formType === "expense" ? "Paid By" : "Paid To"}
+                {name === "paidBy" ? "Paid By" : "Paid To"}
               </FormLabel>
               <FormMessage className="form-item-message" />
             </div>
             <FormControl>
               <div className="input-class">
                 <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger className="w-[240px]">
+                  <SelectTrigger className={width}>
                     <SelectValue placeholder="Select a member" />
                   </SelectTrigger>
                   <SelectContent>
                     {filteredMembers.map((member) => (
                       <SelectItem key={member.id} value={member.id}>
-                        {member.name} {member.id === currentUserId && "(you)"}
+                        {member.name} {member.id === currentUserId && "🫵"}
                       </SelectItem>
                     ))}
                   </SelectContent>

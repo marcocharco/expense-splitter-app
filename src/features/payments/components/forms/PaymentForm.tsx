@@ -4,7 +4,7 @@ import { useUser } from "@/features/users/context/UserContext";
 import { usePayments } from "@/features/payments/hooks/usePayments";
 import { PaymentFormSchema } from "@/features/payments/schemas/paymentFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import AmountInput from "@/components/forms/AmountInput";
@@ -46,6 +46,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   const defaultValues: FormValues = {
     amount: 0,
+    paidBy: user.id,
     paidTo: "",
     date: DateToYMD(new Date()),
     note: "",
@@ -66,38 +67,46 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
       ? isAddingSettlementPayment
       : isAddingExpensePayment;
 
+  const paidBy = useWatch({ control: form.control, name: "paidBy" });
   const paidTo = useWatch({ control: form.control, name: "paidTo" });
   const selectedExpenseIds = form.watch("selectedExpenseIds");
 
+  // Auto-set paidTo to current user when paidBy changes to someone else
+  useEffect(() => {
+    if (paidBy && paidBy !== user.id) {
+      form.setValue("paidTo", user.id);
+    }
+  }, [paidBy, user.id, form]);
+
   const unpaidExpenses = useMemo(() => {
     return expenses.filter((expense) => {
-      const currentUserSplit = expense.splits.find(
-        (split) => split.user.id === user.id
+      const payerSplit = expense.splits.find(
+        (split) => split.user.id === paidBy
       );
       // expenses not in a settlement
       return (
         expense.paid_by.id === paidTo &&
-        currentUserSplit &&
+        payerSplit &&
         expense.settlement === null &&
-        currentUserSplit.remaining_owing > 0
+        payerSplit.remaining_owing > 0
       );
     });
-  }, [expenses, paidTo, user.id]);
+  }, [expenses, paidTo, paidBy]);
 
   // Transform expenses into items format for MultiSelectInput
   const expenseItems = useMemo(() => {
     return unpaidExpenses.reverse().map((expense) => {
       const split = expense.splits.find(
-        (split: ExpenseSplit) => split.user.id === user.id
+        (split: ExpenseSplit) => split.user.id === paidBy
       );
       return {
         id: expense.id,
-        label: `${expense.title} - You owe ${formatCurrency(
+        label: `${expense.title} - Owes ${formatCurrency(
           split?.remaining_owing || 0
         )}`,
       };
     });
-  }, [unpaidExpenses, user.id]);
+  }, [unpaidExpenses, paidBy]);
 
   // Calculate selected expenses with split amounts
   const selectedExpenses = useMemo(() => {
@@ -105,20 +114,20 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
       .filter((expense) => selectedExpenseIds.includes(expense.id))
       .map((expense) => {
         const split = expense.splits.find(
-          (split: ExpenseSplit) => split.user.id === user.id
+          (split: ExpenseSplit) => split.user.id === paidBy
         );
         return {
           expenseId: expense.id,
           splitAmount: split?.amount || 0,
         };
       });
-  }, [unpaidExpenses, selectedExpenseIds, user.id]);
+  }, [unpaidExpenses, selectedExpenseIds, paidBy]);
 
   const onSubmit = async (values: FormValues) => {
     try {
       if (paymentType === "settlement") {
         await addSettlementPayment({
-          paid_by: user.id,
+          paid_by: values.paidBy,
           paid_to: values.paidTo,
           amount: values.amount,
           date: values.date,
@@ -127,7 +136,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
         });
       } else if (paymentType === "balance") {
         await addExpensePayment({
-          paid_by: user.id,
+          paid_by: values.paidBy,
           paid_to: values.paidTo,
           amount: values.amount,
           date: values.date,
@@ -146,14 +155,14 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
     const paidToParticipant = settlement.participants.find(
       (participant) => participant.user.id === paidTo
     );
-    const currentUserParticipant = settlement.participants.find(
-      (participant) => participant.user.id === user.id
+    const paidByParticipant = settlement.participants.find(
+      (participant) => participant.user.id === paidBy
     );
     return (
       paidToParticipant &&
-      currentUserParticipant &&
+      paidByParticipant &&
       paidToParticipant.remaining_balance < 0 &&
-      currentUserParticipant.remaining_balance > 0
+      paidByParticipant.remaining_balance > 0
     );
   });
 
@@ -166,13 +175,23 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
       >
         {/* left side (payment details) */}
         <div className="space-y-4">
-          <MemberSelectInput
-            control={form.control}
-            name="paidTo"
-            formType="payment"
-            groupMembers={groupMembers}
-            currentUserId={user.id}
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <MemberSelectInput
+              control={form.control}
+              name="paidBy"
+              formType="payment"
+              groupMembers={groupMembers}
+              currentUserId={user.id}
+            />
+            <MemberSelectInput
+              control={form.control}
+              name="paidTo"
+              formType="payment"
+              groupMembers={groupMembers}
+              currentUserId={user.id}
+              excludeUserId={paidBy}
+            />
+          </div>
 
           <AmountInput control={form.control} name={"amount"} />
 
@@ -206,9 +225,9 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
                         </span>
                       </FormLabel>
                       {openSettlements.map((settlement) => {
-                        const currentUserAmountOwed =
+                        const paidByAmountOwed =
                           settlement.participants.find(
-                            (participant) => participant.user.id === user.id
+                            (participant) => participant.user.id === paidBy
                           )?.remaining_balance || 0;
 
                         return (
@@ -228,8 +247,8 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
                               htmlFor={`settlement-${settlement.id}`}
                               className="text-sm"
                             >
-                              {settlement.title} - You Owe{" "}
-                              {formatCurrency(currentUserAmountOwed)}
+                              {settlement.title} - Owes{" "}
+                              {formatCurrency(paidByAmountOwed)}
                             </label>
                           </div>
                         );
