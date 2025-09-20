@@ -29,7 +29,7 @@ const CustomInput = ({
       name={name}
       render={({ field }) => (
         <div className="form-item">
-          <FormLabel className="form-label">{label}</FormLabel>
+          <FormLabel className="form-item-label">{label}</FormLabel>
           <div className="flex flex-col w-full">
             <FormControl>
               <Input
@@ -40,7 +40,7 @@ const CustomInput = ({
                 {...field}
               />
             </FormControl>
-            <FormMessage className="form-message" />
+            <FormMessage className="form-item-message" />
           </div>
         </div>
       )}

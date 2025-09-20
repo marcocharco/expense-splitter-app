@@ -74,16 +74,16 @@
   @apply flex flex-col gap-1;
 }
 
-@utility form-label {
+@utility form-item-label {
   @apply !text-base w-full max-w-[280px] font-medium !text-neutral-900;
+}
+
+@utility form-item-message {
+  @apply !text-red-500 !text-sm !h-[20px];
 }
 
 @utility input-class {
   @apply !text-sm !border-neutral-200 !h-12 my-2;
-}
-
-@utility form-message {
-  @apply !text-red-500 !text-sm !h-[20px];
 }
 
 @utility form-btn {

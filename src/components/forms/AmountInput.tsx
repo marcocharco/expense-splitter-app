@@ -67,7 +67,7 @@ const AmountInput = <T extends FieldValues, N extends Path<T>>({
       name={name}
       render={({ field }) => (
         <div className="form-item">
-          <FormLabel className="form-label">Amount</FormLabel>
+          <FormLabel className="form-item-label">Amount</FormLabel>
           <div className="flex flex-col w-full">
             <FormControl>
               <Input
@@ -132,7 +132,7 @@ const AmountInput = <T extends FieldValues, N extends Path<T>>({
                 onWheel={(e) => e.currentTarget.blur()}
               />
             </FormControl>
-            <FormMessage className="form-message" />
+            <FormMessage className="form-item-message" />
           </div>
         </div>
       )}

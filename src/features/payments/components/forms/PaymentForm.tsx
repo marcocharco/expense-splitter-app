@@ -189,7 +189,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
               <span>Choose a payment recepient</span>
             ) : openSettlements.length > 0 ? (
               <div className="space-y-2">
-                <FormLabel className="form-label">
+                <FormLabel className="form-item-label">
                   Choose Settlement{" "}
                   <span className="text-muted-foreground font-normal text-sm">
                     (optional)
@@ -247,7 +247,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
               <span>Choose a payment recepient</span>
             ) : unpaidExpenses.length > 0 ? (
               <div className="space-y-4">
-                <FormLabel className="form-label">
+                <FormLabel className="form-item-label">
                   Choose Expenses
                   <span className="text-muted-foreground font-normal text-sm">
                     {" "}

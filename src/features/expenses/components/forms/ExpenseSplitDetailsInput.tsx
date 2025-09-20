@@ -82,7 +82,7 @@ const ExpenseSplitDetailsInput = ({
   return (
     <div className="form-item">
       <div className="flex items-center justify-between">
-        <FormLabel className="form-label">Splits</FormLabel>
+        <FormLabel className="form-item-label">Splits</FormLabel>
         <Button
           type="button"
           variant="outline"
@@ -96,7 +96,7 @@ const ExpenseSplitDetailsInput = ({
       <FormField
         control={control}
         name="selectedMembers"
-        render={() => <FormMessage className="form-message" />}
+        render={() => <FormMessage className="form-item-message" />}
       />
       <FormField
         control={control}
@@ -172,7 +172,7 @@ const ExpenseSplitDetailsInput = ({
               );
             })}
 
-            <FormMessage className="form-message" />
+            <FormMessage className="form-item-message" />
           </div>
         )}
       />

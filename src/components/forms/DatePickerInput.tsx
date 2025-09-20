@@ -34,7 +34,7 @@ const DatePickerInput = <T extends FieldValues, N extends Path<T>>({
         name={name}
         render={({ field }) => (
           <>
-            <FormLabel className="form-label">Date</FormLabel>
+            <FormLabel className="form-item-label">Date</FormLabel>
             <FormControl>
               <div className="input-class">
                 <Popover modal={true}>
@@ -67,7 +67,7 @@ const DatePickerInput = <T extends FieldValues, N extends Path<T>>({
                 </Popover>
               </div>
             </FormControl>
-            <FormMessage className="form-message" />
+            <FormMessage className="form-item-message" />
           </>
         )}
       />

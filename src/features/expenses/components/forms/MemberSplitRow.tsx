@@ -235,7 +235,7 @@ const MemberSplitRow = ({
               {splitCostLabel}
             </span>
           </div>
-          <FormMessage className="form-message" />
+          <FormMessage className="form-item-message" />
         </div>
       )}
     />

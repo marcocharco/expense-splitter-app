@@ -106,7 +106,7 @@ const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
         />
 
         <div className="space-y-4">
-          <h3 className="form-label">Select Expenses to Settle</h3>
+          <h3 className="form-item-label">Select Expenses to Settle</h3>
 
           {expenseItems.length > 0 ? (
             <MultiSelectInput<FormValues>

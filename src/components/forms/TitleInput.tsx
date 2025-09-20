@@ -28,7 +28,7 @@ const TitleInput = <T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <div className="form-item">
-          <FormLabel className="form-label">
+          <FormLabel className="form-item-label">
             {label}
             {isOptional && (
               <span className="text-muted-foreground font-normal text-sm">
@@ -49,7 +49,7 @@ const TitleInput = <T extends FieldValues>({
                 onChange={field.onChange}
               />
             </FormControl>
-            <FormMessage className="form-message" />
+            <FormMessage className="form-item-message" />
           </div>
         </div>
       )}
