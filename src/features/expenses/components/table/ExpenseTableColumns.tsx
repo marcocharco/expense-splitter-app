@@ -56,10 +56,15 @@ function getUserStatus(expense: Expense, currentUserId: string) {
         text: `You're owed ${formatCurrency(totalOwedToUser)}`,
       };
     } else {
+      // Calculate the total amount that was initially owed to the user
+      const totalInitiallyOwedToUser = expense.splits
+        .filter((split) => split.user.id !== currentUserId)
+        .reduce((sum, split) => sum + split.initial_owing, 0);
+
       return {
         type: "paid",
-        amount: userSplit.initial_owing,
-        text: `You paid ${formatCurrency(userSplit.initial_owing)}`,
+        amount: totalInitiallyOwedToUser,
+        text: `You were paid ${formatCurrency(totalInitiallyOwedToUser)}`,
       };
     }
   } else {
@@ -74,7 +79,7 @@ function getUserStatus(expense: Expense, currentUserId: string) {
       return {
         type: "paid_share",
         amount: userSplit.initial_owing,
-        text: `Paid ${formatCurrency(userSplit.initial_owing)}`,
+        text: `You paid ${formatCurrency(userSplit.initial_owing)}`,
       };
     } else {
       return {
@@ -116,16 +121,16 @@ export const createExpenseTableColumns = (
       const expense = row.original;
       const status = getUserStatus(expense, currentUserId);
 
-      const getTextColor = (type: string) => {
+      const getStatusTextColor = (type: string) => {
         switch (type) {
           case "owed":
-            return "text-green-600"; // You're owed money
+            return "text-green-600"; // Current user is owed money
           case "owes":
-            return "text-red-600"; // You owe money
+            return "text-red-600"; // Current user owes money
           case "paid":
-            return "text-blue-600"; // You paid (settled)
+            return "text-gray-400"; // Current user was paid
           case "paid_share":
-            return "text-blue-600"; // You paid your share
+            return "text-gray-400"; // Current user paid their share
           case "not_involved":
             return "text-gray-400";
           case "no_cost":
@@ -136,7 +141,7 @@ export const createExpenseTableColumns = (
       };
 
       return (
-        <div className={`pr-4 ${getTextColor(status.type)}`}>
+        <div className={`pr-4 ${getStatusTextColor(status.type)}`}>
           <span className="text-sm">{status.text}</span>
         </div>
       );
