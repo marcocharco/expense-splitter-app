@@ -1,9 +1,4 @@
-import {
-  FormControl,
-  FormField,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { FormControl, FormLabel, FormMessage } from "@/components/ui/form";
 import { Tabs, FormTabsList, FormTabsTrigger } from "@/components/ui/tabs";
 
 type PaymentTypeInputProps = {
@@ -22,8 +17,8 @@ const PaymentTypeInput = ({ value, onValueChange }: PaymentTypeInputProps) => {
         <div className="input-class">
           <Tabs value={value} onValueChange={onValueChange}>
             <FormTabsList>
+              <FormTabsTrigger value="expense">Expenses</FormTabsTrigger>
               <FormTabsTrigger value="settlement">Settlements</FormTabsTrigger>
-              <FormTabsTrigger value="balance">Expenses</FormTabsTrigger>
             </FormTabsList>
           </Tabs>
         </div>

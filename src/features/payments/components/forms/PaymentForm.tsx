@@ -58,8 +58,8 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
     defaultValues,
   });
 
-  const [paymentType, setPaymentType] = useState<"settlement" | "balance">(
-    "settlement"
+  const [paymentType, setPaymentType] = useState<"settlement" | "expense">(
+    "expense"
   );
 
   const isLoading =
@@ -134,7 +134,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
           settlement_id: settlementId,
           note: values.note,
         });
-      } else if (paymentType === "balance") {
+      } else if (paymentType === "expense") {
         await addExpensePayment({
           paid_by: values.paidBy,
           paid_to: values.paidTo,
@@ -206,7 +206,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
             <PaymentTypeInput
               value={paymentType}
               onValueChange={(val) =>
-                setPaymentType(val as "settlement" | "balance")
+                setPaymentType(val as "settlement" | "expense")
               }
             />
 
@@ -215,7 +215,9 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
               {paymentType === "settlement" ? (
                 <div>
                   {paidTo === "" ? (
-                    <span>Choose a payment recipient</span>
+                    <span className="text-muted-foreground font-normal text-sm">
+                      Choose a payment recipient
+                    </span>
                   ) : openSettlements.length > 0 ? (
                     <div className="space-y-2">
                       <FormLabel className="form-item-label">
@@ -268,13 +270,17 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
                       </div>
                     </div>
                   ) : (
-                    <span>No open settlements</span>
+                    <span className="text-muted-foreground font-normal text-sm">
+                      No open settlements
+                    </span>
                   )}
                 </div>
               ) : (
                 <div>
                   {paidTo === "" ? (
-                    <span>Choose a payment recipient</span>
+                    <span className="text-muted-foreground font-normal text-sm">
+                      Choose a payment recipient
+                    </span>
                   ) : unpaidExpenses.length > 0 ? (
                     <div className="space-y-4">
                       <FormLabel className="form-item-label">
@@ -291,7 +297,9 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
                       />
                     </div>
                   ) : (
-                    <span>No unpaid expenses</span>
+                    <span className="text-muted-foreground font-normal text-sm">
+                      No unpaid expenses
+                    </span>
                   )}
                 </div>
               )}
