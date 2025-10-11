@@ -118,8 +118,6 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
             placeholder="e.g. Grocery bill, Flight tickets, etc."
           />
 
-          <AmountInput control={form.control} name="amount" />
-
           <MemberSelectInput
             control={form.control}
             name="paidBy"
@@ -136,6 +134,7 @@ const ExpenseForm = ({ type, initialExpense, onSuccess }: ExpenseFormProps) => {
         {/* right side (split info) */}
         <div className="flex flex-col space-y-4">
           <div className="flex-1 space-y-4">
+            <AmountInput control={form.control} name="amount" />
             <ExpenseSplitTypeInput control={form.control} />
 
             <ExpenseSplitDetailsInput
