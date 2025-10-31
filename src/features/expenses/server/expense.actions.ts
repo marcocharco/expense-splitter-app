@@ -1,7 +1,20 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { NewExpense } from "@/types";
+import { NewExpense, NewMultiItemExpense } from "@/types";
+
+// process multi-item expense inputs for RPC function
+const processMultiItemPayload = (items: NewMultiItemExpense["items"]) => {
+  return items.map((item) => ({
+    title: item.title,
+    amount: item.amount,
+    split_type: item.splitType,
+    splits: item.splits.map((split) => ({
+      userId: split.userId,
+      weight: item.splitType === "even" ? 1 : split.weight,
+    })),
+  }));
+};
 
 export async function addNewExpense(values: NewExpense, groupId: string) {
   const supabase = await createClient();
@@ -54,6 +67,26 @@ export async function softDeleteExpense(expenseId: string) {
   const supabase = await createClient();
   const { error } = await supabase.rpc("soft_delete_expense", {
     p_expense_id: expenseId,
+  });
+
+  if (error) throw new Error(error.message);
+}
+
+export async function addMultiItemExpense(
+  values: NewMultiItemExpense,
+  groupId: string
+) {
+  const supabase = await createClient();
+
+  const processedItems = processMultiItemPayload(values.items);
+
+  const { error } = await supabase.rpc("insert_expense_multi_item", {
+    p_group_id: groupId,
+    p_title: values.title,
+    p_paid_by: values.paidBy,
+    p_date: values.date,
+    p_category_id: values.category === undefined ? null : values.category,
+    p_items: processedItems,
   });
 
   if (error) throw new Error(error.message);
