@@ -62,6 +62,19 @@ export type NewExpense = {
   memberSplits: { userId: string; weight: number }[];
 };
 
+export type NewMultiItemExpense = {
+  title: string;
+  paidBy: string;
+  date: string;
+  category?: string;
+  items: {
+    title: string;
+    amount: number;
+    splitType: SplitType;
+    splits: { userId: string; weight: number }[];
+  }[];
+};
+
 export type Settlement = {
   id: string;
   title: string;
