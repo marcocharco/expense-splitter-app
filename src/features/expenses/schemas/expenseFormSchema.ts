@@ -2,6 +2,37 @@ import { z } from "zod";
 
 const SplitTypes = ["even", "percentage", "shares", "custom"] as const;
 
+// Shared validation logic for split totals
+const validateSplitTotals = (
+  data: {
+    splitType: string;
+    memberSplits: { weight: number }[];
+    amount: number;
+  },
+  ctx: z.RefinementCtx,
+  path: string[] = ["splitType"]
+) => {
+  const { splitType, memberSplits, amount } = data;
+
+  const total = memberSplits.reduce((sum, member) => sum + member.weight, 0);
+
+  if (splitType === "percentage" && total !== 100) {
+    ctx.addIssue({
+      path,
+      code: z.ZodIssueCode.custom,
+      message: "Percentage splits must add up to 100%",
+    });
+  }
+
+  if (splitType === "custom" && total !== amount) {
+    ctx.addIssue({
+      path,
+      code: z.ZodIssueCode.custom,
+      message: "Custom splits must add up to the total amount",
+    });
+  }
+};
+
 export const ExpenseFormSchema = () =>
   z
     .object({
@@ -25,27 +56,4 @@ export const ExpenseFormSchema = () =>
         message: "At least one member must be selected",
       }),
     })
-    .superRefine((data, ctx) => {
-      const { splitType, memberSplits } = data;
-
-      const total = memberSplits.reduce(
-        (sum, member) => sum + member.weight,
-        0
-      );
-
-      if (splitType === "percentage" && total !== 100) {
-        ctx.addIssue({
-          path: ["splitType"],
-          code: z.ZodIssueCode.custom,
-          message: "Percentage splits must add up to 100%",
-        });
-      }
-
-      if (splitType === "custom" && total !== data.amount) {
-        ctx.addIssue({
-          path: ["splitType"],
-          code: z.ZodIssueCode.custom,
-          message: "Custom splits must add up to the total amount",
-        });
-      }
-    });
+    .superRefine((data, ctx) => validateSplitTotals(data, ctx));
