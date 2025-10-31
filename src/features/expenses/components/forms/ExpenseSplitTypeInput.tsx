@@ -6,20 +6,22 @@ import {
 } from "@/components/ui/form";
 import { Tabs, FormTabsList, FormTabsTrigger } from "@/components/ui/tabs";
 
-import { ExpenseFormSchema } from "@/features/expenses/schemas/expenseFormSchema";
-import { Control } from "react-hook-form";
-import { z } from "zod";
+import { Control, FieldPath, FieldValues } from "react-hook-form";
 
-type ExpenseSplitTypeInputProps = {
-  control: Control<z.infer<ReturnType<typeof ExpenseFormSchema>>>;
+type ExpenseSplitTypeInputProps<T extends FieldValues> = {
+  control: Control<T>;
+  name?: FieldPath<T>;
 };
 
-const ExpenseSplitTypeInput = ({ control }: ExpenseSplitTypeInputProps) => {
+const ExpenseSplitTypeInput = <T extends FieldValues>({
+  control,
+  name = "splitType" as FieldPath<T>,
+}: ExpenseSplitTypeInputProps<T>) => {
   return (
     <div className="form-item">
       <FormField
         control={control}
-        name="splitType"
+        name={name}
         render={({ field }) => (
           <>
             <div className="form-label-row">
