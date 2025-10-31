@@ -4,9 +4,10 @@ import {
   addNewExpense,
   updateExpense,
   softDeleteExpense,
+  addMultiItemExpense as addMultiItemExpenseAction,
 } from "@/features/expenses/server/expense.actions";
 import { getGroupExpenses } from "@/features/expenses/queries/getGroupExpenses";
-import { NewExpense } from "@/types";
+import { NewExpense, NewMultiItemExpense } from "@/types";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useExpenses(groupId: string) {
@@ -48,6 +49,15 @@ export function useExpenses(groupId: string) {
     },
   });
 
+  const addMultiItemExpense = useMutation({
+    mutationFn: (values: NewMultiItemExpense) =>
+      addMultiItemExpenseAction(values, groupId),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["groupExpenses", groupId] });
+      qc.invalidateQueries({ queryKey: ["groupBalances", groupId] });
+    },
+  });
+
   return {
     expenses: data ?? [],
     isLoading,
@@ -58,5 +68,7 @@ export function useExpenses(groupId: string) {
     isAddingExpense: addExpense.isPending,
     isEditingExpense: editExpense.isPending,
     isDeletingExpense: deleteExpense.isPending,
+    addMultiItemExpense: addMultiItemExpense.mutateAsync,
+    isAddingMultiItemExpense: addMultiItemExpense.isPending,
   };
 }
