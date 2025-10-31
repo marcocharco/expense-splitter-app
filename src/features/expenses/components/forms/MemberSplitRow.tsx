@@ -1,9 +1,13 @@
 import { FormField, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ExpenseFormSchema } from "@/features/expenses/schemas/expenseFormSchema";
 import { Member, SplitType } from "@/types";
-import { Control, useController, UseFormReturn } from "react-hook-form";
-import { z } from "zod";
+import {
+  Control,
+  FieldValues,
+  Path,
+  useController,
+  UseFormReturn,
+} from "react-hook-form";
 
 import {
   getSelectedTotal,
@@ -18,8 +22,8 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import { validateNumericInput } from "@/utils/validateNumericInput";
 import { Parser } from "expr-eval";
 
-type MemberSplitRowProps = {
-  control: Control<z.infer<ReturnType<typeof ExpenseFormSchema>>>;
+type MemberSplitRowProps<T extends FieldValues = FieldValues> = {
+  control: Control<T>;
   member: Member;
   isSelected: boolean;
   splitType: SplitType;
@@ -29,15 +33,12 @@ type MemberSplitRowProps = {
   }[];
   selectedMembers: string[];
   currentAmount: number;
-  setError: UseFormReturn<
-    z.infer<ReturnType<typeof ExpenseFormSchema>>
-  >["setError"];
-  clearErrors: UseFormReturn<
-    z.infer<ReturnType<typeof ExpenseFormSchema>>
-  >["clearErrors"];
+  setError: UseFormReturn<T>["setError"];
+  clearErrors: UseFormReturn<T>["clearErrors"];
+  fieldPrefix?: string;
 };
 
-const MemberSplitRow = ({
+const MemberSplitRow = <T extends FieldValues = FieldValues>({
   control,
   member,
   isSelected,
@@ -47,11 +48,18 @@ const MemberSplitRow = ({
   currentAmount,
   setError,
   clearErrors,
-}: MemberSplitRowProps) => {
+  fieldPrefix = "",
+}: MemberSplitRowProps<T>) => {
   const memberIndexMap = Object.fromEntries(
     memberSplits.map((m, i) => [m.userId, i])
   );
   const memberIndex = memberIndexMap[member.id];
+  const memberSplitsPath = fieldPrefix
+    ? `${fieldPrefix}.memberSplits`
+    : "memberSplits";
+  const selectedMembersPath = fieldPrefix
+    ? `${fieldPrefix}.selectedMembers`
+    : "selectedMembers";
 
   const splitCosts =
     calculateSplitCosts({
@@ -90,7 +98,7 @@ const MemberSplitRow = ({
       const total = getSelectedTotal(updated, selectedMembers);
 
       if (isOverTotalLimit(total, splitType, currentAmount)) {
-        setError("memberSplits", {
+        setError(memberSplitsPath as Path<T>, {
           type: "manual",
           message:
             splitType === "custom" || splitType === "percentage"
@@ -98,14 +106,21 @@ const MemberSplitRow = ({
               : "Invalid split type",
         });
       } else {
-        clearErrors("memberSplits");
+        clearErrors(memberSplitsPath as Path<T>);
       }
     },
-    [selectedMembers, splitType, currentAmount, setError, clearErrors]
+    [
+      selectedMembers,
+      splitType,
+      currentAmount,
+      setError,
+      clearErrors,
+      memberSplitsPath,
+    ]
   );
 
   const { field } = useController({
-    name: `memberSplits.${memberIndex}.weight`,
+    name: `${memberSplitsPath}.${memberIndex}.weight` as Path<T>,
     control,
   });
 
@@ -145,22 +160,29 @@ const MemberSplitRow = ({
   });
 
   useEffect(() => {
-    clearErrors(["memberSplits", "selectedMembers"]);
+    clearErrors([memberSplitsPath as Path<T>, selectedMembersPath as Path<T>]);
     checkTotal(memberSplits);
-  }, [splitType, checkTotal, memberSplits, clearErrors]);
+  }, [
+    splitType,
+    checkTotal,
+    memberSplits,
+    clearErrors,
+    memberSplitsPath,
+    selectedMembersPath,
+  ]);
 
   return (
     <FormField
       control={control}
-      name={`memberSplits.${memberIndex}.weight`}
+      name={`${memberSplitsPath}.${memberIndex}.weight` as Path<T>}
       render={({ field }) => (
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center gap-3">
           {/* Split amount previews */}
-          <span className="w-20 text-right text-sm text-muted-foreground">
+          <span className="w-20 text-right text-sm text-muted-foreground shrink-0">
             {formatCurrency(isSelected ? splitAmount || 0 : 0)}
           </span>
           {/* Split inputs */}
-          <div className="relative">
+          <div className="relative shrink-0">
             <Input
               placeholder={isSelected && splitType !== "even" ? "0" : "-"}
               type="text"
