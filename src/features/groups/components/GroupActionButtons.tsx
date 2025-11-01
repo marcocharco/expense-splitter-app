@@ -1,7 +1,7 @@
 "use client";
 
 import FormDialog from "@/components/ui/FormDialog";
-import ExpenseForm from "@/features/expenses/components/forms/ExpenseForm";
+import SingleItemExpenseForm from "@/features/expenses/components/forms/SingleItemExpenseForm";
 import MultiItemExpenseForm from "@/features/expenses/components/forms/MultiItemExpenseForm";
 import PaymentForm from "@/features/payments/components/forms/PaymentForm";
 import SettlementForm from "@/features/settlements/components/forms/SettlementForm";
@@ -15,7 +15,7 @@ const GroupActionButtons = () => {
         description="Add a new expense to split amongst group members."
       >
         {(closeDialog) => (
-          <ExpenseForm type="newExpense" onSuccess={closeDialog} />
+          <SingleItemExpenseForm type="newExpense" onSuccess={closeDialog} />
         )}
       </FormDialog>
       <FormDialog
