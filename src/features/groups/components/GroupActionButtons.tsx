@@ -2,6 +2,7 @@
 
 import FormDialog from "@/components/ui/FormDialog";
 import ExpenseForm from "@/features/expenses/components/forms/ExpenseForm";
+import MultiItemExpenseForm from "@/features/expenses/components/forms/MultiItemExpenseForm";
 import PaymentForm from "@/features/payments/components/forms/PaymentForm";
 import SettlementForm from "@/features/settlements/components/forms/SettlementForm";
 
@@ -15,6 +16,15 @@ const GroupActionButtons = () => {
       >
         {(closeDialog) => (
           <ExpenseForm type="newExpense" onSuccess={closeDialog} />
+        )}
+      </FormDialog>
+      <FormDialog
+        triggerText="Add multi-item expense"
+        title="Add multi-item expense"
+        description="Add a new expense with multiple items to split amongst group members."
+      >
+        {(closeDialog) => (
+          <MultiItemExpenseForm type="newExpense" onSuccess={closeDialog} />
         )}
       </FormDialog>
       <FormDialog
