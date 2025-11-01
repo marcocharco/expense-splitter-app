@@ -15,19 +15,19 @@ import {
 } from "@/components/ui/select";
 import { getExpenseCategories } from "@/features/expenses/queries/getExpenseCategories";
 
-import { Control } from "react-hook-form";
-
-import { z } from "zod";
-import { ExpenseFormSchema } from "@/features/expenses/schemas/expenseFormSchema";
+import { Control, FieldValues, Path } from "react-hook-form";
 
 import { useQuery } from "@tanstack/react-query";
 
-type ExpenseFormInputProps = {
-  control: Control<z.infer<ReturnType<typeof ExpenseFormSchema>>>;
+type ExpenseFormInputProps<T extends FieldValues = FieldValues> = {
+  control: Control<T>;
   groupId: string;
 };
 
-const ExpenseCategoryInput = ({ control, groupId }: ExpenseFormInputProps) => {
+const ExpenseCategoryInput = <T extends FieldValues = FieldValues>({
+  control,
+  groupId,
+}: ExpenseFormInputProps<T>) => {
   const { data: categories } = useQuery({
     queryKey: ["categories", groupId],
     queryFn: () => getExpenseCategories(groupId),
@@ -37,7 +37,7 @@ const ExpenseCategoryInput = ({ control, groupId }: ExpenseFormInputProps) => {
     <div className="form-item">
       <FormField
         control={control}
-        name="category"
+        name={"category" as Path<T>}
         render={({ field }) => (
           <>
             <div className="form-label-row">
