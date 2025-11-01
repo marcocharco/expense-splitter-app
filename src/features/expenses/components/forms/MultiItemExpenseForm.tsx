@@ -9,6 +9,7 @@ import { useCurrentGroup } from "@/features/groups/contexts/CurrentGroupContext"
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import ExpenseGeneralInfoSection from "@/features/expenses/components/forms/ExpenseGeneralInfoSection";
+import ExpenseMultiItemSection from "@/features/expenses/components/forms/ExpenseMultiItemSection";
 import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import { DateToYMD } from "@/utils/formatDate";
 import { toast } from "sonner";
@@ -114,6 +115,14 @@ const MultiItemExpenseForm = ({
 
         {/* right side (items array) */}
         <div className="flex flex-col space-y-4">
+          <ExpenseMultiItemSection
+            control={form.control}
+            setValue={form.setValue}
+            setError={form.setError}
+            clearErrors={form.clearErrors}
+            groupMembers={groupMembers}
+          />
+
           {/* submit form button */}
           <div className="flex justify-end mt-8">
             <Button type="submit" className="form-btn" disabled={isLoading}>
