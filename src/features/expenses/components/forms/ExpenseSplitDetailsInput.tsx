@@ -111,9 +111,9 @@ const ExpenseSplitDetailsInput = ({
               return (
                 <FormItem
                   key={member.id}
-                  className="flex items-center justify-between"
+                  className="flex items-center justify-between w-full"
                 >
-                  <div className="flex items-center space-x-4">
+                  <div className="flex items-center gap-2">
                     <FormControl>
                       <Checkbox
                         id={member.id}
@@ -154,7 +154,7 @@ const ExpenseSplitDetailsInput = ({
                     </FormControl>
                     <FormLabel
                       htmlFor={member.id}
-                      className="w-32 font-normal text-base"
+                      className="font-normal text-base min-w-0"
                     >
                       <span className="cursor-pointer">{member.name}</span>
                     </FormLabel>
