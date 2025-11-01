@@ -79,7 +79,7 @@ const ExpenseMultiItemSection = ({
         </Button>
       </div>
 
-      <div className="space-y-6 max-h-fit overflow-y-auto pr-2">
+      <div className="space-y-6 max-h-100 overflow-y-auto pr-2">
         {fields.map((field, index) => (
           <ItemCard
             key={field.id}
