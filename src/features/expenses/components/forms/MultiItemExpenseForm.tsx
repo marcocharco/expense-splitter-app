@@ -102,7 +102,7 @@ const MultiItemExpenseForm = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="grid grid-cols-1 xl:grid-cols-2 gap-8 h-full"
+        className="grid grid-cols-1 xl:grid-cols-2 gap-8 flex-auto"
         autoComplete="off"
       >
         {/* left side (general expense info) */}
@@ -114,7 +114,7 @@ const MultiItemExpenseForm = ({
         />
 
         {/* right side (items array) */}
-        <div className="flex flex-col space-y-4">
+        <div className="flex flex-col">
           <ExpenseMultiItemSection
             control={form.control}
             setValue={form.setValue}
@@ -124,7 +124,7 @@ const MultiItemExpenseForm = ({
           />
 
           {/* submit form button */}
-          <div className="flex justify-end mt-8">
+          <div className="flex justify-end">
             <Button type="submit" className="form-btn" disabled={isLoading}>
               {type === "newExpense" ? "Add Expense" : "Update Expense"}
             </Button>

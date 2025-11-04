@@ -10,11 +10,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 
 interface FormDialogProps {
   triggerText: string;
   title: string;
   description: string;
+  fullHeight?: boolean;
   children: (closeDialog: () => void) => ReactNode;
   triggerVariant?:
     | "default"
@@ -30,6 +32,7 @@ export const FormDialog = ({
   triggerText,
   title,
   description,
+  fullHeight,
   children,
   triggerVariant = "outline",
   triggerClassName,
@@ -45,7 +48,12 @@ export const FormDialog = ({
           {triggerText}
         </Button>
       </DialogTrigger>
-      <DialogContent className="!max-w-[70vw] !w-[60vw] px-12 py-12 max-h-[80vh] overflow-y-auto min-w-auto">
+      <DialogContent
+        className={cn(
+          "!max-w-[70vw] !w-[60vw] px-12 py-12 max-h-[80vh] min-w-auto flex flex-col",
+          fullHeight && "min-h-[80vh]"
+        )}
+      >
         <DialogHeader>
           <DialogTitle className="text-3xl font-medium">{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>

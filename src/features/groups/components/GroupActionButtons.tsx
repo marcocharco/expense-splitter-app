@@ -22,6 +22,7 @@ const GroupActionButtons = () => {
         triggerText="Add multi-item expense"
         title="Add multi-item expense"
         description="Add a new expense with multiple items to split amongst group members."
+        fullHeight
       >
         {(closeDialog) => (
           <MultiItemExpenseForm type="newExpense" onSuccess={closeDialog} />
