@@ -31,11 +31,9 @@ const MultiItemExpenseForm = ({
   }
 
   const groupMembers = groupData.members;
-  const {
-    addMultiItemExpense,
-    isAddingMultiItemExpense,
-    isEditingMultiItemExpense,
-  } = useExpenses(groupData.id);
+  const { addMultiItemExpense, isAddingMultiItemExpense } = useExpenses(
+    groupData.id
+  );
 
   const formSchema = MultiItemExpenseFormSchema();
   type FormValues = z.infer<typeof formSchema>;
@@ -45,15 +43,7 @@ const MultiItemExpenseForm = ({
     paidBy: user.id ?? "",
     date: DateToYMD(new Date()),
     category: undefined,
-    items: [
-      {
-        title: "",
-        amount: 0,
-        splitType: "even",
-        memberSplits: groupMembers.map((m) => ({ userId: m.id, weight: 0 })),
-        selectedMembers: user ? [user.id] : [],
-      },
-    ],
+    items: [],
   };
 
   const form = useForm<FormValues>({
@@ -61,10 +51,7 @@ const MultiItemExpenseForm = ({
     defaultValues,
   });
 
-  const isLoading =
-    type === "newExpense"
-      ? isAddingMultiItemExpense
-      : isEditingMultiItemExpense;
+  const isLoading = type === "newExpense" && isAddingMultiItemExpense;
 
   const onSubmit = async (values: FormValues) => {
     try {
