@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Control, FieldValues, Path, useController } from "react-hook-form";
 
 import { Input } from "@/components/ui/input";
@@ -53,14 +53,6 @@ const AmountInput = <T extends FieldValues, N extends Path<T>>({
     field.value == 0 ? "" : formatCurrency(field.value)
   );
 
-  useEffect(() => {
-    if (!field.value) {
-      setDisplayValue("");
-    }
-    if (field.value === 0) {
-      setDisplayValue("");
-    }
-  }, [field.value]);
   return (
     <FormField
       control={control}
