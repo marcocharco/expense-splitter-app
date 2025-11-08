@@ -27,6 +27,11 @@ export function useExpenseTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    initialState: {
+      pagination: {
+        pageSize: 8,
+      },
+    },
     state: {
       columnFilters,
       columnVisibility: {
