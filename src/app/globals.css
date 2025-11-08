@@ -4,7 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-main: #14eb00;
+  /* --color-main: #14eb00; */
+  --color-main: #9acd32;
   --font-main: var(--font-dm-sans);
   --font-header: var(--font-raleway);
   --font-number: var(--font-inter);
@@ -104,6 +105,71 @@
 
 @utility expense-details-content {
   @apply flex flex-col items-center h-[1000px] gap-4;
+}
+
+.wave-text-container {
+  position: relative;
+  display: inline-block;
+}
+
+.wave-text-container::before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 120%;
+  z-index: -1;
+  background-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 30%,
+      rgba(115, 221, 219, 0.4) 40%,
+      rgba(115, 221, 219, 0.6) 50%,
+      rgba(115, 221, 219, 0.4) 60%,
+      transparent 70%,
+      transparent 100%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      rgba(115, 221, 219, 0.3) 10px,
+      rgba(115, 221, 219, 0.5) 20px,
+      rgba(115, 221, 219, 0.7) 30px,
+      rgba(115, 221, 219, 0.5) 40px,
+      rgba(115, 221, 219, 0.3) 50px,
+      transparent 60px,
+      transparent 70px,
+      rgba(115, 221, 219, 0.3) 80px,
+      rgba(115, 221, 219, 0.5) 90px,
+      rgba(115, 221, 219, 0.7) 100px,
+      rgba(115, 221, 219, 0.5) 110px,
+      rgba(115, 221, 219, 0.3) 120px,
+      transparent 130px
+    );
+  background-size: 100% 100%, 260px 100%;
+  background-position: center, 0 center;
+  border-radius: 8px;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60' preserveAspectRatio='none'%3E%3Cpath d='M0,30 Q150,0 300,30 T600,30 T900,30 T1200,30 L1200,60 L0,60 Z' fill='white'/%3E%3C/svg%3E");
+  mask-size: 200% 100%;
+  mask-position: center;
+  mask-repeat: repeat-x;
+}
+
+@keyframes wave-flow {
+  0% {
+    background-position: center, 0 center;
+    mask-position: 0% center;
+  }
+  100% {
+    background-position: center, 260px center;
+    mask-position: 100% center;
+  }
+}
+
+.wave-text-container:hover::before {
+  animation: wave-flow 3s linear infinite;
 }
 
 @theme inline {

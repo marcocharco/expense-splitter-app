@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { signOut } from "@/features/auth/server/auth.actions";
@@ -17,17 +16,19 @@ const Sidebar = () => {
           href="/"
           className="mb-12 cursor-pointer flex items-center justify-center gap-2 h-12"
         >
-          <Image
+          {/* <Image
             src="/icons/logo.svg"
             width={34}
             height={34}
             alt="Logo"
             className="size-[24px] max-xl:size-14"
             priority={true}
-          />
-          <h1 className="text-main font-bold text-[26px] text-black-1 max-xl:hidden 2xl:text-26">
-            uomi
-          </h1>
+          /> */}
+          <div className="wave-text-container">
+            <h1 className="text-main font-bold text-[26px] text-black-1 max-xl:hidden 2xl:text-26">
+              SplitTheX
+            </h1>
+          </div>
         </Link>
 
         {groups?.map((group) => (

@@ -21,7 +21,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "uomi",
+  title: "SplitTheX",
   description: "",
 };
 
