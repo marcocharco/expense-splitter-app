@@ -125,7 +125,7 @@ const SingleItemExpenseForm = ({
           />
 
           {/* submit form button */}
-          <div className="flex justify-end mt-8">
+          <div className="flex justify-end mt-4">
             <Button type="submit" className="form-btn" disabled={isLoading}>
               {type === "newExpense" ? "Add Expense" : "Update Expense"}
             </Button>

@@ -92,7 +92,7 @@
 }
 
 @utility input-class {
-  @apply !text-sm !border-neutral-200 !h-12 my-2;
+  @apply !text-sm !border-neutral-200 !h-10 my-2;
 }
 
 @utility form-btn {

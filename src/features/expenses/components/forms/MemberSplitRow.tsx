@@ -249,7 +249,7 @@ const MemberSplitRow = <T extends FieldValues = FieldValues>({
                   field.value === 0 ? "" : field.value?.toString()
                 );
               }}
-              className="w-32 pr-8 input-no-spinner"
+              className="w-32 pr-8 !h-8 input-no-spinner"
               onWheel={(e) => e.currentTarget.blur()}
             />
             {/* Symbol for type of split in preview box */}
