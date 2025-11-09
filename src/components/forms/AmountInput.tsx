@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Control, FieldValues, Path, useController } from "react-hook-form";
 
 import { Input } from "@/components/ui/input";
@@ -70,6 +70,14 @@ const AmountInput = <T extends FieldValues, N extends Path<T>>({
 
   const hasValue = field.value && field.value > 0;
   const showAsText = variant === "compact" && hasValue && !isFocused;
+
+  // Sync displayValue with external field value changes (e.g., from form.setValue)
+  // Only update when not focused to avoid interfering with user input
+  useEffect(() => {
+    if (!isFocused) {
+      setDisplayValue(field.value == 0 ? "" : formatCurrency(field.value));
+    }
+  }, [field.value, isFocused]);
 
   const handleTextClick = () => {
     setIsFocused(true);

@@ -24,22 +24,31 @@ import { toast } from "sonner";
 const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const { user } = useUser();
   const group = useCurrentGroup();
+  const groupMembers = group.members;
 
   if (!user) {
     throw new Error("Missing user");
   }
 
-  const groupMembers = group.members;
   const { expenses } = useExpenses(group.id);
+  const { settlements } = useSettlements(group.id);
   const {
     addSettlementPayment,
     addExpensePayment,
     isAddingSettlementPayment,
     isAddingExpensePayment,
   } = usePayments(group.id);
-  const { settlements } = useSettlements(group.id);
 
   const [settlementId, setSettlementId] = useState<string | null>(null);
+
+  const [paymentType, setPaymentType] = useState<"settlement" | "expense">(
+    "expense"
+  );
+
+  const isLoading =
+    paymentType === "settlement"
+      ? isAddingSettlementPayment
+      : isAddingExpensePayment;
 
   const formSchema = PaymentFormSchema();
   type FormValues = z.infer<typeof formSchema>;
@@ -58,25 +67,9 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
     defaultValues,
   });
 
-  const [paymentType, setPaymentType] = useState<"settlement" | "expense">(
-    "expense"
-  );
-
-  const isLoading =
-    paymentType === "settlement"
-      ? isAddingSettlementPayment
-      : isAddingExpensePayment;
-
   const paidBy = useWatch({ control: form.control, name: "paidBy" });
   const paidTo = useWatch({ control: form.control, name: "paidTo" });
   const selectedExpenseIds = form.watch("selectedExpenseIds");
-
-  // Auto-set paidTo to current user when paidBy changes to someone else
-  useEffect(() => {
-    if (paidBy && paidBy !== user.id) {
-      form.setValue("paidTo", user.id);
-    }
-  }, [paidBy, user.id, form]);
 
   const unpaidExpenses = useMemo(() => {
     return expenses.filter((expense) => {
@@ -118,10 +111,30 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
         );
         return {
           expenseId: expense.id,
-          splitAmount: split?.amount || 0,
+          splitAmount: split?.remaining_owing || 0,
         };
       });
   }, [unpaidExpenses, selectedExpenseIds, paidBy]);
+
+  const selectedExpensesTotalAmount = selectedExpenses.reduce(
+    (accumulator, currentExpense) => accumulator + currentExpense.splitAmount,
+    0
+  );
+
+  const openSettlements = settlements.filter((settlement) => {
+    const paidToParticipant = settlement.participants.find(
+      (participant) => participant.user.id === paidTo
+    );
+    const paidByParticipant = settlement.participants.find(
+      (participant) => participant.user.id === paidBy
+    );
+    return (
+      paidToParticipant &&
+      paidByParticipant &&
+      paidToParticipant.remaining_balance < 0 &&
+      paidByParticipant.remaining_balance > 0
+    );
+  });
 
   const onSubmit = async (values: FormValues) => {
     try {
@@ -151,20 +164,29 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
     }
   };
 
-  const openSettlements = settlements.filter((settlement) => {
-    const paidToParticipant = settlement.participants.find(
-      (participant) => participant.user.id === paidTo
-    );
-    const paidByParticipant = settlement.participants.find(
-      (participant) => participant.user.id === paidBy
-    );
-    return (
-      paidToParticipant &&
-      paidByParticipant &&
-      paidToParticipant.remaining_balance < 0 &&
-      paidByParticipant.remaining_balance > 0
-    );
-  });
+  // Auto-set paidTo to current user when paidBy changes to someone else
+  // assumption is that payment form is used for a payment involving current user (either to or from)
+  useEffect(() => {
+    if (paidBy && paidBy !== user.id) {
+      form.setValue("paidTo", user.id);
+    }
+    // if paidBy set to curr user when paidTo is curr user, clear paidTo (can't pay yourself)
+    else if (paidBy === paidTo) {
+      form.setValue("paidTo", "");
+    }
+  }, [paidBy, user.id, form]);
+
+  useEffect(() => {
+    if (paidTo && paidTo !== user.id) {
+      form.setValue("paidBy", user.id);
+    } else if (paidBy === paidTo) {
+      form.setValue("paidBy", "");
+    }
+  }, [paidTo, user.id, form]);
+
+  useEffect(() => {
+    form.setValue("amount", selectedExpensesTotalAmount);
+  }, [selectedExpensesTotalAmount, selectedExpenseIds, form]);
 
   return (
     <Form {...form}>
@@ -189,7 +211,8 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
               formType="payment"
               groupMembers={groupMembers}
               currentUserId={user.id}
-              excludeUserId={paidBy}
+              // originally excluded, but might create unexpected ux
+              // excludeUserId={paidBy}
             />
           </div>
 
