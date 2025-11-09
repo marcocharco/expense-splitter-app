@@ -37,11 +37,12 @@ function getUserStatus(expense: Expense, currentUserId: string) {
     (split) => split.user.id === currentUserId
   );
 
-  if (!userSplit) {
+  const isPayer = expense.paid_by.id === currentUserId;
+
+  // not included in any splits and wasn't the one paying
+  if (!userSplit && !isPayer) {
     return { type: "not_involved", amount: 0, text: "Not involved" };
   }
-
-  const isPayer = expense.paid_by.id === currentUserId;
 
   if (isPayer) {
     // User paid the expense
@@ -69,13 +70,13 @@ function getUserStatus(expense: Expense, currentUserId: string) {
     }
   } else {
     // User didn't pay the expense
-    if (userSplit.remaining_owing > 0) {
+    if (userSplit && userSplit.remaining_owing > 0) {
       return {
         type: "owes",
         amount: userSplit.remaining_owing,
         text: `You owe ${formatCurrency(userSplit.remaining_owing)}`,
       };
-    } else if (userSplit.initial_owing > 0) {
+    } else if (userSplit && userSplit.initial_owing > 0) {
       return {
         type: "paid_share",
         amount: userSplit.initial_owing,
