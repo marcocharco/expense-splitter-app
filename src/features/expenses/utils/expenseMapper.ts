@@ -1,4 +1,4 @@
-import { Expense, Member } from "@/types";
+import { Expense, ExpenseItem, Member } from "@/types";
 
 type toFormValuesProps = {
   expense: Expense;
@@ -27,6 +27,30 @@ export function toDomainExpense(dbExpense: Expense): Expense {
     0
   );
 
+  // Process items if they exist (multi-item expense)
+  const processedItems = dbExpense.items?.map((item): ExpenseItem => {
+    const itemTotalWeight = item.splits.reduce(
+      (sum, split) => sum + split.weight,
+      0
+    );
+
+    return {
+      ...item,
+      splits: item.splits.map((split) => {
+        const splitAmount = (item.amount * split.weight) / itemTotalWeight;
+
+        return {
+          user: {
+            id: split.user.id,
+            name: split.user.name,
+          },
+          weight: item.split_type === "even" ? 0 : split.weight,
+          amount: splitAmount,
+        };
+      }),
+    };
+  });
+
   return {
     ...dbExpense,
     splits: dbExpense.splits.map((split) => {
@@ -43,5 +67,6 @@ export function toDomainExpense(dbExpense: Expense): Expense {
         remaining_owing: split.remaining_owing,
       };
     }),
+    items: processedItems,
   };
 }

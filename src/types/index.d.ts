@@ -37,6 +37,7 @@ export type Expense = {
   settlement?: { id: string; status: SettlementStatus };
   splits: ExpenseSplit[];
   split_type: SplitType;
+  items?: ExpenseItem[]; // Present for multi-item expenses
 };
 
 export type SplitType = "even" | "percentage" | "shares" | "custom";
@@ -48,6 +49,20 @@ export type ExpenseSplit = {
   weight: number;
   initial_owing: number;
   remaining_owing: number;
+};
+
+export type ExpenseItem = {
+  id: string;
+  title: string;
+  amount: number;
+  split_type: SplitType;
+  splits: ExpenseItemSplit[];
+};
+
+export type ExpenseItemSplit = {
+  user: { id: string; name: string };
+  weight: number;
+  amount: number;
 };
 
 export type NewExpense = {

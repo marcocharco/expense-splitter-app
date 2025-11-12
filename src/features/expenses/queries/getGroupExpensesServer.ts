@@ -20,7 +20,14 @@ export async function getGroupExpenses(groupId: string) {
         id, name, icon
       ),
       paid_by:profile!paid_by(id, name),
-      splits:expense_split(user:profile(id, name), weight, initial_owing, remaining_owing)
+      splits:expense_split(user:profile(id, name), weight, initial_owing, remaining_owing),
+      items:expense_item(
+        id,
+        title,
+        amount,
+        split_type,
+        splits:expense_item_split(user:profile(id, name), weight)
+      ),
       deleted_at
     `
     )
@@ -30,8 +37,10 @@ export async function getGroupExpenses(groupId: string) {
     .order("created_at", { ascending: false })
     .overrideTypes<Expense[], { merge: false }>();
 
-  // console.log(data);
-  if (error) throw new Error(error.message);
+  if (error) {
+    // console.error("error:", error);
+    throw new Error(error.message);
+  }
 
   return data.map(toDomainExpense) ?? null;
 }
