@@ -27,15 +27,6 @@ export type Group = {
   created_at?: string;
 };
 
-export type ExpenseSplit = {
-  expense_id?: string;
-  user: { id: string; name: string };
-  amount: number;
-  weight: number;
-  initial_owing: number;
-  remaining_owing: number;
-};
-
 export type Expense = {
   id: string;
   title: string;
@@ -48,9 +39,16 @@ export type Expense = {
   split_type: SplitType;
 };
 
-export type SettlementStatus = "open" | "closed";
-
 export type SplitType = "even" | "percentage" | "shares" | "custom";
+
+export type ExpenseSplit = {
+  expense_id?: string;
+  user: { id: string; name: string };
+  amount: number;
+  weight: number;
+  initial_owing: number;
+  remaining_owing: number;
+};
 
 export type NewExpense = {
   amount: number;
@@ -74,6 +72,8 @@ export type NewMultiItemExpense = {
     splits: { userId: string; weight: number }[];
   }[];
 };
+
+export type SettlementStatus = "open" | "closed";
 
 export type Settlement = {
   id: string;
