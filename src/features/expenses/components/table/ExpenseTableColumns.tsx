@@ -102,6 +102,24 @@ export const createExpenseTableColumns = (
   {
     accessorKey: "title",
     header: "Title",
+    cell: ({ row }) => {
+      const expense = row.original;
+      const isMultiItem = expense.items && expense.items.length > 0;
+
+      return (
+        <div className="flex items-center gap-2">
+          <span>{expense.title}</span>
+          {isMultiItem && (
+            <>
+              <span>·</span>
+              <span className="text-muted-foreground">
+                {expense.items?.length} items
+              </span>
+            </>
+          )}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "amount",
