@@ -128,7 +128,6 @@ const ExpenseMultiItemSection = ({
             clearErrors={clearErrors}
             groupMembers={groupMembers}
             onRemove={() => handleRemove(index)}
-            canRemove={true}
             isExpanded={expandedIndex === index}
             onExpand={() => setExpandedIndex(index)}
             onCollapse={() => setExpandedIndex(-1)}
@@ -166,7 +165,6 @@ type ItemCardProps = {
   >["clearErrors"];
   groupMembers: Member[];
   onRemove: () => void;
-  canRemove: boolean;
   isExpanded: boolean;
   onExpand: () => void;
   onCollapse: () => void;
@@ -181,7 +179,6 @@ const ItemCard = ({
   clearErrors,
   groupMembers,
   onRemove,
-  canRemove,
   isExpanded,
   onExpand,
   onCollapse,
@@ -317,20 +314,18 @@ const ItemCard = ({
               {selectedMemberNames || "No members selected"}
             </div>
           </div>
-          {canRemove && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                onRemove();
-              }}
-              className="h-6 w-6 p-0 ml-2"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          )}
+          <Button
+            type="button"
+            variant="link"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              onRemove();
+            }}
+            className="h-6 w-6 p-0 ml-2 group"
+          >
+            <Trash2 className="h-4 w-4 transition-colors group-hover:text-destructive" />
+          </Button>
         </div>
       </div>
     );
@@ -343,7 +338,7 @@ const ItemCard = ({
       className="border rounded-lg p-4 bg-muted/30 transition-all duration-200 ease-in-out min-h-[200px]"
     >
       <div className="space-y-3">
-        <div className="flex items-start gap-2">
+        <div className="flex items-center gap-2">
           <div
             className={`${
               hasTitle && !isTitleInputFocused ? "w-auto shrink-0" : "flex-1"
@@ -370,31 +365,43 @@ const ItemCard = ({
               inputRef={amountInputRef}
             />
           </div>
-          <div className="shrink-0 ml-auto">
-            <CompactSplitTypeSelect
-              control={control}
-              name={`items.${index}.splitType`}
-            />
-          </div>
+          <Button
+            type="button"
+            variant="link"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              onRemove();
+            }}
+            className="h-6 w-6 p-0 ml-2 shrink-0 group"
+          >
+            <Trash2 className="h-4 w-4 transition-colors group-hover:text-destructive" />
+          </Button>
         </div>
 
         {/* Split Details */}
         <div className="form-item animate-in fade-in duration-200">
           <div className="flex items-center justify-between mb-2">
-            <FormField
+            <div className="flex items-center gap-2">
+              <FormField
+                control={control}
+                name={`items.${index}.selectedMembers`}
+                render={() => <FormMessage className="form-item-message" />}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleSelectAllToggle}
+                className="text-xs h-7"
+              >
+                {areAllMembersSelected ? "Deselect All" : "Select All"}
+              </Button>
+            </div>
+            <CompactSplitTypeSelect
               control={control}
-              name={`items.${index}.selectedMembers`}
-              render={() => <FormMessage className="form-item-message" />}
+              name={`items.${index}.splitType`}
             />
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={handleSelectAllToggle}
-              className="text-xs h-7"
-            >
-              {areAllMembersSelected ? "Deselect All" : "Select All"}
-            </Button>
           </div>
           <FormField
             control={control}
