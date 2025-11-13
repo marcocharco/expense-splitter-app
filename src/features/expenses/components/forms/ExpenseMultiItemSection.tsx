@@ -60,7 +60,7 @@ const ExpenseMultiItemSection = ({
     name: "items",
   });
 
-  const [expandedIndex, setExpandedIndex] = useState<number>(0);
+  const [expandedIndex, setExpandedIndex] = useState<number>(-1);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const lastCardRef = useRef<HTMLDivElement>(null);
 
@@ -88,9 +88,9 @@ const ExpenseMultiItemSection = ({
 
   const handleRemove = (index: number) => {
     remove(index);
-    // If we removed the expanded item, expand the first item
+    // If we removed the expanded item, collapse all
     if (index === expandedIndex) {
-      setExpandedIndex(0);
+      setExpandedIndex(-1);
     } else if (index < expandedIndex) {
       // If we removed an item before the expanded one, adjust the index
       setExpandedIndex(expandedIndex - 1);
