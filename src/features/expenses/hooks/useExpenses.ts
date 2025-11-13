@@ -5,6 +5,7 @@ import {
   updateExpense,
   softDeleteExpense,
   addMultiItemExpense as addMultiItemExpenseAction,
+  updateMultiItemExpense,
 } from "@/features/expenses/server/expense.actions";
 import { getGroupExpenses } from "@/features/expenses/queries/getGroupExpenses";
 import { NewExpense, NewMultiItemExpense } from "@/types";
@@ -58,6 +59,20 @@ export function useExpenses(groupId: string) {
     },
   });
 
+  const editMultiItemExpense = useMutation({
+    mutationFn: ({
+      values,
+      expenseId,
+    }: {
+      values: NewMultiItemExpense;
+      expenseId: string;
+    }) => updateMultiItemExpense(values, groupId, expenseId),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["groupExpenses", groupId] });
+      qc.invalidateQueries({ queryKey: ["groupBalances", groupId] });
+    },
+  });
+
   return {
     expenses: data ?? [],
     isLoading,
@@ -69,6 +84,8 @@ export function useExpenses(groupId: string) {
     isEditingExpense: editExpense.isPending,
     isDeletingExpense: deleteExpense.isPending,
     addMultiItemExpense: addMultiItemExpense.mutateAsync,
+    editMultiItemExpense: editMultiItemExpense.mutateAsync,
     isAddingMultiItemExpense: addMultiItemExpense.isPending,
+    isEditingMultiItemExpense: editMultiItemExpense.isPending,
   };
 }

@@ -91,3 +91,28 @@ export async function addMultiItemExpense(
 
   if (error) throw new Error(error.message);
 }
+
+export async function updateMultiItemExpense(
+  values: NewMultiItemExpense,
+  groupId: string,
+  expenseId: string
+) {
+  const supabase = await createClient();
+
+  const processedItems = processMultiItemPayload(values.items);
+
+  const { error } = await supabase.rpc("update_expense_multi_item", {
+    p_expense_id: expenseId,
+    p_group_id: groupId,
+    p_title: values.title,
+    p_paid_by: values.paidBy,
+    p_date: values.date,
+    p_category_id: values.category === undefined ? null : values.category,
+    p_items: processedItems,
+  });
+
+  if (error) {
+    console.error("error:", error);
+    throw new Error(error.message);
+  }
+}

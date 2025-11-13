@@ -35,9 +35,12 @@ const MultiItemExpenseForm = ({
   }
 
   const groupMembers = groupData.members;
-  const { addMultiItemExpense, isAddingMultiItemExpense } = useExpenses(
-    groupData.id
-  );
+  const {
+    addMultiItemExpense,
+    editMultiItemExpense,
+    isAddingMultiItemExpense,
+    isEditingMultiItemExpense,
+  } = useExpenses(groupData.id);
 
   const formSchema = MultiItemExpenseFormSchema();
   type FormValues = z.infer<typeof formSchema>;
@@ -69,33 +72,40 @@ const MultiItemExpenseForm = ({
     defaultValues,
   });
 
-  const isLoading = type === "newExpense" && isAddingMultiItemExpense;
+  const isLoading =
+    type === "newExpense"
+      ? isAddingMultiItemExpense
+      : isEditingMultiItemExpense;
 
   const onSubmit = async (values: FormValues) => {
-    try {
-      // Transform form values to match backend payload structure
-      const payload = {
-        title: values.title,
-        paidBy: values.paidBy,
-        date: values.date,
-        category: values.category,
-        items: values.items.map((item) => ({
-          title: item.title,
-          amount: item.amount,
-          splitType: item.splitType,
-          splits: item.memberSplits.filter((split) =>
-            item.selectedMembers.includes(split.userId)
-          ),
-        })),
-      };
+    // Transform form values to match backend payload structure
+    const payload = {
+      title: values.title,
+      paidBy: values.paidBy,
+      date: values.date,
+      category: values.category,
+      items: values.items.map((item) => ({
+        title: item.title,
+        amount: item.amount,
+        splitType: item.splitType,
+        splits: item.memberSplits.filter((split) =>
+          item.selectedMembers.includes(split.userId)
+        ),
+      })),
+    };
 
+    try {
       if (type === "newExpense") {
         await addMultiItemExpense(payload);
         toast(`Successfully added "${values.title}"`);
         onSuccess();
-      } else if (type === "updateExpense") {
-        // TODO: Implement update logic when needed
-        toast(`Update not yet implemented`);
+      } else if (type === "updateExpense" && initialExpense) {
+        await editMultiItemExpense({
+          values: payload,
+          expenseId: initialExpense.id,
+        });
+        toast(`Successfully edited "${values.title}"`);
+        onSuccess();
       }
     } catch (error) {
       console.error(error);
