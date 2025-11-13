@@ -2,7 +2,7 @@ import { Settlement } from "@/types";
 import { createClient } from "@/utils/supabase/client";
 
 export async function getGroupSettlements(groupId: string) {
-  const supabase = await createClient();
+  const supabase = createClient();
 
   const { data, error } = await supabase
     .from("settlement")

@@ -2,7 +2,7 @@ import { Payment } from "@/types";
 import { createClient } from "@/utils/supabase/client";
 
 export async function getGroupPayments(groupId: string) {
-  const supabase = await createClient();
+  const supabase = createClient();
 
   const { data, error } = await supabase
     .from("payment")

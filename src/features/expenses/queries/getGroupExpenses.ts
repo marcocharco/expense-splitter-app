@@ -3,7 +3,7 @@ import { toDomainExpense } from "@/features/expenses/utils/expenseMapper";
 import { createClient } from "@/utils/supabase/client";
 
 export async function getGroupExpenses(groupId: string) {
-  const supabase = await createClient();
+  const supabase = createClient();
 
   const { data, error } = await supabase
     .from("expense")
