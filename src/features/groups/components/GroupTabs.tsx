@@ -8,7 +8,7 @@ import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import GroupBalances from "@/features/groups/components/GroupBalances";
 import PaymentList from "@/features/payments/components/PaymentList";
 import SettlementList from "@/features/settlements/components/SettlementList";
-import UpdateFormDialog from "@/components/ui/UpdateFormDialog";
+import FormDialog from "@/components/ui/FormDialog";
 import SingleItemExpenseForm from "@/features/expenses/components/forms/SingleItemExpenseForm";
 import { useCurrentGroup } from "@/features/groups/contexts/CurrentGroupContext";
 import { useUser } from "@/features/users/context/UserContext";
@@ -81,11 +81,12 @@ const GroupTabs = () => {
       </Tabs>
 
       {/* Edit Expense */}
-      <UpdateFormDialog
+      <FormDialog
         title="Update Expense"
         description={`Update ${expenseToUpdate?.title || "expense"}.`}
         open={Boolean(expenseToUpdate)}
         onOpenChange={(isOpen) => !isOpen && setExpenseToUpdate(null)}
+        fullHeight={Boolean(expenseToUpdate?.items?.length)}
       >
         {(closeDialog) =>
           expenseToUpdate &&
@@ -109,16 +110,17 @@ const GroupTabs = () => {
             />
           ))
         }
-      </UpdateFormDialog>
+      </FormDialog>
 
       {/* Duplicate Expense */}
-      <UpdateFormDialog
+      <FormDialog
         title="Duplicate Expense"
         description={`Create a copy of "${
           expenseToDuplicate?.title || "expense"
         }".`}
         open={Boolean(expenseToDuplicate)}
         onOpenChange={(isOpen) => !isOpen && setExpenseToDuplicate(null)}
+        fullHeight={Boolean(expenseToDuplicate?.items?.length)}
       >
         {(closeDialog) =>
           expenseToDuplicate &&
@@ -142,7 +144,7 @@ const GroupTabs = () => {
             />
           ))
         }
-      </UpdateFormDialog>
+      </FormDialog>
 
       <ExpenseDetailsSheet
         expense={expenseToView}
