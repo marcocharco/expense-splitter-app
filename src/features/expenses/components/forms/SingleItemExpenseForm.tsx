@@ -75,20 +75,26 @@ const SingleItemExpenseForm = ({
   const isLoading = type === "newExpense" ? isAddingExpense : isEditingExpense;
 
   const onSubmit = async (values: FormValues) => {
-    const { selectedMembers, memberSplits, ...rest } = values;
-
-    const filteredSplits = memberSplits.filter((split) =>
-      selectedMembers.includes(split.userId)
-    );
+    const payload = {
+      title: values.title,
+      amount: values.amount,
+      paidBy: values.paidBy,
+      date: values.date,
+      category: values.category,
+      splitType: values.splitType,
+      memberSplits: values.memberSplits.filter((split) =>
+        values.selectedMembers.includes(split.userId)
+      ),
+    };
 
     try {
       if (type === "newExpense") {
-        await addExpense({ ...rest, memberSplits: filteredSplits });
+        await addExpense(payload);
         toast(`Successfully added "${values.title}"`);
         onSuccess();
       } else if (type === "updateExpense" && initialExpense) {
         await editExpense({
-          values: { ...rest, memberSplits: filteredSplits },
+          values: payload,
           expenseId: initialExpense.id,
         });
         toast(`Successfully updated "${values.title}"`);
