@@ -322,7 +322,7 @@ const ItemCard = ({
               e.stopPropagation();
               onRemove();
             }}
-            className="h-6 w-6 p-0 ml-2 group"
+            className="h-6 w-6 p-0 ml-2 mr-1 group"
           >
             <Trash2 className="h-4 w-4 transition-colors group-hover:text-destructive" />
           </Button>
@@ -342,7 +342,7 @@ const ItemCard = ({
           <div
             className={`${
               hasTitle && !isTitleInputFocused ? "w-auto shrink-0" : "flex-1"
-            } min-w-0 transition-[flex,width] duration-150 ease-out`}
+            } min-w-0 transition-[flex,width] duration-0 animate-slide-in-top`}
           >
             <TitleInput
               control={control}
@@ -356,7 +356,7 @@ const ItemCard = ({
           <div
             className={`${
               hasTitle && !isTitleInputFocused ? "flex-1" : "w-[120px] shrink-0"
-            } transition-[flex,width] duration-150 ease-out`}
+            } transition-[flex,width] duration-0 animate-slide-in-top`}
           >
             <AmountInput
               control={control}
@@ -375,12 +375,12 @@ const ItemCard = ({
             }}
             className="h-6 w-6 p-0 ml-2 shrink-0 group"
           >
-            <Trash2 className="h-4 w-4 transition-colors group-hover:text-destructive" />
+            <Trash2 className="h-4 w-4 icon-destructive-hover" />
           </Button>
         </div>
 
         {/* Split Details */}
-        <div className="form-item animate-in fade-in duration-200">
+        <div className="form-item animate-fade-in">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               <FormField

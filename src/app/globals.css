@@ -107,6 +107,19 @@
   @apply flex flex-col items-center h-[1000px] gap-4;
 }
 
+/* Animation utilities for consistent card/form animations */
+@utility animate-fade-in {
+  @apply animate-in fade-in duration-200;
+}
+
+@utility animate-slide-in-top {
+  @apply animate-in fade-in slide-in-from-top-2 duration-200;
+}
+
+@utility icon-destructive-hover {
+  @apply transition-colors group-hover:text-destructive;
+}
+
 .wave-text-container {
   position: relative;
   display: inline-block;
