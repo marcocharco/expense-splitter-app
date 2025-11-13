@@ -20,13 +20,13 @@ export async function getGroupExpenses(groupId: string) {
         id, name, icon
       ),
       paid_by:profile!paid_by(id, name),
-      splits:expense_split(user:profile(id, name), weight, initial_owing, remaining_owing),
+      splits:expense_split(user:profile!user_id(id, name), weight, initial_owing, remaining_owing),
       items:expense_item(
         id,
         title,
         amount,
         split_type,
-        splits:expense_item_split(user:profile(id, name), weight)
+        splits:expense_item_split(user:profile!user_id(id, name), weight)
       ),
       deleted_at
     `
