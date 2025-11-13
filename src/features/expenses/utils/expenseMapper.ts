@@ -4,7 +4,11 @@ type toFormValuesProps = {
   expense: Expense;
   members: Member[];
 };
-export function toFormValues({ expense, members }: toFormValuesProps) {
+
+export function toSingleItemFormValues({
+  expense,
+  members,
+}: toFormValuesProps) {
   return {
     amount: expense.amount,
     title: expense.title,
@@ -18,6 +22,27 @@ export function toFormValues({ expense, members }: toFormValuesProps) {
       weight:
         expense.splits.find((split) => split.user.id === m.id)?.weight ?? 0,
     })),
+  };
+}
+
+export function toMultiItemFormValues({ expense, members }: toFormValuesProps) {
+  return {
+    title: expense.title,
+    paidBy: expense.paid_by.id,
+    date: expense.date,
+    category: expense.category?.id,
+    items:
+      expense.items?.map((item) => ({
+        title: item.title,
+        amount: item.amount,
+        splitType: item.split_type,
+        selectedMembers: item.splits.map((s) => s.user.id),
+        memberSplits: members.map((m) => ({
+          userId: m.id,
+          weight:
+            item.splits.find((split) => split.user.id === m.id)?.weight ?? 0,
+        })),
+      })) ?? [],
   };
 }
 

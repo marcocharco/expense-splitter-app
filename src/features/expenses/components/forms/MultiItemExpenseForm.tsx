@@ -13,14 +13,18 @@ import ExpenseMultiItemSection from "@/features/expenses/components/forms/Expens
 import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import { DateToYMD } from "@/utils/formatDate";
 import { toast } from "sonner";
+import { Expense } from "@/types";
+import { toMultiItemFormValues } from "../../utils/expenseMapper";
 
 type MultiItemExpenseFormProps = {
   type: "newExpense" | "updateExpense";
+  initialExpense?: Expense;
   onSuccess: () => void;
 };
 
 const MultiItemExpenseForm = ({
   type,
+  initialExpense,
   onSuccess,
 }: MultiItemExpenseFormProps) => {
   const { user } = useUser();
@@ -38,13 +42,27 @@ const MultiItemExpenseForm = ({
   const formSchema = MultiItemExpenseFormSchema();
   type FormValues = z.infer<typeof formSchema>;
 
-  const defaultValues: FormValues = {
-    title: "",
-    paidBy: user.id ?? "",
-    date: DateToYMD(new Date()),
-    category: undefined,
-    items: [],
-  };
+  const defaultValues: FormValues =
+    type === "updateExpense"
+      ? toMultiItemFormValues({
+          expense: initialExpense!,
+          members: groupMembers,
+        })
+      : initialExpense
+      ? {
+          ...toMultiItemFormValues({
+            expense: initialExpense,
+            members: groupMembers,
+          }),
+          date: DateToYMD(new Date()),
+        }
+      : {
+          title: "",
+          paidBy: user.id ?? "",
+          date: DateToYMD(new Date()),
+          category: undefined,
+          items: [],
+        };
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),

@@ -14,6 +14,7 @@ import { useCurrentGroup } from "@/features/groups/contexts/CurrentGroupContext"
 import { useUser } from "@/features/users/context/UserContext";
 import { Expense } from "@/types";
 import ExpenseDetailsSheet from "@/features/expenses/components/ExpenseDetailsSheet";
+import MultiItemExpenseForm from "@/features/expenses/components/forms/MultiItemExpenseForm";
 
 const GroupTabs = () => {
   const group = useCurrentGroup();
@@ -79,7 +80,7 @@ const GroupTabs = () => {
         </TabsContent>
       </Tabs>
 
-      {/* Update Expense */}
+      {/* Edit Expense */}
       <UpdateFormDialog
         title="Update Expense"
         description={`Update ${expenseToUpdate?.title || "expense"}.`}
@@ -87,7 +88,17 @@ const GroupTabs = () => {
         onOpenChange={(isOpen) => !isOpen && setExpenseToUpdate(null)}
       >
         {(closeDialog) =>
-          expenseToUpdate && (
+          expenseToUpdate &&
+          (expenseToUpdate.items && expenseToUpdate.items.length > 0 ? (
+            <MultiItemExpenseForm
+              type="updateExpense"
+              initialExpense={expenseToUpdate}
+              onSuccess={() => {
+                closeDialog();
+                setExpenseToUpdate(null);
+              }}
+            />
+          ) : (
             <SingleItemExpenseForm
               type="updateExpense"
               initialExpense={expenseToUpdate}
@@ -96,7 +107,7 @@ const GroupTabs = () => {
                 setExpenseToUpdate(null);
               }}
             />
-          )
+          ))
         }
       </UpdateFormDialog>
 
@@ -110,16 +121,26 @@ const GroupTabs = () => {
         onOpenChange={(isOpen) => !isOpen && setExpenseToDuplicate(null)}
       >
         {(closeDialog) =>
-          expenseToDuplicate && (
+          expenseToDuplicate &&
+          (expenseToDuplicate.items && expenseToDuplicate.items.length > 0 ? (
+            <MultiItemExpenseForm
+              type="newExpense"
+              initialExpense={expenseToDuplicate}
+              onSuccess={() => {
+                closeDialog();
+                setExpenseToUpdate(null);
+              }}
+            />
+          ) : (
             <SingleItemExpenseForm
               type="newExpense"
               initialExpense={expenseToDuplicate}
               onSuccess={() => {
                 closeDialog();
-                setExpenseToDuplicate(null);
+                setExpenseToUpdate(null);
               }}
             />
-          )
+          ))
         }
       </UpdateFormDialog>
 

@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import ExpenseGeneralInfoSection from "@/features/expenses/components/forms/ExpenseGeneralInfoSection";
 import ExpenseSingleItemSection from "@/features/expenses/components/forms/ExpenseSingleItemSection";
 import { Expense } from "@/types";
-import { toFormValues } from "@/features/expenses/utils/expenseMapper";
+import { toSingleItemFormValues } from "@/features/expenses/utils/expenseMapper";
 import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import { DateToYMD } from "@/utils/formatDate";
 import { toast } from "sonner";
@@ -43,14 +43,14 @@ const SingleItemExpenseForm = ({
 
   const defaultValues: FormValues =
     type === "updateExpense"
-      ? toFormValues({
+      ? toSingleItemFormValues({
           expense: initialExpense!,
           members: groupMembers,
         })
       : initialExpense
       ? {
           // default to the current date for duplicate expenses
-          ...toFormValues({
+          ...toSingleItemFormValues({
             expense: initialExpense,
             members: groupMembers,
           }),
