@@ -2,7 +2,7 @@
 
 import { createClient } from "@/utils/supabase/server";
 
-export async function startNewSettlement({
+export async function insertSettlement({
   groupId,
   currentUser,
   title,

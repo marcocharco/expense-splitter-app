@@ -2,7 +2,7 @@
 
 import { createClient } from "@/utils/supabase/server";
 
-export async function addNewSettlementPayment({
+export async function insertSettlementPayment({
   groupId,
   paid_by,
   paid_to,
@@ -36,7 +36,7 @@ export async function addNewSettlementPayment({
   return data ?? null;
 }
 
-export async function addNewExpensePayment({
+export async function insertExpensePayment({
   groupId,
   paid_by,
   paid_to,

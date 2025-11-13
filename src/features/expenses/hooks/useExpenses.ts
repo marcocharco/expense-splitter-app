@@ -1,10 +1,10 @@
 "use client";
 
 import {
-  addNewExpense,
+  insertExpense,
   updateExpense,
-  softDeleteExpense,
-  addMultiItemExpense as addMultiItemExpenseAction,
+  deleteExpense as deleteExpenseAction,
+  insertMultiItemExpense,
   updateMultiItemExpense,
 } from "@/features/expenses/server/expense.actions";
 import { getGroupExpenses } from "@/features/expenses/queries/getGroupExpenses";
@@ -20,7 +20,7 @@ export function useExpenses(groupId: string) {
   });
 
   const addExpense = useMutation({
-    mutationFn: (values: NewExpense) => addNewExpense(values, groupId),
+    mutationFn: (values: NewExpense) => insertExpense(values, groupId),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["groupExpenses", groupId] });
       qc.invalidateQueries({ queryKey: ["groupBalances", groupId] });
@@ -43,7 +43,7 @@ export function useExpenses(groupId: string) {
 
   const deleteExpense = useMutation({
     mutationFn: ({ expenseId }: { expenseId: string }) =>
-      softDeleteExpense(expenseId),
+      deleteExpenseAction(expenseId),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["groupExpenses", groupId] });
       qc.invalidateQueries({ queryKey: ["groupBalances", groupId] });
@@ -52,7 +52,7 @@ export function useExpenses(groupId: string) {
 
   const addMultiItemExpense = useMutation({
     mutationFn: (values: NewMultiItemExpense) =>
-      addMultiItemExpenseAction(values, groupId),
+      insertMultiItemExpense(values, groupId),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["groupExpenses", groupId] });
       qc.invalidateQueries({ queryKey: ["groupBalances", groupId] });

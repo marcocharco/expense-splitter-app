@@ -16,7 +16,7 @@ const processMultiItemPayload = (items: NewMultiItemExpense["items"]) => {
   }));
 };
 
-export async function addNewExpense(values: NewExpense, groupId: string) {
+export async function insertExpense(values: NewExpense, groupId: string) {
   const supabase = await createClient();
 
   if (values.splitType === "even") {
@@ -63,7 +63,7 @@ export async function updateExpense(
   if (error) throw new Error(error.message);
 }
 
-export async function softDeleteExpense(expenseId: string) {
+export async function deleteExpense(expenseId: string) {
   const supabase = await createClient();
   const { error } = await supabase.rpc("soft_delete_expense", {
     p_expense_id: expenseId,
@@ -72,7 +72,7 @@ export async function softDeleteExpense(expenseId: string) {
   if (error) throw new Error(error.message);
 }
 
-export async function addMultiItemExpense(
+export async function insertMultiItemExpense(
   values: NewMultiItemExpense,
   groupId: string
 ) {

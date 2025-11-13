@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getGroupSettlements } from "../queries/getGroupSettlements";
-import { startNewSettlement } from "../server/settlement.actions";
+import { insertSettlement } from "../server/settlement.actions";
 
 export function useSettlements(groupId: string) {
   const qc = useQueryClient();
@@ -18,7 +18,7 @@ export function useSettlements(groupId: string) {
       title: string;
       selectedExpenseIds: string[];
       balances: { userId: string; netBalance: number }[];
-    }) => startNewSettlement({ ...values, groupId }),
+    }) => insertSettlement({ ...values, groupId }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["groupSettlements", groupId] });
       qc.invalidateQueries({ queryKey: ["groupExpenses", groupId] });
