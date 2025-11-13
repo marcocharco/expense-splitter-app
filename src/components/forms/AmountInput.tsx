@@ -126,18 +126,20 @@ const AmountInput = <T extends FieldValues, N extends Path<T>>({
     field.onChange(completedValue); // update form value
     setDisplayValue(completedValue > 0 ? formatCurrency(completedValue) : ""); // update display value with currency format
 
-    if (variant === "compact") {
-      setTimeout(() => {
-        setIsFocused(false);
+    // Set isFocused to false for both variants to prevent useEffect interference
+    setTimeout(() => {
+      setIsFocused(false);
+      if (variant === "compact") {
         onFocusChange?.(false);
-      }, 0);
-    }
+      }
+    }, 0);
   };
 
   const handleFocus = () => {
     setDisplayValue(field.value === 0 ? "" : field.value?.toString());
+    // Set isFocused to true for both variants to prevent useEffect interference
+    setIsFocused(true);
     if (variant === "compact") {
-      setIsFocused(true);
       onFocusChange?.(true);
     }
   };
