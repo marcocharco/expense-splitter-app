@@ -27,7 +27,7 @@ import {
   isOverTotalLimit,
   errorMsgForLimit,
 } from "@/features/expenses/utils/splitsHelpers";
-import { Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { MultiItemExpenseFormSchema } from "@/features/expenses/schemas/expenseFormSchema";
 import { formatCurrency } from "@/utils/formatCurrency";
 
@@ -106,17 +106,23 @@ const ExpenseMultiItemSection = ({
   );
 
   return (
-    <div className="flex-1 space-y-4 h-full">
-      <div className="flex items-center justify-between">
+    <div className="flex flex-col flex-1 min-h-0 form-item">
+      <div className="form-label-row flex-shrink-0">
         <FormLabel className="form-item-label">Items</FormLabel>
-        <span className="text-sm text-muted-foreground">
-          Count: {itemCount} · Total: {formatCurrency(totalAmount)}
-        </span>
+        <div
+          className="ml-auto pr-2 overflow-y-auto"
+          style={{ scrollbarGutter: "stable", height: "fit-content" }}
+        >
+          <div className="text-sm text-muted-foreground text-right whitespace-nowrap">
+            Count: {itemCount} · Total: {formatCurrency(totalAmount)}
+          </div>
+        </div>
       </div>
 
       <div
         ref={scrollContainerRef}
-        className="space-y-3 max-h-100 overflow-y-auto pr-2"
+        className="flex-1 space-y-3 overflow-y-auto pr-2 min-h-0 mt-1"
+        style={{ scrollbarGutter: "stable" }}
       >
         {fields.map((field, index) => (
           <ItemCard
@@ -136,7 +142,7 @@ const ExpenseMultiItemSection = ({
         ))}
       </div>
 
-      <div className="flex justify-start">
+      <div className="flex items-start justify-between mt-4 flex-shrink-0">
         <Button
           type="button"
           onClick={handleAddItem}
@@ -144,7 +150,8 @@ const ExpenseMultiItemSection = ({
           size="sm"
           data-ignore-outside-click
         >
-          Add Item
+          <Plus />
+          New Item
         </Button>
       </div>
     </div>

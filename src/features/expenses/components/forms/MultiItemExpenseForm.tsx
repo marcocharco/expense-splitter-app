@@ -117,19 +117,21 @@ const MultiItemExpenseForm = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="grid grid-cols-1 xl:grid-cols-2 gap-8 flex-auto"
+        className="grid grid-cols-1 xl:grid-cols-2 gap-8 flex-1 min-h-0"
         autoComplete="off"
       >
         {/* left side (general expense info) */}
-        <ExpenseGeneralInfoSection
-          control={form.control}
-          groupMembers={groupMembers}
-          currentUserId={user.id ?? ""}
-          groupId={groupData.id}
-        />
+        <div className="overflow-y-auto">
+          <ExpenseGeneralInfoSection
+            control={form.control}
+            groupMembers={groupMembers}
+            currentUserId={user.id ?? ""}
+            groupId={groupData.id}
+          />
+        </div>
 
         {/* right side (items array) */}
-        <div className="flex flex-col">
+        <div className="flex flex-col min-h-0">
           <ExpenseMultiItemSection
             control={form.control}
             setValue={form.setValue}
@@ -139,7 +141,7 @@ const MultiItemExpenseForm = ({
           />
 
           {/* submit form button */}
-          <div className="flex justify-end">
+          <div className="flex justify-end flex-shrink-0">
             <Button type="submit" className="form-btn" disabled={isLoading}>
               {type === "newExpense" ? "Add Expense" : "Update Expense"}
             </Button>
