@@ -43,13 +43,13 @@ const GroupBalances = () => {
           return (
             <TableRow key={member.id}>
               <TableCell>{member.name}</TableCell>
-              <TableCell className="text-right tabular-nums">
+              <TableCell className="text-right">
                 {formatCurrency(userBalance?.totalOwing ?? 0)}
               </TableCell>
-              <TableCell className="text-right tabular-nums">
+              <TableCell className="text-right">
                 {formatCurrency(userBalance?.totalOwed ?? 0)}
               </TableCell>
-              <TableCell className="text-right tabular-nums">
+              <TableCell className="text-right">
                 {(userBalance?.netOwing ?? 0) < 0
                   ? `is owed ${formatCurrency(absValue)}`
                   : `owes ${formatCurrency(absValue)}`}

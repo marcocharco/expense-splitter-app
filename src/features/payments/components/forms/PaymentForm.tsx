@@ -273,7 +273,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
                               className="text-sm"
                             >
                               {settlement.title} - Owes{" "}
-                              {formatCurrency(paidByAmountOwed)}
+                              <span>{formatCurrency(paidByAmountOwed)}</span>
                             </label>
                           </div>
                         );

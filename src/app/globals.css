@@ -6,9 +6,9 @@
 @theme {
   /* --color-main: #14eb00; */
   --color-main: #9acd32;
-  --font-main: var(--font-dm-sans);
-  --font-header: var(--font-raleway);
-  --font-number: var(--font-inter);
+  --font-main: "Satoshi", sans-serif;
+  --font-header: "Satoshi", sans-serif;
+  --font-number: "Satoshi", sans-serif;
 }
 
 @layer base {

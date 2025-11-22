@@ -1,24 +1,9 @@
 import type { Metadata } from "next";
-import { DM_Sans, Raleway, Inter } from "next/font/google";
+import "@/assets/fonts/satoshi.css";
 import "./globals.css";
 import { UserProvider } from "@/features/users/context/UserContext";
 import { getUserProfileServer } from "@/features/users/queries/getUserProfileServer";
 import ReactQueryProvider from "@/app/ReactQueryProvider";
-
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
-  subsets: ["latin"],
-});
-
-const raleway = Raleway({
-  variable: "--font-raleway",
-  subsets: ["latin"],
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "SplitTheX",
@@ -33,10 +18,7 @@ export default async function Layout({
   const user = await getUserProfileServer();
 
   return (
-    <html
-      lang="en"
-      className={`${dmSans.variable} ${raleway.variable} ${inter.variable}`}
-    >
+    <html lang="en">
       <body>
         <ReactQueryProvider>
           <UserProvider initialUser={user}>{children}</UserProvider>
