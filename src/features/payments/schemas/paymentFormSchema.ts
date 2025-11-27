@@ -10,4 +10,5 @@ export const PaymentFormSchema = () =>
       .refine((val) => !isNaN(Date.parse(val)), { message: "Invalid date" }),
     note: z.string().optional(),
     selectedExpenseIds: z.array(z.string()),
+    selectedSettlementIds: z.array(z.string()),
   });

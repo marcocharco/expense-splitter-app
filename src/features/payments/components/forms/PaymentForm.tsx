@@ -8,7 +8,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import AmountInput from "@/components/forms/AmountInput";
-import { Form, FormLabel } from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import MemberSelectInput from "@/components/forms/MemberSelectInput";
 import DatePickerInput from "@/components/forms/DatePickerInput";
 import NoteInput from "@/components/forms/NoteInput";
@@ -17,9 +17,10 @@ import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import { ExpenseSplit } from "@/types";
 import { DateToYMD } from "@/utils/formatDate";
 import { formatCurrency } from "@/utils/formatCurrency";
-import MultiSelectInput from "@/components/forms/MultiSelectInput";
 import { useSettlements } from "@/features/settlements/hooks/useSettlements";
 import { toast } from "sonner";
+import PaymentFormExpensesPanel from "./PaymentFormExpensesPanel";
+import PaymentFormSettlementsPanel from "./PaymentFormSettlementsPanel";
 
 const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const { user } = useUser();
@@ -38,8 +39,6 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
     isAddingSettlementPayment,
     isAddingExpensePayment,
   } = usePayments(group.id);
-
-  const [settlementId, setSettlementId] = useState<string | null>(null);
 
   const [paymentType, setPaymentType] = useState<"settlement" | "expense">(
     "expense"
@@ -60,6 +59,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
     date: DateToYMD(new Date()),
     note: "",
     selectedExpenseIds: [],
+    selectedSettlementIds: [],
   };
 
   const form = useForm<FormValues>({
@@ -70,7 +70,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const paidBy = useWatch({ control: form.control, name: "paidBy" });
   const paidTo = useWatch({ control: form.control, name: "paidTo" });
   const selectedExpenseIds = form.watch("selectedExpenseIds");
-
+  const selectedSettlementIds = form.watch("selectedSettlementIds");
   const unpaidExpenses = useMemo(() => {
     return expenses.filter((expense) => {
       const payerSplit = expense.splits.find(
@@ -86,9 +86,8 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
     });
   }, [expenses, paidTo, paidBy]);
 
-  // Transform expenses into items format for MultiSelectInput
   const expenseItems = useMemo(() => {
-    return unpaidExpenses.reverse().map((expense) => {
+    return [...unpaidExpenses].reverse().map((expense) => {
       const split = expense.splits.find(
         (split: ExpenseSplit) => split.user.id === paidBy
       );
@@ -117,24 +116,75 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
   }, [unpaidExpenses, selectedExpenseIds, paidBy]);
 
   const selectedExpensesTotalAmount = selectedExpenses.reduce(
-    (accumulator, currentExpense) => accumulator + currentExpense.splitAmount,
+    (sum, currentExpense) => sum + currentExpense.splitAmount,
     0
   );
 
-  const openSettlements = settlements.filter((settlement) => {
-    const paidToParticipant = settlement.participants.find(
-      (participant) => participant.user.id === paidTo
+  const unpaidSettlements = useMemo(() => {
+    return settlements.filter((settlement) => {
+      const paidToParticipant = settlement.participants.find(
+        (participant) => participant.user.id === paidTo
+      );
+      const paidByParticipant = settlement.participants.find(
+        (participant) => participant.user.id === paidBy
+      );
+      return (
+        paidToParticipant &&
+        paidByParticipant &&
+        paidToParticipant.remaining_balance < 0 &&
+        paidByParticipant.remaining_balance > 0
+      );
+    });
+  }, [settlements, paidTo, paidBy]);
+
+  const selectedSettlements = useMemo(() => {
+    return unpaidSettlements
+      .filter((settlement) => selectedSettlementIds.includes(settlement.id))
+      .map((settlement) => {
+        const paidByParticipant = settlement.participants.find(
+          (participant) => participant.user.id === paidBy
+        );
+        return {
+          settlementId: settlement.id,
+          amount: Math.max(paidByParticipant?.remaining_balance || 0, 0),
+        };
+      });
+  }, [unpaidSettlements, selectedSettlementIds, paidBy]);
+
+  const selectedSettlementsTotalAmount = selectedSettlements.reduce(
+    (sum, settlement) => sum + settlement.amount,
+    0
+  );
+
+  // Remove any selected expense IDs that are no longer in the unpaid expenses list
+  // (e.g., if an expense was paid or removed, auto-deselect it)
+  useEffect(() => {
+    const allowableExpenseIds = new Set(
+      unpaidExpenses.map((expense) => expense.id)
     );
-    const paidByParticipant = settlement.participants.find(
-      (participant) => participant.user.id === paidBy
+    const filteredIds = selectedExpenseIds.filter((id) =>
+      allowableExpenseIds.has(id)
     );
-    return (
-      paidToParticipant &&
-      paidByParticipant &&
-      paidToParticipant.remaining_balance < 0 &&
-      paidByParticipant.remaining_balance > 0
+
+    if (filteredIds.length !== selectedExpenseIds.length) {
+      form.setValue("selectedExpenseIds", filteredIds);
+    }
+  }, [unpaidExpenses, selectedExpenseIds, form]);
+
+  // Remove any selected settlement IDs that are no longer in the open settlements list
+  // (e.g., if a settlement was closed or removed, auto-deselect it)
+  useEffect(() => {
+    const allowableSettlementIds = new Set(
+      unpaidSettlements.map((settlement) => settlement.id)
     );
-  });
+    const filteredIds = selectedSettlementIds.filter((id) =>
+      allowableSettlementIds.has(id)
+    );
+
+    if (filteredIds.length !== selectedSettlementIds.length) {
+      form.setValue("selectedSettlementIds", filteredIds);
+    }
+  }, [unpaidSettlements, selectedSettlementIds, form]);
 
   const onSubmit = async (values: FormValues) => {
     try {
@@ -144,9 +194,13 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
           paid_to: values.paidTo,
           amount: values.amount,
           date: values.date,
-          settlement_id: settlementId,
+          settlement_ids:
+            values.selectedSettlementIds.length > 0
+              ? values.selectedSettlementIds
+              : undefined,
           note: values.note,
         });
+        toast(`Successfully added payment of ${formatCurrency(values.amount)}`);
       } else if (paymentType === "expense") {
         await addExpensePayment({
           paid_by: values.paidBy,
@@ -156,8 +210,9 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
           selectedExpenseSplits: selectedExpenses,
           note: values.note,
         });
+        toast(`Successfully added payment of ${formatCurrency(values.amount)}`);
       }
-      toast(`Successfully added payment of ${formatCurrency(values.amount)}`);
+
       onSuccess();
     } catch (error) {
       console.error(error);
@@ -184,9 +239,41 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
     }
   }, [paidTo, user.id, form]);
 
+  // Clear all selections and reset amount when paidTo is cleared (no recipient selected)
   useEffect(() => {
-    form.setValue("amount", selectedExpensesTotalAmount);
-  }, [selectedExpensesTotalAmount, selectedExpenseIds, form]);
+    if (!paidTo) {
+      if (form.getValues("selectedExpenseIds").length > 0) {
+        form.setValue("selectedExpenseIds", []);
+      }
+      if (form.getValues("selectedSettlementIds").length > 0) {
+        form.setValue("selectedSettlementIds", []);
+      }
+      form.setValue("amount", 0);
+    }
+  }, [paidTo, form]);
+
+  // Auto-update payment amount to match total of selected expenses when payment type is "expense"
+  useEffect(() => {
+    if (paymentType === "expense") {
+      form.setValue("amount", selectedExpensesTotalAmount);
+    }
+  }, [paymentType, selectedExpensesTotalAmount, form]);
+
+  // Auto-update payment amount to match total of selected settlements when payment type is "settlement"
+  useEffect(() => {
+    if (paymentType === "settlement") {
+      if (selectedSettlementIds.length > 0) {
+        form.setValue("amount", selectedSettlementsTotalAmount);
+      } else {
+        form.setValue("amount", 0);
+      }
+    }
+  }, [
+    paymentType,
+    selectedSettlementsTotalAmount,
+    selectedSettlementIds.length,
+    form,
+  ]);
 
   return (
     <Form {...form}>
@@ -223,9 +310,9 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
           <NoteInput control={form.control} />
         </div>
 
-        {/* right side (expense/settlemnt selection) */}
+        {/* right side (expense/settlement selection) */}
         <div className="flex flex-col space-y-4">
-          <div className="flex-1 space-y-4">
+          <div className="flex-1 space-y-4 overflow-hidden">
             <PaymentTypeInput
               value={paymentType}
               onValueChange={(val) =>
@@ -233,98 +320,30 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
               }
             />
 
-            {/* Payment Type Content */}
-            <div className="space-y-4">
-              {paymentType === "settlement" ? (
-                <div>
-                  {paidTo === "" ? (
-                    <span className="text-muted-foreground font-normal text-sm">
-                      Choose a payment recipient
-                    </span>
-                  ) : openSettlements.length > 0 ? (
-                    <div className="space-y-2">
-                      <FormLabel className="form-item-label">
-                        Choose Settlement{" "}
-                        <span className="text-muted-foreground font-normal text-sm">
-                          (optional)
-                        </span>
-                      </FormLabel>
-                      {openSettlements.map((settlement) => {
-                        const paidByAmountOwed =
-                          settlement.participants.find(
-                            (participant) => participant.user.id === paidBy
-                          )?.remaining_balance || 0;
-
-                        return (
-                          <div
-                            key={settlement.id}
-                            className="flex items-center gap-2"
-                          >
-                            <input
-                              type="radio"
-                              name="settlement"
-                              value={settlement.id}
-                              checked={settlementId === settlement.id}
-                              onChange={() => setSettlementId(settlement.id)}
-                              id={`settlement-${settlement.id}`}
-                            />
-                            <label
-                              htmlFor={`settlement-${settlement.id}`}
-                              className="text-sm"
-                            >
-                              {settlement.title} - Owes{" "}
-                              <span>{formatCurrency(paidByAmountOwed)}</span>
-                            </label>
-                          </div>
-                        );
-                      })}
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="radio"
-                          name="settlement"
-                          value=""
-                          checked={settlementId === null}
-                          onChange={() => setSettlementId(null)}
-                          id="settlement-none"
-                        />
-                        <label htmlFor="settlement-none" className="text-sm">
-                          None (General Payment)
-                        </label>
-                      </div>
-                    </div>
-                  ) : (
-                    <span className="text-muted-foreground font-normal text-sm">
-                      No open settlements
-                    </span>
-                  )}
+            <div className="flex-1 overflow-hidden">
+              {!paidBy || !paidTo ? (
+                <div className="flex h-full items-center justify-center rounded-xl border border-dashed bg-muted/30 px-4 py-12 text-center">
+                  <p className="text-sm text-muted-foreground">
+                    Choose who is paying and who this payment is for to view
+                    matching expenses or settlements.
+                  </p>
                 </div>
+              ) : paymentType === "expense" ? (
+                <PaymentFormExpensesPanel<FormValues>
+                  control={form.control}
+                  name="selectedExpenseIds"
+                  items={expenseItems}
+                  hasBothFields={!!paidBy && !!paidTo}
+                />
               ) : (
-                <div>
-                  {paidTo === "" ? (
-                    <span className="text-muted-foreground font-normal text-sm">
-                      Choose a payment recipient
-                    </span>
-                  ) : unpaidExpenses.length > 0 ? (
-                    <div className="space-y-4">
-                      <FormLabel className="form-item-label">
-                        Choose Expenses
-                        <span className="text-muted-foreground font-normal text-sm">
-                          {" "}
-                          (select one or more)
-                        </span>
-                      </FormLabel>
-                      <MultiSelectInput<FormValues>
-                        control={form.control}
-                        name="selectedExpenseIds"
-                        items={expenseItems}
-                      />
-                    </div>
-                  ) : (
-                    <span className="text-muted-foreground font-normal text-sm">
-                      No unpaid expenses
-                    </span>
-                  )}
-                </div>
+                <PaymentFormSettlementsPanel<FormValues>
+                  control={form.control}
+                  name="selectedSettlementIds"
+                  settlements={unpaidSettlements}
+                  paidBy={paidBy}
+                  paidTo={paidTo}
+                  hasBothFields={!!paidBy && !!paidTo}
+                />
               )}
             </div>
           </div>
