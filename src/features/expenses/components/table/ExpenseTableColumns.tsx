@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getExpenseUserStatus } from "../../utils/getExpenseUserStatus";
 
 function getPaymentStatus(expense: Expense) {
   if (expense.settlement) {
@@ -30,66 +31,6 @@ function getPaymentStatus(expense: Expense) {
 
   if (paid === total) return "Paid";
   return `${paid}/${total} Paid`;
-}
-
-function getUserStatus(expense: Expense, currentUserId: string) {
-  const userSplit = expense.splits.find(
-    (split) => split.user.id === currentUserId
-  );
-
-  const isPayer = expense.paid_by.id === currentUserId;
-
-  // not included in any splits and wasn't the one paying
-  if (!userSplit && !isPayer) {
-    return { type: "not_involved", amount: 0, text: "Not involved" };
-  }
-
-  if (isPayer) {
-    // User paid the expense
-    const totalOwedToUser = expense.splits
-      .filter((split) => split.user.id !== currentUserId)
-      .reduce((sum, split) => sum + split.remaining_owing, 0);
-
-    if (totalOwedToUser > 0) {
-      return {
-        type: "owed",
-        amount: totalOwedToUser,
-        text: `You're owed ${formatCurrency(totalOwedToUser)}`,
-      };
-    } else {
-      // Calculate the total amount that was initially owed to the user
-      const totalInitiallyOwedToUser = expense.splits
-        .filter((split) => split.user.id !== currentUserId)
-        .reduce((sum, split) => sum + split.initial_owing, 0);
-
-      return {
-        type: "paid",
-        amount: totalInitiallyOwedToUser,
-        text: `You were paid ${formatCurrency(totalInitiallyOwedToUser)}`,
-      };
-    }
-  } else {
-    // User didn't pay the expense
-    if (userSplit && userSplit.remaining_owing > 0) {
-      return {
-        type: "owes",
-        amount: userSplit.remaining_owing,
-        text: `You owe ${formatCurrency(userSplit.remaining_owing)}`,
-      };
-    } else if (userSplit && userSplit.initial_owing > 0) {
-      return {
-        type: "paid_share",
-        amount: userSplit.initial_owing,
-        text: `You paid ${formatCurrency(userSplit.initial_owing)}`,
-      };
-    } else {
-      return {
-        type: "no_cost",
-        amount: 0,
-        text: "No cost to you",
-      };
-    }
-  }
 }
 
 export const createExpenseTableColumns = (
@@ -138,7 +79,7 @@ export const createExpenseTableColumns = (
       if (!currentUserId) return;
 
       const expense = row.original;
-      const status = getUserStatus(expense, currentUserId);
+      const status = getExpenseUserStatus(expense, currentUserId);
 
       const getStatusTextColor = (type: string) => {
         switch (type) {
