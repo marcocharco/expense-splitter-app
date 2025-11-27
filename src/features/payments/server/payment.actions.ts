@@ -8,7 +8,7 @@ export async function insertSettlementPayment({
   paid_to,
   amount,
   date,
-  settlement_id,
+  settlement_ids,
   note,
 }: {
   groupId: string;
@@ -16,7 +16,7 @@ export async function insertSettlementPayment({
   paid_to: string;
   amount: number;
   date: string;
-  settlement_id?: string | null;
+  settlement_ids?: string[];
   note?: string | null;
 }) {
   const supabase = await createClient();
@@ -27,7 +27,7 @@ export async function insertSettlementPayment({
     _paid_to: paid_to,
     _amount: amount,
     _date: date,
-    _settlement_id: settlement_id,
+    _settlement_ids: settlement_ids,
     _note: note,
   });
 

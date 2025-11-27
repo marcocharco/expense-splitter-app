@@ -21,7 +21,7 @@ export function usePayments(groupId: string) {
       paid_to: string;
       amount: number;
       date: string;
-      settlement_id?: string | null;
+      settlement_ids?: string[];
       note?: string | null;
     }) => insertSettlementPayment({ ...values, groupId }),
     onSuccess: () => {
