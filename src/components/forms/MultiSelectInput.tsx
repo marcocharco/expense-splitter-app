@@ -26,35 +26,35 @@ const MultiSelectInput = <T extends FieldValues>({
   items,
 }: MultiSelectInputProps<T>) => {
   return (
-    <>
-      <FormField
-        control={control}
-        name={name}
-        render={({ field }) => (
-          <>
-            <div className="flex flex-row items-center gap-2">
-              <Checkbox
-                checked={
-                  field.value.length === items.length
-                    ? true
-                    : field.value.length > 0
-                    ? "indeterminate"
-                    : false
-                }
-                onCheckedChange={(checked) => {
-                  return typeof checked === "boolean"
-                    ? checked
-                      ? field.onChange(items.map((item) => item.id))
-                      : field.onChange([])
-                    : field.onChange(items.map((item) => item.id));
-                }}
-              />
-              <label>
-                {field.value.length === items.length
-                  ? "Deselect All"
-                  : "Select All"}
-              </label>
-            </div>
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <div className="flex flex-col h-full space-y-4">
+          <div className="flex flex-row items-center gap-2">
+            <Checkbox
+              checked={
+                field.value.length === items.length
+                  ? true
+                  : field.value.length > 0
+                  ? "indeterminate"
+                  : false
+              }
+              onCheckedChange={(checked) => {
+                return typeof checked === "boolean"
+                  ? checked
+                    ? field.onChange(items.map((item) => item.id))
+                    : field.onChange([])
+                  : field.onChange(items.map((item) => item.id));
+              }}
+            />
+            <span className="text-xs font-medium">
+              {field.value.length === items.length
+                ? "Deselect All"
+                : "Select All"}
+            </span>
+          </div>
+          <div className="flex-1 min-h-0 max-h-[200px] overflow-y-auto space-y-2 pr-2">
             {items.map((item) => {
               return (
                 <FormItem
@@ -81,13 +81,13 @@ const MultiSelectInput = <T extends FieldValues>({
                 </FormItem>
               );
             })}
-            <div className="text-muted-foreground font-normal text-sm">
-              {field.value.length} items selected
-            </div>
-          </>
-        )}
-      />
-    </>
+          </div>
+          <div className="text-muted-foreground font-normal text-sm">
+            {field.value.length} items selected
+          </div>
+        </div>
+      )}
+    />
   );
 };
 

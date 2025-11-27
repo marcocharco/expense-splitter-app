@@ -62,7 +62,7 @@ function PaymentFormSettlementsPanel<T extends FieldValues>({
         }
 
         return (
-          <div className="space-y-4">
+          <div className="flex flex-col h-full space-y-4">
             <FormLabel className="form-item-label">
               Choose Settlements
               <span className="text-muted-foreground font-normal text-sm">
@@ -93,7 +93,7 @@ function PaymentFormSettlementsPanel<T extends FieldValues>({
               </span>
             </div>
 
-            <div className="space-y-3">
+            <div className="flex-1 min-h-0 overflow-y-auto space-y-3 pr-2">
               {settlements.map((settlement) => {
                 const paidByParticipant = settlement.participants.find(
                   (participant) => participant.user.id === paidBy

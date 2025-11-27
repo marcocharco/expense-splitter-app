@@ -32,7 +32,7 @@ function PaymentFormExpensesPanel<T extends FieldValues>({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col h-full space-y-4">
       <FormLabel className="form-item-label">
         Choose Expenses
         <span className="text-muted-foreground font-normal text-sm">
@@ -40,7 +40,9 @@ function PaymentFormExpensesPanel<T extends FieldValues>({
           (select one or more)
         </span>
       </FormLabel>
-      <MultiSelectInput control={control} name={name} items={items} />
+      <div className="flex-1 min-h-0">
+        <MultiSelectInput control={control} name={name} items={items} />
+      </div>
     </div>
   );
 }
