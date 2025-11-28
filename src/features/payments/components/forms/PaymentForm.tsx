@@ -279,29 +279,27 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="grid grid-cols-1 xl:grid-cols-2 gap-8 h-full"
+        className="grid grid-cols-1 xl:grid-cols-5 gap-8 h-full"
         autoComplete="off"
       >
         {/* left side (payment details) */}
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <MemberSelectInput
-              control={form.control}
-              name="paidBy"
-              formType="payment"
-              groupMembers={groupMembers}
-              currentUserId={user.id}
-            />
-            <MemberSelectInput
-              control={form.control}
-              name="paidTo"
-              formType="payment"
-              groupMembers={groupMembers}
-              currentUserId={user.id}
-              // originally excluded, but might create unexpected ux
-              // excludeUserId={paidBy}
-            />
-          </div>
+        <div className="space-y-4 col-span-2">
+          <MemberSelectInput
+            control={form.control}
+            name="paidBy"
+            formType="payment"
+            groupMembers={groupMembers}
+            currentUserId={user.id}
+          />
+          <MemberSelectInput
+            control={form.control}
+            name="paidTo"
+            formType="payment"
+            groupMembers={groupMembers}
+            currentUserId={user.id}
+            // originally excluded, but might create unexpected ux
+            // excludeUserId={paidBy}
+          />
 
           <AmountInput control={form.control} name={"amount"} />
 
@@ -311,7 +309,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
         </div>
 
         {/* right side (expense/settlement selection) */}
-        <div className="flex flex-col space-y-4">
+        <div className="flex flex-col space-y-4 col-span-3">
           <div className="flex-1 space-y-4 overflow-hidden">
             <PaymentTypeInput
               value={paymentType}

@@ -109,19 +109,21 @@ const SingleItemExpenseForm = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="grid grid-cols-1 xl:grid-cols-2 gap-8 h-full"
+        className="grid grid-cols-1 xl:grid-cols-5 gap-8 h-full"
         autoComplete="off"
       >
         {/* left side (general expense info) */}
-        <ExpenseGeneralInfoSection
-          control={form.control}
-          groupMembers={groupMembers}
-          currentUserId={user.id ?? ""}
-          groupId={groupData.id}
-        />
+        <div className="col-span-2">
+          <ExpenseGeneralInfoSection
+            control={form.control}
+            groupMembers={groupMembers}
+            currentUserId={user.id ?? ""}
+            groupId={groupData.id}
+          />
+        </div>
 
         {/* right side (split info) */}
-        <div className="flex flex-col space-y-4">
+        <div className="flex flex-col space-y-4 col-span-3">
           <ExpenseSingleItemSection
             control={form.control}
             setValue={form.setValue}
