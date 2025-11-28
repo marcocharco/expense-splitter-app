@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import {
   Control,
   useFieldArray,
@@ -27,7 +27,7 @@ import {
   isOverTotalLimit,
   errorMsgForLimit,
 } from "@/features/expenses/utils/splitsHelpers";
-import { Plus, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { MultiItemExpenseFormSchema } from "@/features/expenses/schemas/expenseFormSchema";
 import { formatCurrency } from "@/utils/formatCurrency";
 
@@ -63,39 +63,62 @@ const ExpenseMultiItemSection = ({
   const [expandedIndex, setExpandedIndex] = useState<number>(-1);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const lastCardRef = useRef<HTMLDivElement>(null);
+  const hasInitializedRef = useRef(false);
 
-  const handleAddItem = () => {
-    append({
+  // Create empty item structure (reusable)
+  const createEmptyItem = useCallback(
+    () => ({
       title: "",
       amount: 0,
-      splitType: "even",
+      splitType: "even" as const,
       memberSplits: groupMembers.map((m) => ({ userId: m.id, weight: 0 })),
       selectedMembers: [],
-    });
-    // Expand the newly added item (which will be at index fields.length after append)
-    setExpandedIndex(fields.length);
+    }),
+    [groupMembers]
+  );
 
-    // Scroll to the new item after it's been added to the DOM
+  // Scroll to bottom function - memoized to prevent recreation
+  const scrollToBottom = useCallback(() => {
     setTimeout(() => {
-      if (lastCardRef.current) {
-        lastCardRef.current.scrollIntoView({
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollTo({
+          top: scrollContainerRef.current.scrollHeight,
           behavior: "smooth",
-          block: "nearest",
         });
       }
     }, SCROLL_DELAY_MS);
-  };
+  }, []);
 
-  const handleRemove = (index: number) => {
-    remove(index);
-    // If we removed the expanded item, collapse all
-    if (index === expandedIndex) {
-      setExpandedIndex(-1);
-    } else if (index < expandedIndex) {
-      // If we removed an item before the expanded one, adjust the index
-      setExpandedIndex(expandedIndex - 1);
-    }
-  };
+  const handleAddItem = useCallback(() => {
+    const newIndex = fields.length;
+    append(createEmptyItem());
+    setExpandedIndex(newIndex);
+    scrollToBottom();
+  }, [fields.length, append, createEmptyItem, scrollToBottom]);
+
+  const handleRemove = useCallback(
+    (index: number) => {
+      const newItemCount = fields.length - 1;
+      remove(index);
+
+      // If only one item remains, always expand it
+      if (newItemCount === 1) {
+        setExpandedIndex(0);
+        return;
+      }
+
+      // Adjust expanded index based on which item was removed
+      setExpandedIndex((currentExpanded) => {
+        if (index === currentExpanded) {
+          return -1;
+        } else if (index < currentExpanded) {
+          return currentExpanded - 1;
+        }
+        return currentExpanded;
+      });
+    },
+    [fields.length, remove]
+  );
 
   const items = useWatch({ control, name: "items" });
 
@@ -104,6 +127,33 @@ const ExpenseMultiItemSection = ({
     () => items?.reduce((sum, item) => sum + (item?.amount || 0), 0) || 0,
     [items]
   );
+
+  // Check if any item has no title and no amount
+  const hasIncompleteItem = useMemo(() => {
+    return (
+      items?.some((item) => {
+        const hasTitle = item?.title && item.title.trim() !== "";
+        const hasAmount = (item?.amount || 0) > 0;
+        return !hasTitle && !hasAmount;
+      }) || false
+    );
+  }, [items]);
+
+  // Initialize with one empty item on first load if items array is empty
+  useEffect(() => {
+    if (!hasInitializedRef.current && itemCount === 0) {
+      hasInitializedRef.current = true;
+      append(createEmptyItem());
+      setExpandedIndex(0);
+    }
+  }, [itemCount, append, createEmptyItem]);
+
+  // Ensure single item is always expanded
+  useEffect(() => {
+    if (itemCount === 1 && expandedIndex !== 0) {
+      setExpandedIndex(0);
+    }
+  }, [itemCount, expandedIndex]);
 
   return (
     <div className="flex flex-col flex-1 min-h-0 form-item">
@@ -135,24 +185,48 @@ const ExpenseMultiItemSection = ({
             groupMembers={groupMembers}
             onRemove={() => handleRemove(index)}
             isExpanded={expandedIndex === index}
-            onExpand={() => setExpandedIndex(index)}
+            onExpand={() => {
+              // If another item is expanded, collapse it first for smooth transition
+              if (expandedIndex !== -1 && expandedIndex !== index) {
+                setExpandedIndex(-1);
+                // Use requestAnimationFrame for smoother transition
+                requestAnimationFrame(() => {
+                  requestAnimationFrame(() => {
+                    setExpandedIndex(index);
+                  });
+                });
+              } else {
+                setExpandedIndex(index);
+              }
+            }}
             onCollapse={() => setExpandedIndex(-1)}
             cardRef={index === fields.length - 1 ? lastCardRef : undefined}
+            totalItemCount={fields.length}
+            onExpandOtherCard={(targetIndex, onComplete) => {
+              // Adjust target index if deleted item was before the target
+              const adjustedIndex =
+                index < targetIndex ? targetIndex - 1 : targetIndex;
+              setExpandedIndex(-1);
+              setTimeout(() => {
+                setExpandedIndex(adjustedIndex);
+                // Call completion callback after expansion
+                onComplete?.();
+              }, 100);
+            }}
+            scrollToBottom={scrollToBottom}
           />
         ))}
-      </div>
 
-      <div className="flex items-start justify-between mt-4 flex-shrink-0">
-        <Button
+        {/* Add Item Button - fixed at end of list */}
+        <button
           type="button"
           onClick={handleAddItem}
-          variant="outline"
-          size="sm"
+          disabled={hasIncompleteItem}
           data-ignore-outside-click
+          className="w-full border-2 border-dashed rounded-lg p-3 bg-transparent hover:bg-muted/30 transition-all duration-200 ease-in-out text-muted-foreground hover:text-foreground cursor-pointer flex items-center justify-center mb-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-muted-foreground"
         >
-          <Plus />
-          New Item
-        </Button>
+          <span className="text-sm font-medium">New Item</span>
+        </button>
       </div>
     </div>
   );
@@ -176,6 +250,9 @@ type ItemCardProps = {
   onExpand: () => void;
   onCollapse: () => void;
   cardRef?: React.RefObject<HTMLDivElement | null>;
+  totalItemCount: number;
+  onExpandOtherCard?: (targetIndex: number, onComplete?: () => void) => void;
+  scrollToBottom: () => void;
 };
 
 const ItemCard = ({
@@ -190,6 +267,9 @@ const ItemCard = ({
   onExpand,
   onCollapse,
   cardRef: externalCardRef,
+  totalItemCount,
+  onExpandOtherCard,
+  scrollToBottom,
 }: ItemCardProps) => {
   // Watch the entire item to avoid multiple subscriptions
   const item = useWatch({ control, name: `items.${index}` });
@@ -205,6 +285,13 @@ const ItemCard = ({
   const [isTitleInputFocused, setIsTitleInputFocused] = useState(false);
 
   const hasTitle = title && title.trim() !== "";
+  const hasAmount = currentAmount > 0;
+  const isOnlyItem = totalItemCount === 1;
+
+  // Collapsibility rules:
+  // - If there's only 1 item: never collapsible (always expanded)
+  // - If there are 2+ items: collapsible only if this item has title or amount
+  const isCollapsible = !isOnlyItem && (hasTitle || hasAmount);
 
   // Ref for the expanded card to detect clicks outside
   const cardRef = useRef<HTMLDivElement>(null);
@@ -215,6 +302,15 @@ const ItemCard = ({
 
   // Use external ref if provided, otherwise use internal ref
   const activeCardRef = externalCardRef || cardRef;
+
+  // Reset title input focus state when card collapses
+  useEffect(() => {
+    if (!isExpanded) {
+      setIsTitleInputFocused(false);
+      // Blur the input to ensure it loses focus
+      titleInputRef.current?.blur();
+    }
+  }, [isExpanded]);
 
   // Smart auto-focus when card expands
   useEffect(() => {
@@ -247,7 +343,7 @@ const ItemCard = ({
 
       // Check if click is outside this card
       if (activeCardRef.current && !activeCardRef.current.contains(target)) {
-        // Check if the click is on another card (don't collapse if switching cards)
+        // Check if the click is on another card
         const clickedOnAnotherCard = target.closest("[data-item-card]");
 
         // Check if the click is on a button or element that should be ignored
@@ -255,9 +351,39 @@ const ItemCard = ({
           "[data-ignore-outside-click]"
         );
 
-        if (!clickedOnAnotherCard && !clickedOnIgnoredElement) {
-          // Click was outside all cards and not on ignored elements, collapse it
-          onCollapse();
+        if (clickedOnAnotherCard && !clickedOnIgnoredElement) {
+          // If clicking on another card and this item is incomplete, delete it
+          const isIncomplete = !hasTitle && !hasAmount;
+          if (isIncomplete && onExpandOtherCard) {
+            // Get the index of the clicked card from the data attribute
+            const clickedCardIndex =
+              clickedOnAnotherCard.getAttribute("data-item-index");
+            if (clickedCardIndex !== null) {
+              const targetIndex = parseInt(clickedCardIndex, 10);
+              // Check if the clicked card is the one immediately before this incomplete item
+              const isItemRightBefore = targetIndex === index - 1;
+              // First collapse this item, then delete and expand target
+              onCollapse();
+              onRemove();
+              // Use a small delay to ensure deletion completes before expanding
+              setTimeout(() => {
+                // Only scroll to bottom if clicking on the item right before the incomplete one
+                onExpandOtherCard(
+                  targetIndex,
+                  isItemRightBefore ? scrollToBottom : undefined
+                );
+              }, 50);
+            } else {
+              onCollapse();
+              onRemove();
+            }
+          }
+          // Otherwise, let the clicked card handle its own expansion
+        } else if (!clickedOnAnotherCard && !clickedOnIgnoredElement) {
+          // Clicked outside all cards - only collapse if allowed
+          if (isCollapsible) {
+            onCollapse();
+          }
         }
       }
     };
@@ -266,9 +392,18 @@ const ItemCard = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isExpanded, onCollapse, activeCardRef]);
-
-  const areAllMembersSelected = selectedMembers?.length === groupMembers.length;
+  }, [
+    isExpanded,
+    onCollapse,
+    activeCardRef,
+    isCollapsible,
+    hasTitle,
+    hasAmount,
+    onRemove,
+    onExpandOtherCard,
+    scrollToBottom,
+    index,
+  ]);
 
   const handleSelectAllToggle = () => {
     const newValue = areAllMembersSelected
@@ -293,17 +428,33 @@ const ItemCard = ({
     setValue(`items.${index}.selectedMembers`, newValue);
   };
 
-  // Get names of selected members for collapsed view
-  const selectedMemberNames = groupMembers
-    .filter((member) => selectedMembers?.includes(member.id))
-    .map((member) => member.name)
-    .join(", ");
+  // Create Set for O(1) lookup - memoized for performance
+  const selectedMembersSet = useMemo(
+    () => new Set(selectedMembers || []),
+    [selectedMembers]
+  );
+
+  // Memoize check for performance
+  const areAllMembersSelected = useMemo(
+    () => selectedMembersSet.size === groupMembers.length,
+    [selectedMembersSet.size, groupMembers.length]
+  );
+
+  // Get names of selected members for collapsed view - memoized for performance
+  const selectedMemberNames = useMemo(() => {
+    if (!selectedMembersSet.size) return "";
+    return groupMembers
+      .filter((member) => selectedMembersSet.has(member.id))
+      .map((member) => member.name)
+      .join(", ");
+  }, [selectedMembersSet, groupMembers]);
 
   if (!isExpanded) {
     return (
       <div
         ref={activeCardRef}
         data-item-card
+        data-item-index={index}
         className="border rounded-lg p-3 bg-muted/30 cursor-pointer hover:bg-muted/50 transition-all duration-200 ease-in-out"
         onClick={onExpand}
       >
@@ -342,6 +493,7 @@ const ItemCard = ({
     <div
       ref={activeCardRef}
       data-item-card
+      data-item-index={index}
       className="border rounded-lg p-4 bg-muted/30 transition-all duration-200 ease-in-out min-h-[200px]"
     >
       <div className="space-y-3">
@@ -416,7 +568,7 @@ const ItemCard = ({
             render={() => (
               <div className="flex flex-col gap-y-3">
                 {groupMembers.map((member) => {
-                  const isSelected = selectedMembers?.includes(member.id);
+                  const isSelected = selectedMembersSet.has(member.id);
 
                   return (
                     <FormItem
