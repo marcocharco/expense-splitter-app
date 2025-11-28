@@ -1,12 +1,5 @@
 import { FormControl, FormField, FormMessage } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
+import { Tabs, FormTabsList, FormTabsTrigger } from "@/components/ui/tabs";
 import { Control, FieldPath, FieldValues } from "react-hook-form";
 
 type CompactSplitTypeSelectProps<T extends FieldValues> = {
@@ -21,13 +14,6 @@ const splitTypeSymbols: Record<string, string> = {
   custom: "$",
 };
 
-const splitTypeNames: Record<string, string> = {
-  even: "Even",
-  percentage: "Percentage",
-  shares: "Shares",
-  custom: "Custom",
-};
-
 const CompactSplitTypeSelect = <T extends FieldValues>({
   control,
   name = "splitType" as FieldPath<T>,
@@ -38,29 +24,44 @@ const CompactSplitTypeSelect = <T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <div className="flex flex-col">
-          <Select onValueChange={field.onChange} value={field.value}>
-            <FormControl>
-              <SelectTrigger className="h-9 w-[60px]">
-                <SelectValue>
-                  {splitTypeSymbols[field.value] || "="}
-                </SelectValue>
-              </SelectTrigger>
-            </FormControl>
-            <SelectContent data-ignore-outside-click>
-              <SelectItem value="even">
-                {splitTypeSymbols.even} {splitTypeNames.even}
-              </SelectItem>
-              <SelectItem value="percentage">
-                {splitTypeSymbols.percentage} {splitTypeNames.percentage}
-              </SelectItem>
-              <SelectItem value="shares">
-                {splitTypeSymbols.shares} {splitTypeNames.shares}
-              </SelectItem>
-              <SelectItem value="custom">
-                {splitTypeSymbols.custom} {splitTypeNames.custom}
-              </SelectItem>
-            </SelectContent>
-          </Select>
+          <FormControl>
+            <Tabs
+              value={field.value}
+              onValueChange={field.onChange}
+              className="w-fit"
+            >
+              <FormTabsList className="h-7 p-0.5">
+                <FormTabsTrigger
+                  value="even"
+                  className="min-w-[40px] px-2 py-0.5 h-full"
+                  title="Even split"
+                >
+                  {splitTypeSymbols.even}
+                </FormTabsTrigger>
+                <FormTabsTrigger
+                  value="percentage"
+                  className="min-w-[40px] px-2 py-0.5 h-full"
+                  title="Percentage split"
+                >
+                  {splitTypeSymbols.percentage}
+                </FormTabsTrigger>
+                <FormTabsTrigger
+                  value="shares"
+                  className="min-w-[40px] px-2 py-0.5 h-full"
+                  title="Shares split"
+                >
+                  {splitTypeSymbols.shares}
+                </FormTabsTrigger>
+                <FormTabsTrigger
+                  value="custom"
+                  className="min-w-[40px] px-2 py-0.5 h-full"
+                  title="Custom split"
+                >
+                  {splitTypeSymbols.custom}
+                </FormTabsTrigger>
+              </FormTabsList>
+            </Tabs>
+          </FormControl>
           <FormMessage className="text-xs mt-1" />
         </div>
       )}
