@@ -47,7 +47,7 @@ const ExpenseCategoryInput = <T extends FieldValues = FieldValues>({
             <FormControl>
               <div className="input-class">
                 <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger className="w-[240px]">
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
                   <SelectContent>

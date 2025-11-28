@@ -34,7 +34,7 @@ const MemberSelectInput = <T extends FieldValues, N extends Path<T>>({
   excludeUserId,
 }: MemberSelectInputProps<T, N>) => {
   // Auto-determine width based on form type
-  const width = formType === "payment" ? "w-full" : "w-[240px]";
+  const width = "w-full";
   const filteredMembers = useMemo(() => {
     let list = groupMembers;
 

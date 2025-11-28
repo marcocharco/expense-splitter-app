@@ -45,7 +45,7 @@ const DatePickerInput = <T extends FieldValues, N extends Path<T>>({
                     <Button
                       variant={"outline"}
                       className={cn(
-                        "w-64 justify-start text-left font-normal",
+                        "w-full justify-start text-left font-normal",
                         !field.value && "text-muted-foreground"
                       )}
                     >
