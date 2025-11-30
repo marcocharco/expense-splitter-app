@@ -134,3 +134,20 @@ export type Payment = {
     };
   }[];
 };
+
+export type GroupInvitation = {
+  id: string;
+  group_id: string;
+  group_name: string;
+  group_slug: string;
+  invited_by_name: string;
+  invited_by_id: string;
+  email: string;
+  token: string;
+  created_at: string;
+};
+
+export type NewGroup = {
+  title: string;
+  memberEmails: string[];
+};
