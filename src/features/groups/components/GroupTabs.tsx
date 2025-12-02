@@ -11,7 +11,7 @@ import SettlementList from "@/features/settlements/components/SettlementList";
 import FormDialog from "@/components/ui/FormDialog";
 import SingleItemExpenseForm from "@/features/expenses/components/forms/SingleItemExpenseForm";
 import { useCurrentGroup } from "@/features/groups/contexts/CurrentGroupContext";
-import { useUser } from "@/features/users/context/UserContext";
+import { useUser } from "@/features/users/hooks/useUser";
 import { Expense } from "@/types";
 import ExpenseDetailsSheet from "@/features/expenses/components/ExpenseDetailsSheet";
 import MultiItemExpenseForm from "@/features/expenses/components/forms/MultiItemExpenseForm";

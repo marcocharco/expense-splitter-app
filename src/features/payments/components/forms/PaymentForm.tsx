@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useCurrentGroup } from "@/features/groups/contexts/CurrentGroupContext";
-import { useUser } from "@/features/users/context/UserContext";
+import { useUser } from "@/features/users/hooks/useUser";
 import { usePayments } from "@/features/payments/hooks/usePayments";
 import { PaymentFormSchema } from "@/features/payments/schemas/paymentFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";

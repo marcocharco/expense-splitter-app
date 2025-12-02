@@ -12,7 +12,7 @@ import AuthInput from "@/features/auth/components/forms/AuthInput";
 import { authFormSchema } from "@/features/auth/schemas/authFormSchema";
 import Link from "next/link";
 import { signIn, signUp } from "@/features/auth/server/auth.actions";
-import { useUser } from "@/features/users/context/UserContext";
+import { useUser } from "@/features/users/hooks/useUser";
 import { getUserProfile } from "@/features/users/queries/getUserProfile";
 
 const AuthForm = ({ type }: { type: "sign-in" | "sign-up" }) => {

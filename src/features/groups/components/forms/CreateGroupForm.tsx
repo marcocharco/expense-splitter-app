@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { groupFormSchema } from "@/features/groups/schemas/groupFormSchema";
 import { createGroup } from "@/features/groups/server/group.actions";
-import { useUser } from "@/features/users/context/UserContext";
+import { useUser } from "@/features/users/hooks/useUser";
 import { X } from "lucide-react";
 import { toast } from "sonner";
 

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MultiItemExpenseFormSchema } from "@/features/expenses/schemas/expenseFormSchema";
-import { useUser } from "@/features/users/context/UserContext";
+import { useUser } from "@/features/users/hooks/useUser";
 import { useCurrentGroup } from "@/features/groups/contexts/CurrentGroupContext";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";

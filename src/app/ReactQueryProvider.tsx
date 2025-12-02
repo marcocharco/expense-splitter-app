@@ -1,25 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { getQueryClient } from "./getQueryClient";
 
 export default function ReactQueryProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Create a stable QueryClient instance that persists across renders
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            staleTime: 60 * 1000,
-          },
-        },
-      })
-  );
+  // Use the same QueryClient instance that's used for server-side prefetching
+  // This ensures hydration works correctly - getQueryClient() returns a singleton on the client
+  const [queryClient] = useState(() => getQueryClient());
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -9,7 +9,7 @@ import { Form } from "@/components/ui/form";
 import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { useCurrentGroup } from "@/features/groups/contexts/CurrentGroupContext";
-import { useUser } from "@/features/users/context/UserContext";
+import { useUser } from "@/features/users/hooks/useUser";
 import { calculateSettlementBalances } from "@/features/settlements/utils/settlementBalanceCalculator";
 import TitleInput from "@/components/forms/TitleInput";
 import { SettlementFormSchema } from "@/features/settlements/schemas/settlementFormSchema";

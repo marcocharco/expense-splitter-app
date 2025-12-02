@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { signOut } from "@/features/auth/server/auth.actions";
-import { useUserGroups } from "@/features/groups/contexts/UserGroupsContext";
-import { useUser } from "@/features/users/context/UserContext";
+import { useUserGroups } from "@/features/groups/hooks/useUserGroups";
+import { useUser } from "@/features/users/hooks/useUser";
 
 const Sidebar = () => {
   const { groups } = useUserGroups();
