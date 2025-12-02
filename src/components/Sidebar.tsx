@@ -1,5 +1,6 @@
 "use client";
 
+import { useTransition } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { signOut } from "@/features/auth/server/auth.actions";
@@ -8,7 +9,15 @@ import { useUser } from "@/features/users/hooks/useUser";
 
 const Sidebar = () => {
   const { groups } = useUserGroups();
-  const { user, setUser } = useUser();
+  const { user } = useUser();
+  const [isPending, startTransition] = useTransition();
+
+  const handleLogout = () => {
+    startTransition(() => {
+      signOut();
+    });
+  };
+
   return (
     <section className="sidebar">
       <nav className="flex flex-col gap-4 w-full">
@@ -44,14 +53,8 @@ const Sidebar = () => {
 
       <div className="gap-2 flex flex-col">
         <p className="flex justify-center">{user?.email}</p>
-        <Button
-          variant="outline"
-          onClick={() => {
-            setUser(null);
-            signOut();
-          }}
-        >
-          Logout
+        <Button variant="outline" onClick={handleLogout} disabled={isPending}>
+          {isPending ? "Logging out..." : "Logout"}
         </Button>
       </div>
     </section>
