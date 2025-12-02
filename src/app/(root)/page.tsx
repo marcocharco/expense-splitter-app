@@ -1,5 +1,6 @@
 import GroupList from "@/features/groups/components/GroupList";
 import Header from "@/components/root/Header";
+import PendingInvitations from "@/features/groups/components/PendingInvitations";
 
 const Home = () => {
   // console.log(groups);
@@ -7,7 +8,10 @@ const Home = () => {
     <section className="layout-container">
       <div className="layout-content">
         <Header />
-        <GroupList />
+        <div className="flex w-full flex-col gap-4">
+          <PendingInvitations />
+          <GroupList />
+        </div>
       </div>
     </section>
   );

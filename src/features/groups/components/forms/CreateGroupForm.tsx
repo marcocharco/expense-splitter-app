@@ -4,6 +4,8 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -25,6 +27,8 @@ type FormValues = z.infer<typeof groupFormSchema>;
 
 const CreateGroupForm = () => {
   const { user } = useUser();
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const [emailInput, setEmailInput] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -84,9 +88,19 @@ const CreateGroupForm = () => {
   const onSubmit = async (values: FormValues) => {
     setIsSubmitting(true);
     try {
-      await createGroup(values);
+      const result = await createGroup(values);
+
+      if (result?.slug) {
+        // Navigate to the new group
+        router.push(`/groups/${result.slug}`);
+
+        toast.success("Group created successfully!");
+
+        // Invalidate queries to refetch updated data
+        queryClient.invalidateQueries({ queryKey: ["userGroups"] });
+        queryClient.invalidateQueries({ queryKey: ["pendingInvitations"] });
+      }
     } catch (error) {
-      console.error(error);
       toast.error(
         error instanceof Error ? error.message : "Failed to create group"
       );

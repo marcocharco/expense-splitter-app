@@ -17,7 +17,6 @@ import { getUserProfile } from "@/features/users/queries/getUserProfile";
 
 const AuthForm = ({ type }: { type: "sign-in" | "sign-up" }) => {
   const [isLoading, setIsLoading] = useState(false);
-
   const { setUser } = useUser();
 
   const formSchema = authFormSchema(type);
@@ -40,15 +39,17 @@ const AuthForm = ({ type }: { type: "sign-in" | "sign-up" }) => {
       // Sign up with supabase auth
       if (type === "sign-in") {
         await signIn(values);
+        const profile = await getUserProfile(); // freshly fetch profile
+        setUser(profile);
       }
       if (type === "sign-up") {
         await signUp(values);
+        const profile = await getUserProfile(); // freshly fetch profile
+        setUser(profile);
       }
     } catch (error) {
       console.error("Error", error);
     } finally {
-      const profile = await getUserProfile(); // freshly fetch profile
-      setUser(profile);
       setIsLoading(false);
     }
   };
