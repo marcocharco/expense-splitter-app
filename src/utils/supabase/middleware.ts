@@ -42,7 +42,9 @@ export async function updateSession(request: NextRequest) {
 
   // Allow access to auth pages and invite pages (for invitation acceptance)
   const isAuthPage = request.nextUrl.pathname.startsWith("/sign-in") ||
-    request.nextUrl.pathname.startsWith("/sign-up");
+    request.nextUrl.pathname.startsWith("/sign-up") ||
+    request.nextUrl.pathname.startsWith("/forgot-password") ||
+    request.nextUrl.pathname.startsWith("/reset-password");
   const isInvitePage = request.nextUrl.pathname.startsWith("/invite/");
 
   if (
@@ -56,11 +58,12 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Block auth pages when signed in
+  // Block auth pages when signed in (except reset-password which needs session)
   if (
     user &&
     (request.nextUrl.pathname === "/sign-in" ||
-      request.nextUrl.pathname === "/sign-up")
+      request.nextUrl.pathname === "/sign-up" ||
+      request.nextUrl.pathname === "/forgot-password")
   ) {
     return NextResponse.redirect(new URL("/", request.url));
   }

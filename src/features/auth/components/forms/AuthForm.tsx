@@ -89,18 +89,29 @@ const AuthForm = ({ type }: { type: "sign-in" | "sign-up" }) => {
         </form>
       </Form>
 
-      <footer className="flex flex-row gap-1 justify-center">
-        <p className="text-sm text-neutral-500">
-          {type === "sign-in"
-            ? "Don't have an account?"
-            : "Already have an account?"}
-        </p>
-        <Link href={type === "sign-in" ? "/sign-up" : "sign-in"}>
-          <p className="text-sm text-neutral-600 hover:underline">
-            {type === "sign-in" ? "Sign Up" : "Sign In"}
+      <div className="flex flex-col gap-y-4">
+        {type === "sign-in" && (
+          <div className="flex justify-center">
+            <Link href="/forgot-password">
+              <p className="text-sm text-neutral-600 hover:underline">
+                Forgot password?
+              </p>
+            </Link>
+          </div>
+        )}
+        <footer className="flex flex-row gap-1 justify-center">
+          <p className="text-sm text-neutral-500">
+            {type === "sign-in"
+              ? "Don't have an account?"
+              : "Already have an account?"}
           </p>
-        </Link>
-      </footer>
+          <Link href={type === "sign-in" ? "/sign-up" : "sign-in"}>
+            <p className="text-sm text-neutral-600 hover:underline">
+              {type === "sign-in" ? "Sign Up" : "Sign In"}
+            </p>
+          </Link>
+        </footer>
+      </div>
     </section>
   );
 };
