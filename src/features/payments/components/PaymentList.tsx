@@ -3,7 +3,7 @@ import { useCurrentGroup } from "@/features/groups/contexts/CurrentGroupContext"
 import { useUser } from "@/features/users/hooks/useUser";
 import { usePayments } from "@/features/payments/hooks/usePayments";
 import { formatCurrency } from "@/utils/formatCurrency";
-import { Payment } from "@/types";
+import { Payment } from "@/features/payments/types/payment";
 import { formatDisplayDate } from "@/utils/formatDate";
 
 const PaymentList = () => {

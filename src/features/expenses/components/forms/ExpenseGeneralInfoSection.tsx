@@ -5,7 +5,7 @@ import TitleInput from "@/components/forms/TitleInput";
 import MemberSelectInput from "@/components/forms/MemberSelectInput";
 import DatePickerInput from "@/components/forms/DatePickerInput";
 import ExpenseCategoryInput from "@/features/expenses/components/forms/ExpenseCategoryInput";
-import { Member } from "@/types";
+import { Member } from "@/features/users/types/user";
 
 type ExpenseGeneralInfoSectionProps<T extends FieldValues = FieldValues> = {
   control: Control<T>;

@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { Member } from "@/types";
+import { Member } from "@/features/users/types/user";
 import { useMemo } from "react";
 import { Control, FieldValues, Path } from "react-hook-form";
 

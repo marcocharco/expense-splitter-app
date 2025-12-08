@@ -13,7 +13,7 @@ import ExpenseMultiItemSection from "@/features/expenses/components/forms/Expens
 import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import { DateToYMD } from "@/utils/formatDate";
 import { toast } from "sonner";
-import { Expense } from "@/types";
+import { Expense } from "@/features/expenses/types/expense";
 import { toMultiItemFormValues } from "../../utils/expenseMapper";
 
 type MultiItemExpenseFormProps = {

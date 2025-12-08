@@ -1,6 +1,6 @@
 "use client";
 
-import { Expense } from "@/types";
+import { Expense } from "@/features/expenses/types/expense";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { formatDisplayDate } from "@/utils/formatDate";
 import { ColumnDef } from "@tanstack/react-table";

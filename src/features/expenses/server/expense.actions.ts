@@ -1,7 +1,10 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { NewExpense, NewMultiItemExpense } from "@/types";
+import {
+  NewExpense,
+  NewMultiItemExpense,
+} from "@/features/expenses/types/expense";
 
 // process multi-item expense inputs for RPC function
 const processMultiItemPayload = (items: NewMultiItemExpense["items"]) => {

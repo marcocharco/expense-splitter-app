@@ -1,4 +1,4 @@
-import { Group } from "@/types";
+import { Group } from "@/features/groups/types/group";
 import { createClient } from "@/utils/supabase/client";
 
 export async function getUserGroups() {

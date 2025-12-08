@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { Control, UseFormReturn, useWatch } from "react-hook-form";
 
-import { Member } from "@/types";
+import { Member } from "@/features/users/types/user";
 
 import { ExpenseFormSchema } from "@/features/expenses/schemas/expenseFormSchema";
 

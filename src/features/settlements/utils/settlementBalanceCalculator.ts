@@ -1,4 +1,4 @@
-import { Expense } from "@/types";
+import { Expense } from "@/features/expenses/types/expense";
 
 export function calculateSettlementBalances({
   expenses,

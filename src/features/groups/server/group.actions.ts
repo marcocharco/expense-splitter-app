@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { NewGroup } from "@/types";
+import { NewGroup } from "@/features/groups/types/group";
 import { revalidatePath } from "next/cache";
 
 export async function createGroup(values: NewGroup) {

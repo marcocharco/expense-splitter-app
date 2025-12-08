@@ -5,7 +5,7 @@ import { z } from "zod";
 import AmountInput from "@/components/forms/AmountInput";
 import ExpenseSplitTypeInput from "@/features/expenses/components/forms/ExpenseSplitTypeInput";
 import ExpenseSplitDetailsInput from "@/features/expenses/components/forms/ExpenseSplitDetailsInput";
-import { Member } from "@/types";
+import { Member } from "@/features/users/types/user";
 import { ExpenseFormSchema } from "@/features/expenses/schemas/expenseFormSchema";
 
 type ExpenseSingleItemSectionProps = {

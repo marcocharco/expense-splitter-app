@@ -10,7 +10,7 @@ import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import ExpenseGeneralInfoSection from "@/features/expenses/components/forms/ExpenseGeneralInfoSection";
 import ExpenseSingleItemSection from "@/features/expenses/components/forms/ExpenseSingleItemSection";
-import { Expense } from "@/types";
+import { Expense } from "@/features/expenses/types/expense";
 import { toSingleItemFormValues } from "@/features/expenses/utils/expenseMapper";
 import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import { DateToYMD } from "@/utils/formatDate";

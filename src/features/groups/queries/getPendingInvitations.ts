@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/client";
-import { GroupInvitation } from "@/types";
+import { GroupInvitation } from "@/features/groups/types/group";
 
 export async function getPendingInvitations(): Promise<GroupInvitation[]> {
   const supabase = createClient();

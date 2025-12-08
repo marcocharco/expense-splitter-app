@@ -1,4 +1,4 @@
-import { Group, GroupInvitation } from "@/types";
+import { Group, GroupInvitation } from "@/features/groups/types/group";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Check, X } from "lucide-react";

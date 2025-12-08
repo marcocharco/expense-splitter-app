@@ -14,7 +14,7 @@ import DatePickerInput from "@/components/forms/DatePickerInput";
 import NoteInput from "@/components/forms/NoteInput";
 import PaymentTypeInput from "./PaymentTypeInput";
 import { useExpenses } from "@/features/expenses/hooks/useExpenses";
-import { ExpenseSplit } from "@/types";
+import { ExpenseSplit } from "@/features/expenses/types/expense";
 import { DateToYMD } from "@/utils/formatDate";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { useSettlements } from "@/features/settlements/hooks/useSettlements";

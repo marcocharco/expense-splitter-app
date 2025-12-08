@@ -8,7 +8,10 @@ import {
   updateMultiItemExpense,
 } from "@/features/expenses/server/expense.actions";
 import { getGroupExpenses } from "@/features/expenses/queries/getGroupExpenses";
-import { NewExpense, NewMultiItemExpense } from "@/types";
+import {
+  NewExpense,
+  NewMultiItemExpense,
+} from "@/features/expenses/types/expense";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useExpenses(groupId: string) {

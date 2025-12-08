@@ -1,4 +1,4 @@
-import { Payment } from "@/types";
+import { Payment } from "@/features/payments/types/payment";
 import { createClient } from "@/utils/supabase/client";
 
 export async function getGroupPayments(groupId: string) {

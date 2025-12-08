@@ -1,4 +1,4 @@
-import { Expense } from "@/types";
+import { Expense } from "@/features/expenses/types/expense";
 import { formatCurrency } from "@/utils/formatCurrency";
 
 export type ExpenseUserStatus =

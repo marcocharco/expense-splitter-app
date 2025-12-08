@@ -1,4 +1,5 @@
-import { Expense, ExpenseItem, Member } from "@/types";
+import { Expense, ExpenseItem } from "@/features/expenses/types/expense";
+import { Member } from "@/features/users/types/user";
 
 type toFormValuesProps = {
   expense: Expense;

@@ -1,6 +1,7 @@
 import { FormField, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Member, SplitType } from "@/types";
+import { Member } from "@/features/users/types/user";
+import { SplitType } from "@/features/expenses/types/expense";
 import {
   Control,
   FieldValues,

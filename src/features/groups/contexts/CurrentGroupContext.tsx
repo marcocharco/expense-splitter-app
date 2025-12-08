@@ -1,6 +1,6 @@
 "use client";
 
-import { Group } from "@/types";
+import { Group } from "@/features/groups/types/group";
 import React, { createContext, useContext } from "react";
 
 const CurrentGroupContext = createContext<Group | null>(null);

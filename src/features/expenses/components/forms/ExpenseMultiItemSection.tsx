@@ -8,7 +8,7 @@ import {
   UseFormReturn,
 } from "react-hook-form";
 import { z } from "zod";
-import { Member } from "@/types";
+import { Member } from "@/features/users/types/user";
 import { Button } from "@/components/ui/button";
 import {
   FormLabel,

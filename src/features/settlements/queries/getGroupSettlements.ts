@@ -1,4 +1,4 @@
-import { Settlement } from "@/types";
+import { Settlement } from "@/features/settlements/types/settlement";
 import { createClient } from "@/utils/supabase/client";
 
 export async function getGroupSettlements(groupId: string) {

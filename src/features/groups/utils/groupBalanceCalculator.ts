@@ -1,4 +1,5 @@
-import { SettlementStatus, SplitType } from "@/types";
+import { SettlementStatus } from "@/features/settlements/types/settlement";
+import { SplitType } from "@/features/expenses/types/expense";
 
 export type BalanceInputs = {
   expenses: {

@@ -1,7 +1,7 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { FormField, FormLabel } from "@/components/ui/form";
 import { Control, FieldValues, Path } from "react-hook-form";
-import { Settlement } from "@/types";
+import { Settlement } from "@/features/settlements/types/settlement";
 import { formatCurrency } from "@/utils/formatCurrency";
 
 type PaymentFormSettlementsPanelProps<T extends FieldValues> = {

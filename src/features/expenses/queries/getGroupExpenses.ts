@@ -1,4 +1,4 @@
-import { Expense } from "@/types";
+import { Expense } from "@/features/expenses/types/expense";
 import { toDomainExpense } from "@/features/expenses/utils/expenseMapper";
 import { createClient } from "@/utils/supabase/client";
 
