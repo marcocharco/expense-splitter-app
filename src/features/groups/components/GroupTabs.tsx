@@ -15,6 +15,7 @@ import { useUser } from "@/features/users/hooks/useUser";
 import { Expense } from "@/features/expenses/types/expense";
 import ExpenseDetailsSheet from "@/features/expenses/components/ExpenseDetailsSheet";
 import MultiItemExpenseForm from "@/features/expenses/components/forms/MultiItemExpenseForm";
+import { ActivityLog } from "@/features/activity/components/ActivityLog";
 
 const GroupTabs = () => {
   const group = useCurrentGroup();
@@ -64,7 +65,7 @@ const GroupTabs = () => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="activity" className="justify-center">
-          <p>Activity Logs</p>
+          {group?.id ? <ActivityLog groupId={group.id} /> : null}
         </TabsContent>
         <TabsContent value="expenses">
           <ExpenseTable columns={columns} data={expenses} />
