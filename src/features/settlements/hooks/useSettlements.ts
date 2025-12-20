@@ -22,6 +22,7 @@ export function useSettlements(groupId: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["groupSettlements", groupId] });
       qc.invalidateQueries({ queryKey: ["groupExpenses", groupId] });
+      qc.invalidateQueries({ queryKey: ["groupActivities", groupId] });
     },
   });
 
