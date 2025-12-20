@@ -68,7 +68,7 @@ export async function updateExpense(
 
 export async function deleteExpense(expenseId: string) {
   const supabase = await createClient();
-  const { error } = await supabase.rpc("soft_delete_expense", {
+  const { error } = await supabase.rpc("delete_expense_soft", {
     p_expense_id: expenseId,
   });
 
