@@ -5,6 +5,8 @@ import {
   NewExpense,
   NewMultiItemExpense,
 } from "@/features/expenses/types/expense";
+import { logActivity } from "@/features/activity/server/activity.actions";
+import { calculateChanges } from "@/features/activity/utils/calculateChanges";
 
 // process multi-item expense inputs for RPC function
 const processMultiItemPayload = (items: NewMultiItemExpense["items"]) => {
@@ -22,11 +24,19 @@ const processMultiItemPayload = (items: NewMultiItemExpense["items"]) => {
 export async function insertExpense(values: NewExpense, groupId: string) {
   const supabase = await createClient();
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("User not authenticated");
+  }
+
   if (values.splitType === "even") {
     values.memberSplits.forEach((id) => (id.weight = 1));
   }
 
-  const { error } = await supabase.rpc("insert_expense", {
+  const { data: newExpense, error } = await supabase.rpc("insert_expense", {
     group_id: groupId,
     title: values.title,
     amount: values.amount,
@@ -38,6 +48,31 @@ export async function insertExpense(values: NewExpense, groupId: string) {
   });
 
   if (error) throw new Error(error.message);
+
+  // Log activity
+  try {
+    if (newExpense?.id) {
+      await logActivity({
+        groupId,
+        actorId: user.id,
+        activityType: "create_expense",
+        entityType: "expense",
+        entityId: newExpense.id,
+        meta: {
+          action: "created",
+          expense: {
+            title: newExpense.title,
+            amount: newExpense.amount,
+            paid_by: newExpense.paid_by.id,
+            date: newExpense.date,
+          },
+        },
+      });
+    }
+  } catch (logError) {
+    // Don't throw - activity logging shouldn't break main flow
+    console.error("Failed to log expense creation:", logError);
+  }
 }
 
 export async function updateExpense(
@@ -47,11 +82,19 @@ export async function updateExpense(
 ) {
   const supabase = await createClient();
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("User not authenticated");
+  }
+
   if (values.splitType === "even") {
     values.memberSplits.forEach((id) => (id.weight = 1));
   }
 
-  const { error } = await supabase.rpc("update_expense", {
+  const { data: result, error } = await supabase.rpc("update_expense", {
     _expense_id: expenseId,
     _group_id: groupId,
     _title: values.title,
@@ -64,15 +107,89 @@ export async function updateExpense(
   });
 
   if (error) throw new Error(error.message);
+
+  // Calculate changes and log activity
+  try {
+    if (result?.old && result?.new) {
+      const changes = calculateChanges(
+        result.old,
+        {
+          title: result.new.title,
+          amount: result.new.amount,
+          paid_by: result.new.paid_by.id,
+          date: result.new.date,
+          category_id: result.new.category?.id || null,
+        },
+        ["title", "amount", "paid_by", "date", "category_id"]
+      );
+
+      if (changes.length > 0) {
+        await logActivity({
+          groupId,
+          actorId: user.id,
+          activityType: "update_expense",
+          entityType: "expense",
+          entityId: expenseId,
+          meta: {
+            action: "updated",
+            changes,
+            expense: {
+              id: expenseId,
+              title: result.new.title,
+            },
+          },
+        });
+      }
+    }
+  } catch (logError) {
+    // Don't throw - activity logging shouldn't break main flow
+    console.error("Failed to log expense update:", logError);
+  }
 }
 
 export async function deleteExpense(expenseId: string) {
   const supabase = await createClient();
-  const { error } = await supabase.rpc("delete_expense_soft", {
-    p_expense_id: expenseId,
-  });
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("User not authenticated");
+  }
+
+  const { data: deletedExpense, error } = await supabase.rpc(
+    "delete_expense_soft",
+    {
+      p_expense_id: expenseId,
+    }
+  );
 
   if (error) throw new Error(error.message);
+
+  // Log activity
+  try {
+    if (deletedExpense) {
+      await logActivity({
+        groupId: deletedExpense.group_id,
+        actorId: user.id,
+        activityType: "delete_expense",
+        entityType: "expense",
+        entityId: expenseId,
+        meta: {
+          action: "deleted",
+          expense: {
+            id: expenseId,
+            title: deletedExpense.title,
+            amount: deletedExpense.amount,
+          },
+        },
+      });
+    }
+  } catch (logError) {
+    // Don't throw - activity logging shouldn't break main flow
+    console.error("Failed to log expense deletion:", logError);
+  }
 }
 
 export async function insertMultiItemExpense(
@@ -81,18 +198,54 @@ export async function insertMultiItemExpense(
 ) {
   const supabase = await createClient();
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("User not authenticated");
+  }
+
   const processedItems = processMultiItemPayload(values.items);
 
-  const { error } = await supabase.rpc("insert_expense_multi_item", {
-    p_group_id: groupId,
-    p_title: values.title,
-    p_paid_by: values.paidBy,
-    p_date: values.date,
-    p_category_id: values.category === undefined ? null : values.category,
-    p_items: processedItems,
-  });
+  const { data: newExpense, error } = await supabase.rpc(
+    "insert_expense_multi_item",
+    {
+      p_group_id: groupId,
+      p_title: values.title,
+      p_paid_by: values.paidBy,
+      p_date: values.date,
+      p_category_id: values.category === undefined ? null : values.category,
+      p_items: processedItems,
+    }
+  );
 
   if (error) throw new Error(error.message);
+
+  // Log activity
+  try {
+    if (newExpense?.id) {
+      await logActivity({
+        groupId,
+        actorId: user.id,
+        activityType: "create_expense",
+        entityType: "expense",
+        entityId: newExpense.id,
+        meta: {
+          action: "created",
+          expense: {
+            title: newExpense.title,
+            amount: newExpense.amount,
+            paid_by: newExpense.paid_by.id,
+            date: newExpense.date,
+          },
+        },
+      });
+    }
+  } catch (logError) {
+    // Don't throw - activity logging shouldn't break main flow
+    console.error("Failed to log multi-item expense creation:", logError);
+  }
 }
 
 export async function updateMultiItemExpense(
@@ -102,20 +255,69 @@ export async function updateMultiItemExpense(
 ) {
   const supabase = await createClient();
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("User not authenticated");
+  }
+
   const processedItems = processMultiItemPayload(values.items);
 
-  const { error } = await supabase.rpc("update_expense_multi_item", {
-    p_expense_id: expenseId,
-    p_group_id: groupId,
-    p_title: values.title,
-    p_paid_by: values.paidBy,
-    p_date: values.date,
-    p_category_id: values.category === undefined ? null : values.category,
-    p_items: processedItems,
-  });
+  const { data: result, error } = await supabase.rpc(
+    "update_expense_multi_item",
+    {
+      p_expense_id: expenseId,
+      p_group_id: groupId,
+      p_title: values.title,
+      p_paid_by: values.paidBy,
+      p_date: values.date,
+      p_category_id: values.category === undefined ? null : values.category,
+      p_items: processedItems,
+    }
+  );
 
   if (error) {
     console.error("error:", error);
     throw new Error(error.message);
+  }
+
+  // Calculate changes and log activity
+  try {
+    if (result?.old && result?.new) {
+      const changes = calculateChanges(
+        result.old,
+        {
+          title: result.new.title,
+          amount: result.new.amount,
+          paid_by: result.new.paid_by,
+          date: result.new.date,
+          category_id: result.new.category_id || null,
+        },
+        ["title", "amount", "paid_by", "date", "category_id"]
+      );
+
+      if (changes.length > 0) {
+        await logActivity({
+          groupId,
+          actorId: user.id,
+          activityType: "update_expense",
+          entityType: "expense",
+          entityId: expenseId,
+          meta: {
+            action: "updated",
+            changes,
+            expense: {
+              id: expenseId,
+              title: result.new.title,
+            },
+          },
+        });
+      }
+    }
+  } catch (logError) {
+    // Don't throw - activity logging shouldn't break main flow
+    console.error("Failed to log multi-item expense update:", logError);
   }
 }

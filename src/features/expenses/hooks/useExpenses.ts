@@ -27,6 +27,7 @@ export function useExpenses(groupId: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["groupExpenses", groupId] });
       qc.invalidateQueries({ queryKey: ["groupBalances", groupId] });
+      qc.invalidateQueries({ queryKey: ["groupActivities", groupId] });
     },
   });
 
@@ -41,6 +42,7 @@ export function useExpenses(groupId: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["groupExpenses", groupId] });
       qc.invalidateQueries({ queryKey: ["groupBalances", groupId] });
+      qc.invalidateQueries({ queryKey: ["groupActivities", groupId] });
     },
   });
 
@@ -50,6 +52,7 @@ export function useExpenses(groupId: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["groupExpenses", groupId] });
       qc.invalidateQueries({ queryKey: ["groupBalances", groupId] });
+      qc.invalidateQueries({ queryKey: ["groupActivities", groupId] });
     },
   });
 
@@ -59,6 +62,7 @@ export function useExpenses(groupId: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["groupExpenses", groupId] });
       qc.invalidateQueries({ queryKey: ["groupBalances", groupId] });
+      qc.invalidateQueries({ queryKey: ["groupActivities", groupId] });
     },
   });
 
@@ -73,6 +77,7 @@ export function useExpenses(groupId: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["groupExpenses", groupId] });
       qc.invalidateQueries({ queryKey: ["groupBalances", groupId] });
+      qc.invalidateQueries({ queryKey: ["groupActivities", groupId] });
     },
   });
 
