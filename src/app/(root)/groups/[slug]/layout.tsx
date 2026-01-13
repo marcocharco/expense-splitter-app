@@ -4,6 +4,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { getGroupExpenses } from "@/features/expenses/queries/getGroupExpensesServer";
 import { getUnsettledTransactions } from "@/features/groups/queries/getUnsettledTransactionsServer";
 import { ExpenseFiltersProvider } from "@/features/expenses/contexts/ExpenseFiltersContext";
+import { PaymentFiltersProvider } from "@/features/payments/contexts/PaymentFiltersContext";
 import { getQueryClient } from "@/app/getQueryClient";
 
 export default async function GroupLayout({
@@ -34,9 +35,11 @@ export default async function GroupLayout({
   return (
     <CurrentGroupProvider group={group}>
       <ExpenseFiltersProvider>
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          {children}
-        </HydrationBoundary>
+        <PaymentFiltersProvider>
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            {children}
+          </HydrationBoundary>
+        </PaymentFiltersProvider>
       </ExpenseFiltersProvider>
     </CurrentGroupProvider>
   );
