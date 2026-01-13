@@ -1,7 +1,9 @@
 /** Converts yyyy-mm-dd string to Date object */
 export const YMDToDate = (value?: string): Date | undefined => {
   if (!value) return undefined;
-  const [year, month, day] = value.split("-");
+  // Handle ISO strings by taking only the date part
+  const datePart = value.includes("T") ? value.split("T")[0] : value;
+  const [year, month, day] = datePart.split("-");
   return new Date(Number(year), Number(month) - 1, Number(day));
 };
 

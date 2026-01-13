@@ -17,14 +17,16 @@ import { cn } from "@/lib/utils";
 interface SettlementCardProps {
   settlement: Settlement;
   compact?: boolean;
+  onClick?: (settlement: Settlement) => void;
 }
 
 export const SettlementCard = ({
   settlement,
   compact = false,
+  onClick,
 }: SettlementCardProps) => {
   const { user } = useUser();
-  const debtors = settlement.participants.filter((p) => p.initial_balance < 0);
+  const debtors = settlement.participants.filter((p) => p.initial_balance > 0);
   const totalInitialDebt = debtors.reduce(
     (acc, p) => acc + Math.abs(p.initial_balance),
     0
@@ -53,7 +55,10 @@ export const SettlementCard = ({
 
   if (compact) {
     return (
-      <div className="group flex flex-col gap-2 rounded-xl border bg-card p-4 shadow-sm transition-all hover:shadow-md">
+      <div
+        className="group flex flex-col gap-2 rounded-xl border bg-card p-4 shadow-sm transition-all hover:shadow-md cursor-pointer"
+        onClick={() => onClick?.(settlement)}
+      >
         <div className="flex items-center justify-between">
           <div>
             <h3 className="font-medium">{settlement.title}</h3>
@@ -82,7 +87,10 @@ export const SettlementCard = ({
   }
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-xl border bg-card shadow-sm transition-all hover:shadow-md border-l-4 border-l-main">
+    <div
+      className="group relative flex flex-col overflow-hidden rounded-xl border bg-card shadow-sm transition-all hover:shadow-md border-l-4 border-l-main cursor-pointer"
+      onClick={() => onClick?.(settlement)}
+    >
       <div className="p-5 space-y-4">
         <div className="flex items-start justify-between">
           <div className="space-y-1">

@@ -16,6 +16,8 @@ import { Expense } from "@/features/expenses/types/expense";
 import ExpenseDetailsSheet from "@/features/expenses/components/ExpenseDetailsSheet";
 import MultiItemExpenseForm from "@/features/expenses/components/forms/MultiItemExpenseForm";
 import { ActivityLog } from "@/features/activity/components/ActivityLog";
+import { SettlementDetailsSheet } from "@/features/settlements/components/SettlementDetailsSheet";
+import { Settlement } from "@/features/settlements/types/settlement";
 
 const GroupTabs = () => {
   const group = useCurrentGroup();
@@ -74,7 +76,7 @@ const GroupTabs = () => {
           <PaymentList />
         </TabsContent> */}
         <TabsContent value="settlements">
-          <SettlementList />
+          <SettlementList onSettlementClick={setSettlementToView} />
         </TabsContent>
         <TabsContent value="members">
           <GroupBalances />
@@ -150,6 +152,10 @@ const GroupTabs = () => {
       <ExpenseDetailsSheet
         expense={expenseToView}
         onOpenChange={setExpenseToView}
+      />
+      <SettlementDetailsSheet
+        settlement={settlementToView}
+        onOpenChange={setSettlementToView}
       />
     </>
   );

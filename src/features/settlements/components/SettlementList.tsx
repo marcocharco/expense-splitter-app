@@ -5,8 +5,13 @@ import { useSettlements } from "@/features/settlements/hooks/useSettlements";
 import { Badge } from "@/components/ui/badge";
 import { Clock } from "lucide-react";
 import { SettlementCard } from "./SettlementCard";
+import { Settlement } from "../types/settlement";
 
-const SettlementList = () => {
+const SettlementList = ({
+  onSettlementClick,
+}: {
+  onSettlementClick?: (settlement: Settlement) => void;
+}) => {
   const group = useCurrentGroup();
   const { settlements, isLoading } = useSettlements(group.id);
 
@@ -59,7 +64,11 @@ const SettlementList = () => {
           </div>
           <div className="grid gap-4">
             {activeSettlements.map((settlement) => (
-              <SettlementCard key={settlement.id} settlement={settlement} />
+              <SettlementCard
+                key={settlement.id}
+                settlement={settlement}
+                onClick={onSettlementClick}
+              />
             ))}
           </div>
         </div>
@@ -75,6 +84,7 @@ const SettlementList = () => {
                 key={settlement.id}
                 settlement={settlement}
                 compact
+                onClick={onSettlementClick}
               />
             ))}
           </div>

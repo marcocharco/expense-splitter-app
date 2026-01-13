@@ -3,11 +3,12 @@ export type SettlementStatus = "open" | "closed";
 export type Settlement = {
   id: string;
   title: string;
+  status: SettlementStatus;
+  created_at: string;
   created_by: {
     id: string;
     name: string;
   };
-  status: SettlementStatus;
   participants: {
     user: {
       id: string;
@@ -17,4 +18,3 @@ export type Settlement = {
     remaining_balance: number;
   }[];
 };
-
