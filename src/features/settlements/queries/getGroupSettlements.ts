@@ -10,15 +10,15 @@ export async function getGroupSettlements(groupId: string) {
       `
       id,
       title,
-      created_by:profile!created_by(id, name),
       status,
+      created_at,
+      created_by:profile!created_by(id, name),
       participants:settlement_participant(user:profile(id, name), initial_balance, remaining_balance)
     `
     )
     .eq("group_id", groupId)
     .overrideTypes<Settlement[], { merge: false }>();
 
-  // console.log(data);
   if (error) throw new Error(error.message);
 
   return data ?? null;
