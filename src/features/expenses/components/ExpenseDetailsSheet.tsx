@@ -10,6 +10,20 @@ import {
 import { Expense } from "@/features/expenses/types/expense";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { Badge } from "@/components/ui/badge";
+import { formatDisplayDate } from "@/utils/formatDate";
+
+function titleCaseWord(word: string) {
+  if (!word) {
+    return ""; // Handle empty or null input
+  }
+  // Get the first character and convert to uppercase
+  const firstLetter = word.charAt(0).toUpperCase();
+  // Get the rest of the string and convert to lowercase
+  const restOfString = word.slice(1).toLowerCase();
+
+  // Concatenate and return the result
+  return firstLetter + restOfString;
+}
 
 const ExpenseDetailsSheet = ({
   expense,
@@ -54,7 +68,7 @@ const ExpenseDetailsSheet = ({
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Date</span>
-                  <span>{expense.date}</span>
+                  <span>{formatDisplayDate(expense.date)}</span>
                 </div>
                 {expense.category && (
                   <div className="flex justify-between items-center">
@@ -66,7 +80,9 @@ const ExpenseDetailsSheet = ({
                 )}
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Split Type</span>
-                  <Badge variant="secondary">{expense.split_type}</Badge>
+                  <span className="normal-case">
+                    {titleCaseWord(expense.split_type)}
+                  </span>
                 </div>
               </div>
 
@@ -104,11 +120,12 @@ const ExpenseDetailsSheet = ({
                               {split.user.name}
                             </span>
                             <div className="flex gap-3 items-center">
-                              {split.weight > 0 && (
-                                <span className="text-xs text-muted-foreground">
-                                  Weight: {split.weight}
-                                </span>
-                              )}
+                              {split.weight > 0 &&
+                                item.split_type !== "even" && (
+                                  <span className="text-xs text-muted-foreground">
+                                    Weight: {split.weight}
+                                  </span>
+                                )}
                               <span className="font-medium">
                                 {formatCurrency(split.amount)}
                               </span>
@@ -132,9 +149,11 @@ const ExpenseDetailsSheet = ({
                     >
                       <span>{split.user.name}</span>
                       <div className="flex gap-4 items-center">
-                        <span className="text-sm text-muted-foreground">
-                          Weight: {split.weight}
-                        </span>
+                        {expense.split_type !== "even" && split.weight > 0 && (
+                          <span className="text-sm text-muted-foreground">
+                            Weight: {split.weight}
+                          </span>
+                        )}
                         <span className="font-medium">
                           {formatCurrency(split.amount)}
                         </span>

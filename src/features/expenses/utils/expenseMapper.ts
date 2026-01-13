@@ -70,7 +70,7 @@ export function toDomainExpense(dbExpense: Expense): Expense {
             id: split.user.id,
             name: split.user.name,
           },
-          weight: item.split_type === "even" ? 0 : split.weight,
+          weight: item.split_type === "even" ? 1 : split.weight,
           amount: splitAmount,
         };
       }),
@@ -88,7 +88,7 @@ export function toDomainExpense(dbExpense: Expense): Expense {
           name: split.user.name,
         },
         amount: splitAmount,
-        weight: dbExpense.split_type === "even" ? 0 : split.weight,
+        weight: dbExpense.split_type === "even" ? 1 : split.weight,
         initial_owing: split.initial_owing,
         remaining_owing: split.remaining_owing,
       };
