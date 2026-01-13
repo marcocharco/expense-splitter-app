@@ -6,7 +6,7 @@ import { ExpenseTable } from "@/features/expenses/components/table/ExpenseTable"
 import { createExpenseTableColumns } from "@/features/expenses/components/table/ExpenseTableColumns";
 import { useExpenses } from "@/features/expenses/hooks/useExpenses";
 import GroupBalances from "@/features/groups/components/GroupBalances";
-import PaymentList from "@/features/payments/components/PaymentList";
+// import PaymentList from "@/features/payments/components/PaymentList";
 import SettlementList from "@/features/settlements/components/SettlementList";
 import FormDialog from "@/components/ui/FormDialog";
 import SingleItemExpenseForm from "@/features/expenses/components/forms/SingleItemExpenseForm";
@@ -54,9 +54,9 @@ const GroupTabs = () => {
           <TabsTrigger value="expenses" className="px-2">
             Expenses
           </TabsTrigger>
-          <TabsTrigger value="payments" className="px-2">
+          {/* <TabsTrigger value="payments" className="px-2">
             Payments
-          </TabsTrigger>
+          </TabsTrigger> */}
           <TabsTrigger value="settlements" className="px-2">
             Settlements
           </TabsTrigger>
@@ -70,9 +70,9 @@ const GroupTabs = () => {
         <TabsContent value="expenses">
           <ExpenseTable columns={columns} data={expenses} />
         </TabsContent>
-        <TabsContent value="payments">
+        {/* <TabsContent value="payments">
           <PaymentList />
-        </TabsContent>
+        </TabsContent> */}
         <TabsContent value="settlements">
           <SettlementList />
         </TabsContent>
