@@ -2,9 +2,15 @@
 
 import { useActivities } from "../hooks/useActivities";
 import { formatActivityMessage } from "../utils/formatActivityMessage";
-import { Activity } from "@/features/activity/types/activity";
+import { Activity, EntityType } from "@/features/activity/types/activity";
 
-export function ActivityLog({ groupId }: { groupId: string }) {
+export function ActivityLog({
+  groupId,
+  onItemClick,
+}: {
+  groupId: string;
+  onItemClick?: (type: EntityType, id: string) => void;
+}) {
   const { activities, isLoading } = useActivities(groupId);
 
   if (isLoading) {
@@ -44,10 +50,15 @@ export function ActivityLog({ groupId }: { groupId: string }) {
             {dateActivities.map((activity) => (
               <div
                 key={activity.id}
-                className="flex items-start gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors"
+                className="flex items-start gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer group"
+                onClick={() =>
+                  onItemClick?.(activity.entity_type, activity.entity_id)
+                }
               >
                 <div className="flex-1">
-                  <p className="text-sm">{formatActivityMessage(activity)}</p>
+                  <p className="text-sm group-hover:text-main transition-colors">
+                    {formatActivityMessage(activity)}
+                  </p>
                   <p className="text-xs text-muted-foreground mt-1">
                     {formatRelativeTime(activity.created_at)}
                   </p>

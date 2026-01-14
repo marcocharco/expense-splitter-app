@@ -16,8 +16,14 @@ import { Expense } from "@/features/expenses/types/expense";
 import ExpenseDetailsSheet from "@/features/expenses/components/ExpenseDetailsSheet";
 import MultiItemExpenseForm from "@/features/expenses/components/forms/MultiItemExpenseForm";
 import { ActivityLog } from "@/features/activity/components/ActivityLog";
+import { PaymentDetailsSheet } from "@/features/payments/components/PaymentDetailsSheet";
 import { SettlementDetailsSheet } from "@/features/settlements/components/SettlementDetailsSheet";
+import { Payment } from "@/features/payments/types/payment";
 import { Settlement } from "@/features/settlements/types/settlement";
+import { getExpense } from "@/features/expenses/queries/getExpense";
+import { getPayment } from "@/features/payments/queries/getPayment";
+import { getSettlement } from "@/features/settlements/queries/getSettlement";
+import { EntityType } from "@/features/activity/types/activity";
 
 const GroupTabs = () => {
   const group = useCurrentGroup();
@@ -28,7 +34,28 @@ const GroupTabs = () => {
     null
   );
   const [expenseToView, setExpenseToView] = useState<Expense | null>(null);
+  const [paymentToView, setPaymentToView] = useState<Payment | null>(null);
+  const [settlementToView, setSettlementToView] = useState<Settlement | null>(
+    null
+  );
   const { deleteExpense } = useExpenses(group?.id ?? "");
+
+  const handleActivityItemClick = async (type: EntityType, id: string) => {
+    try {
+      if (type === "expense") {
+        const expense = await getExpense(id);
+        setExpenseToView(expense);
+      } else if (type === "payment") {
+        const payment = await getPayment(id);
+        setPaymentToView(payment);
+      } else if (type === "settlement") {
+        const settlement = await getSettlement(id);
+        setSettlementToView(settlement);
+      }
+    } catch (error) {
+      console.error(`Failed to fetch ${type} details:`, error);
+    }
+  };
 
   const columns = createExpenseTableColumns(
     (expense: Expense) => {
@@ -67,7 +94,12 @@ const GroupTabs = () => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="activity" className="justify-center">
-          {group?.id ? <ActivityLog groupId={group.id} /> : null}
+          {group?.id ? (
+            <ActivityLog
+              groupId={group.id}
+              onItemClick={handleActivityItemClick}
+            />
+          ) : null}
         </TabsContent>
         <TabsContent value="expenses">
           <ExpenseTable columns={columns} data={expenses} />
@@ -153,6 +185,12 @@ const GroupTabs = () => {
         expense={expenseToView}
         onOpenChange={setExpenseToView}
       />
+
+      <PaymentDetailsSheet
+        payment={paymentToView}
+        onOpenChange={setPaymentToView}
+      />
+
       <SettlementDetailsSheet
         settlement={settlementToView}
         onOpenChange={setSettlementToView}
