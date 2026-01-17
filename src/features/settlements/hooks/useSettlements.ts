@@ -14,7 +14,6 @@ export function useSettlements(groupId: string) {
 
   const startSettlement = useMutation({
     mutationFn: (values: {
-      currentUser: string;
       title: string;
       selectedExpenseIds: string[];
       balances: { userId: string; netBalance: number }[];

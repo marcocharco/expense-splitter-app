@@ -78,7 +78,6 @@ const SettlementForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
     try {
       await startSettlement({
-        currentUser: user.id,
         title: values.title,
         selectedExpenseIds: values.selectedExpenseIds,
         balances,

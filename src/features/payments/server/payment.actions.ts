@@ -30,6 +30,13 @@ export async function insertSettlementPayment({
     throw new Error("User not authenticated");
   }
 
+  // Verify that the current user is either the payer or the recipient
+  if (user.id !== paid_by && user.id !== paid_to) {
+    throw new Error(
+      "Unauthorized: You can only record payments where you are the payer or the recipient"
+    );
+  }
+
   const { data: result, error } = await supabase.rpc(
     "insert_payment_settlement",
     {
@@ -109,6 +116,13 @@ export async function insertExpensePayment({
 
   if (!user) {
     throw new Error("User not authenticated");
+  }
+
+  // Verify that the current user is either the payer or the recipient
+  if (user.id !== paid_by && user.id !== paid_to) {
+    throw new Error(
+      "Unauthorized: You can only record payments where you are the payer or the recipient"
+    );
   }
 
   const { data: result, error } = await supabase.rpc("insert_payment_expense", {
