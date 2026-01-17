@@ -141,41 +141,15 @@ export async function insertExpensePayment({
   try {
     if (result && result.payment_id) {
       const paymentId = result.payment_id;
-      const targets = result.applied_expenses.map((e: any) => ({
-        type: "expense" as const,
-        id: e.id,
-        amount: e.amount,
-        title: e.title,
-      }));
 
-      await logActivity({
-        groupId,
-        actorId: user.id,
-        activityType: "create_payment",
-        entityType: "payment",
-        entityId: paymentId,
-        targetUserId: paid_to,
-        meta: {
-          action: "created",
-          payment: {
-            id: paymentId,
-            amount: result.total_amount,
-            paid_by: result.paid_by,
-            paid_to: result.paid_to,
-            type: "expense",
-          },
-          targets,
-        },
-      });
-
-      // Also log individual "pay_expense" activities for each expense being paid
+      // Log activity
       for (const e of result.applied_expenses) {
         await logActivity({
           groupId,
           actorId: user.id,
           activityType: "pay_expense",
-          entityType: "expense",
-          entityId: e.id,
+          entityType: "payment", // Link to payment details
+          entityId: paymentId,
           targetUserId: paid_to,
           meta: {
             action: "payment_applied",

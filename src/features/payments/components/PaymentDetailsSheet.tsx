@@ -15,11 +15,13 @@ import { Badge } from "@/components/ui/badge";
 interface PaymentDetailsSheetProps {
   payment: Payment | null;
   onOpenChange: (payment: Payment | null) => void;
+  onExpenseClick?: (expenseId: string) => void;
 }
 
 export function PaymentDetailsSheet({
   payment,
   onOpenChange,
+  onExpenseClick,
 }: PaymentDetailsSheetProps) {
   return (
     <Sheet
@@ -88,11 +90,16 @@ export function PaymentDetailsSheet({
                     {payment.expense_allocations.map((allocation, idx) => (
                       <div
                         key={idx}
-                        className="flex justify-between items-center p-4 rounded-xl border bg-muted/30 hover:bg-muted/50 transition-colors"
+                        className="flex justify-between items-center p-4 rounded-xl border bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer group"
+                        onClick={() => onExpenseClick?.(allocation.expense.id)}
                       >
                         <div className="space-y-1">
-                          <p className="font-medium">{allocation.expense.title}</p>
-                          <p className="text-xs text-muted-foreground">Expense ID: {allocation.expense.id.slice(0, 8)}...</p>
+                          <p className="font-medium group-hover:text-main transition-colors">
+                            {allocation.expense.title}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Expense ID: {allocation.expense.id.slice(0, 8)}...
+                          </p>
                         </div>
                         <p className="text-lg font-semibold">
                           {formatCurrency(allocation.amount)}

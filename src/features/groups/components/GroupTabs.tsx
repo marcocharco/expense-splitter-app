@@ -189,6 +189,7 @@ const GroupTabs = () => {
       <PaymentDetailsSheet
         payment={paymentToView}
         onOpenChange={setPaymentToView}
+        onExpenseClick={(expenseId) => handleActivityItemClick("expense", expenseId)}
       />
 
       <SettlementDetailsSheet
