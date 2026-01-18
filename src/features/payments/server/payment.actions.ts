@@ -56,7 +56,7 @@ export async function insertSettlementPayment({
   try {
     if (result && result.payment_ids && result.payment_ids.length > 0) {
       const mainPaymentId = result.payment_ids[0];
-      const targets = result.applied_settlements.map((s: any) => ({
+      const targets = result.applied_settlements.map((s: { id: string; amount: number; title: string }) => ({
         type: "settlement" as const,
         id: s.id,
         amount: s.amount,

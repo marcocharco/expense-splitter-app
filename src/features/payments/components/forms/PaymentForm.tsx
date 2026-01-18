@@ -229,7 +229,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
     else if (paidBy === paidTo) {
       form.setValue("paidTo", "");
     }
-  }, [paidBy, user.id, form]);
+  }, [paidBy, user.id, form, paidTo]);
 
   useEffect(() => {
     if (paidTo && paidTo !== user.id) {
@@ -237,7 +237,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
     } else if (paidBy === paidTo) {
       form.setValue("paidBy", "");
     }
-  }, [paidTo, user.id, form]);
+  }, [paidTo, user.id, form, paidBy]);
 
   // Clear all selections and reset amount when paidTo is cleared (no recipient selected)
   useEffect(() => {
@@ -287,14 +287,12 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
           <MemberSelectInput
             control={form.control}
             name="paidBy"
-            formType="payment"
             groupMembers={groupMembers}
             currentUserId={user.id}
           />
           <MemberSelectInput
             control={form.control}
             name="paidTo"
-            formType="payment"
             groupMembers={groupMembers}
             currentUserId={user.id}
             // originally excluded, but might create unexpected ux

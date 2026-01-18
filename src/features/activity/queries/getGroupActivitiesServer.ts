@@ -26,6 +26,14 @@ export async function getGroupActivities(groupId: string) {
 
   if (error) throw new Error(error.message);
 
-  return (data as Activity[]) ?? [];
-}
+  type RawActivityResponse = Omit<Activity, "actor"> & {
+    actor: { id: string; name: string } | { id: string; name: string }[] | null;
+  };
 
+  const activities = (data as RawActivityResponse[])?.map((activity) => ({
+    ...activity,
+    actor: Array.isArray(activity.actor) ? activity.actor[0] : activity.actor,
+  }));
+
+  return (activities as Activity[]) ?? [];
+}

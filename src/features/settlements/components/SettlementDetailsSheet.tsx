@@ -116,7 +116,7 @@ export function SettlementDetailsSheet({
                 <div className="grid gap-3">
                   {settlement.participants.map((participant, idx) => {
                     const isSettled = participant.remaining_balance === 0;
-                    const balance = participant.initial_balance;
+                    // const balance = participant.initial_balance;
 
                     return (
                       <div

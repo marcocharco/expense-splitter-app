@@ -30,8 +30,8 @@ export type ExpenseUpdateMeta = {
   action: 'updated';
   changes: Array<{
     field: string;
-    before: any;
-    after: any;
+    before: unknown;
+    after: unknown;
   }>;
   expense: {
     id: string;

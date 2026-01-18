@@ -1,4 +1,8 @@
-import { Activity, ActivityMeta } from "@/features/activity/types/activity";
+import {
+  Activity,
+  ActivityMeta,
+  PaymentCreateMeta,
+} from "@/features/activity/types/activity";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { formatDisplayDate } from "@/utils/formatDate";
 
@@ -8,8 +12,8 @@ export function formatActivityMessage(activity: Activity): string {
 
   switch (activity.activity_type) {
     case "create_expense":
-      if ("expense" in meta) {
-        return `${actorName} added expense "${meta.expense.title}" for ${formatCurrency(meta.expense.amount)}`;
+      if ("expense" in meta && "amount" in meta.expense) {
+        return `${actorName} added expense "${meta.expense.title}" for ${formatCurrency(Number(meta.expense.amount))}`;
       }
       break;
 
@@ -32,17 +36,24 @@ export function formatActivityMessage(activity: Activity): string {
       break;
 
     case "pay_expense":
-      if ("payment" in meta && "expense" in meta) {
-        return `${actorName} paid ${formatCurrency(meta.payment.amount)} toward expense "${meta.expense.title}"`;
+      if ("payment" in meta && "expense" in meta && "amount" in meta.payment) {
+        return `${actorName} paid ${formatCurrency(Number(meta.payment.amount))} toward expense "${meta.expense.title}"`;
       }
       break;
 
     case "create_payment":
-      if ("payment" in meta) {
-        const targetDescriptions = meta.targets
+      if (
+        "payment" in meta &&
+        "amount" in meta.payment &&
+        meta.action === "created"
+      ) {
+        const paymentMeta = meta as PaymentCreateMeta;
+        const targetDescriptions = paymentMeta.targets
           ?.map((t) => `${formatCurrency(t.amount)} to ${t.title || t.type}`)
           .join(", ");
-        return `${actorName} created payment of ${formatCurrency(meta.payment.amount)}${targetDescriptions ? ` (${targetDescriptions})` : ""}`;
+        return `${actorName} created payment of ${formatCurrency(
+          Number(paymentMeta.payment.amount)
+        )}${targetDescriptions ? ` (${targetDescriptions})` : ""}`;
       }
       break;
 
@@ -56,13 +67,13 @@ export function formatActivityMessage(activity: Activity): string {
   return `${actorName} performed ${activity.activity_type}`;
 }
 
-function formatValue(field: string, value: any): string {
+function formatValue(field: string, value: unknown): string {
   if (value === null || value === undefined) {
     return "nothing";
   }
 
   if (field.includes("amount") || field === "amount") {
-    return formatCurrency(value);
+    return formatCurrency(Number(value));
   }
 
   if (field.includes("date") || field === "date") {

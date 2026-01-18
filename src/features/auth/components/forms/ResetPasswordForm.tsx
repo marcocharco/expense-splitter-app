@@ -77,7 +77,7 @@ const ResetPasswordForm = () => {
         // Password updated successfully, redirect to sign in
         router.push("/sign-in");
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);

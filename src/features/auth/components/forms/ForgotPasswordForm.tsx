@@ -37,7 +37,7 @@ const ForgotPasswordForm = () => {
       } else {
         setIsSubmitted(true);
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
@@ -50,7 +50,7 @@ const ForgotPasswordForm = () => {
         <p className="auth-header">Check your email</p>
         <div className="space-y-4">
           <p className="text-sm text-neutral-600 text-center">
-            We've sent a password reset link to {form.getValues("email")}
+            We&apos;ve sent a password reset link to {form.getValues("email")}
           </p>
           <p className="text-sm text-neutral-500 text-center">
             Click the link in the email to reset your password.
@@ -69,7 +69,7 @@ const ForgotPasswordForm = () => {
     <section className="auth-form">
       <p className="auth-header">Forgot Password</p>
       <p className="text-sm text-neutral-600 text-left">
-        Enter your email address and we'll send you a link to reset your
+        Enter your email address and we&apos;ll send you a link to reset your
         password.
       </p>
 
