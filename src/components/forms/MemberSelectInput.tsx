@@ -21,7 +21,6 @@ type MemberSelectInputProps<T extends FieldValues, N extends Path<T>> = {
   name: N;
   groupMembers: Member[];
   currentUserId: string;
-  formType: "expense" | "payment";
   excludeUserId?: string;
 };
 
@@ -30,7 +29,6 @@ const MemberSelectInput = <T extends FieldValues, N extends Path<T>>({
   name,
   groupMembers,
   currentUserId,
-  formType,
   excludeUserId,
 }: MemberSelectInputProps<T, N>) => {
   // Auto-determine width based on form type

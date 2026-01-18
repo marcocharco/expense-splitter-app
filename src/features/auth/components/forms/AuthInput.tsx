@@ -5,24 +5,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Control, FieldPath } from "react-hook-form";
+import { Control, FieldPath, FieldValues } from "react-hook-form";
 
-import { z } from "zod";
-import { authFormSchema } from "@/features/auth/schemas/authFormSchema";
-
-interface CustomInputProps {
-  control: Control<z.infer<ReturnType<typeof authFormSchema>>>;
-  name: FieldPath<z.infer<ReturnType<typeof authFormSchema>>>;
+interface CustomInputProps<T extends FieldValues> {
+  control: Control<T>;
+  name: FieldPath<T>;
   label: string;
   placeholder: string;
 }
 
-const CustomInput = ({
+const CustomInput = <T extends FieldValues>({
   control,
   name,
   label,
   placeholder,
-}: CustomInputProps) => {
+}: CustomInputProps<T>) => {
   return (
     <FormField
       control={control}

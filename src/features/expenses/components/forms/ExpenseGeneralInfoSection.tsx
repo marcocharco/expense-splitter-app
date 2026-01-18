@@ -32,7 +32,6 @@ const ExpenseGeneralInfoSection = <T extends FieldValues = FieldValues>({
       <MemberSelectInput
         control={control}
         name={"paidBy" as Path<T>}
-        formType="expense"
         groupMembers={groupMembers}
         currentUserId={currentUserId}
       />
