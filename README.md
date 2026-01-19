@@ -26,7 +26,7 @@ The existing spreadsheet I used with my roommates eventually became complicated 
 ## Features
 - Create groups to share expenses with the same circle of people
 - Split expenses equally, by percentage, by fraction, or with custom dollar values
-- Record grocery receipts as a single expense with different splits for each item
+- Record multi-item receipts as a single expense with different splits for each item
 - Quickly see how much you owe to the group or are owed by the group
 - View all group activity with time stamps and activity details
 - Group expenses into settlements to minimize the number of payments needed
