@@ -75,7 +75,7 @@ const GroupTabs = () => {
 
   return (
     <>
-      <Tabs defaultValue="expenses" className="w-full !gap-4">
+      <Tabs defaultValue="activity" className="w-full !gap-4">
         <TabsList className="flex gap-4">
           <TabsTrigger value="activity" className="px-2">
             Activity
@@ -189,7 +189,9 @@ const GroupTabs = () => {
       <PaymentDetailsSheet
         payment={paymentToView}
         onOpenChange={setPaymentToView}
-        onExpenseClick={(expenseId) => handleActivityItemClick("expense", expenseId)}
+        onExpenseClick={(expenseId) =>
+          handleActivityItemClick("expense", expenseId)
+        }
       />
 
       <SettlementDetailsSheet
