@@ -18,6 +18,7 @@ import { ExpenseSplit } from "@/features/expenses/types/expense";
 import { DateToYMD } from "@/utils/formatDate";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { useSettlements } from "@/features/settlements/hooks/useSettlements";
+import { usePayableExpenses, usePayableExpenseItems, usePayableSettlements } from "@/features/payments/hooks/usePayableItems";
 import { toast } from "sonner";
 import PaymentFormExpensesPanel from "./PaymentFormExpensesPanel";
 import PaymentFormSettlementsPanel from "./PaymentFormSettlementsPanel";
@@ -71,34 +72,8 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const paidTo = useWatch({ control: form.control, name: "paidTo" });
   const selectedExpenseIds = form.watch("selectedExpenseIds");
   const selectedSettlementIds = form.watch("selectedSettlementIds");
-  const unpaidExpenses = useMemo(() => {
-    return expenses.filter((expense) => {
-      const payerSplit = expense.splits.find(
-        (split) => split.user.id === paidBy
-      );
-      // expenses not in a settlement
-      return (
-        expense.paid_by.id === paidTo &&
-        payerSplit &&
-        expense.settlement === null &&
-        payerSplit.remaining_owing > 0
-      );
-    });
-  }, [expenses, paidTo, paidBy]);
-
-  const expenseItems = useMemo(() => {
-    return [...unpaidExpenses].reverse().map((expense) => {
-      const split = expense.splits.find(
-        (split: ExpenseSplit) => split.user.id === paidBy
-      );
-      return {
-        id: expense.id,
-        label: `${expense.title} - Owes ${formatCurrency(
-          split?.remaining_owing || 0
-        )}`,
-      };
-    });
-  }, [unpaidExpenses, paidBy]);
+  const unpaidExpenses = usePayableExpenses(expenses, paidBy, paidTo);
+  const expenseItems = usePayableExpenseItems(unpaidExpenses, paidBy);
 
   // Calculate selected expenses with split amounts
   const selectedExpenses = useMemo(() => {
@@ -120,22 +95,7 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
     0
   );
 
-  const unpaidSettlements = useMemo(() => {
-    return settlements.filter((settlement) => {
-      const paidToParticipant = settlement.participants.find(
-        (participant) => participant.user.id === paidTo
-      );
-      const paidByParticipant = settlement.participants.find(
-        (participant) => participant.user.id === paidBy
-      );
-      return (
-        paidToParticipant &&
-        paidByParticipant &&
-        paidToParticipant.remaining_balance < 0 &&
-        paidByParticipant.remaining_balance > 0
-      );
-    });
-  }, [settlements, paidTo, paidBy]);
+  const unpaidSettlements = usePayableSettlements(settlements, paidBy, paidTo);
 
   const selectedSettlements = useMemo(() => {
     return unpaidSettlements
