@@ -1,5 +1,4 @@
 "use client";
-import { calculateMemberBalances } from "@/features/groups/utils/groupBalanceCalculator";
 import {
   Table,
   TableBody,
@@ -11,19 +10,11 @@ import {
 } from "@/components/ui/table";
 import { useCurrentGroup } from "@/features/groups/contexts/CurrentGroupContext";
 import { formatCurrency } from "@/utils/formatCurrency";
-import { useBalanceInputs } from "@/features/groups/hooks/useBalanceInputs";
-import { useMemo } from "react";
+import { useGroupMemberBalances } from "@/features/groups/hooks/useGroupMemberBalances";
 
 const GroupBalances = () => {
   const group = useCurrentGroup();
-  const { data } = useBalanceInputs(group?.id ?? "");
-  const memberBalances = useMemo(() => {
-    if (!data?.expenses || !data?.payments) return new Map();
-    return calculateMemberBalances({
-      expenses: data.expenses,
-      payments: data.payments,
-    });
-  }, [data?.expenses, data?.payments]);
+  const memberBalances = useGroupMemberBalances(group?.id ?? "");
   return (
     <Table>
       <TableCaption>Total owed and owing for each group member.</TableCaption>
@@ -49,10 +40,20 @@ const GroupBalances = () => {
               <TableCell className="text-right">
                 {formatCurrency(userBalance?.totalOwed ?? 0)}
               </TableCell>
-              <TableCell className="text-right">
+              <TableCell
+                className={`text-right font-medium ${
+                  (userBalance?.netOwing ?? 0) < 0
+                    ? "text-main"
+                    : (userBalance?.netOwing ?? 0) > 0
+                    ? "text-orange-500"
+                    : ""
+                }`}
+              >
                 {(userBalance?.netOwing ?? 0) < 0
                   ? `is owed ${formatCurrency(absValue)}`
-                  : `owes ${formatCurrency(absValue)}`}
+                  : (userBalance?.netOwing ?? 0) > 0
+                  ? `owes ${formatCurrency(absValue)}`
+                  : "Settled up"}
               </TableCell>
             </TableRow>
           );
