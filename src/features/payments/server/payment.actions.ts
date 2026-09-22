@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { logActivity } from "@/features/activity/server/activity.actions";
+import { safeLogActivity } from "@/features/activity/utils/safeLogActivity";
 
 export async function insertSettlementPayment({
   groupId,
@@ -52,40 +52,34 @@ export async function insertSettlementPayment({
 
   if (error) throw new Error(error.message);
 
-  // Log activity
-  try {
-    if (result && result.payment_ids && result.payment_ids.length > 0) {
-      const mainPaymentId = result.payment_ids[0];
-      const targets = result.applied_settlements.map((s: { id: string; amount: number; title: string }) => ({
-        type: "settlement" as const,
-        id: s.id,
-        amount: s.amount,
-        title: s.title,
-      }));
+  if (result && result.payment_ids && result.payment_ids.length > 0) {
+    const mainPaymentId = result.payment_ids[0];
+    const targets = result.applied_settlements.map((s: { id: string; amount: number; title: string }) => ({
+      type: "settlement" as const,
+      id: s.id,
+      amount: s.amount,
+      title: s.title,
+    }));
 
-      await logActivity({
-        groupId,
-        actorId: user.id,
-        activityType: "create_payment",
-        entityType: "payment",
-        entityId: mainPaymentId,
-        targetUserId: paid_to,
-        meta: {
-          action: "created",
-          payment: {
-            id: mainPaymentId,
-            amount: result.total_amount,
-            paid_by: result.paid_by,
-            paid_to: result.paid_to,
-            type: "settlement",
-          },
-          targets: targets.length > 0 ? targets : undefined,
+    await safeLogActivity({
+      groupId,
+      actorId: user.id,
+      activityType: "create_payment",
+      entityType: "payment",
+      entityId: mainPaymentId,
+      targetUserId: paid_to,
+      meta: {
+        action: "created",
+        payment: {
+          id: mainPaymentId,
+          amount: result.total_amount,
+          paid_by: result.paid_by,
+          paid_to: result.paid_to,
+          type: "settlement",
         },
-      });
-    }
-  } catch (logError) {
-    // Don't throw - activity logging shouldn't break main flow
-    console.error("Failed to log settlement payment:", logError);
+        targets: targets.length > 0 ? targets : undefined,
+      },
+    });
   }
 
   return result ?? null;
@@ -137,45 +131,38 @@ export async function insertExpensePayment({
 
   if (error) throw new Error(error.message);
 
-  // Log activity
-  try {
-    if (result && result.payment_id) {
-      const paymentId = result.payment_id;
+  if (result && result.payment_id) {
+    const paymentId = result.payment_id;
 
-      // Log activity
-      for (const e of result.applied_expenses) {
-        await logActivity({
-          groupId,
-          actorId: user.id,
-          activityType: "pay_expense",
-          entityType: "payment", // Link to payment details
-          entityId: paymentId,
-          targetUserId: paid_to,
-          meta: {
-            action: "payment_applied",
-            payment: {
-              id: paymentId,
-              amount: e.amount,
-              paid_by: result.paid_by,
-              paid_to: result.paid_to,
-            },
-            expense: {
-              id: e.id,
-              title: e.title,
-            },
-            allocations: [
-              {
-                expense_id: e.id,
-                amount: e.amount,
-              },
-            ],
+    for (const e of result.applied_expenses) {
+      await safeLogActivity({
+        groupId,
+        actorId: user.id,
+        activityType: "pay_expense",
+        entityType: "payment",
+        entityId: paymentId,
+        targetUserId: paid_to,
+        meta: {
+          action: "payment_applied",
+          payment: {
+            id: paymentId,
+            amount: e.amount,
+            paid_by: result.paid_by,
+            paid_to: result.paid_to,
           },
-        });
-      }
+          expense: {
+            id: e.id,
+            title: e.title,
+          },
+          allocations: [
+            {
+              expense_id: e.id,
+              amount: e.amount,
+            },
+          ],
+        },
+      });
     }
-  } catch (logError) {
-    // Don't throw - activity logging shouldn't break main flow
-    console.error("Failed to log expense payment:", logError);
   }
 
   return result ?? null;

@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { logActivity } from "@/features/activity/server/activity.actions";
+import { safeLogActivity } from "@/features/activity/utils/safeLogActivity";
 
 export async function insertSettlement({
   groupId,
@@ -37,28 +37,22 @@ export async function insertSettlement({
 
   if (error) throw new Error(error.message);
 
-  // Log activity
-  try {
-    if (newSettlement?.id) {
-      await logActivity({
-        groupId,
-        actorId: user.id,
-        activityType: "create_settlement",
-        entityType: "settlement",
-        entityId: newSettlement.id,
-        meta: {
-          action: "created",
-          settlement: {
-            id: newSettlement.id,
-            title: newSettlement.title,
-            expense_count: newSettlement.expense_count,
-          },
+  if (newSettlement?.id) {
+    await safeLogActivity({
+      groupId,
+      actorId: user.id,
+      activityType: "create_settlement",
+      entityType: "settlement",
+      entityId: newSettlement.id,
+      meta: {
+        action: "created",
+        settlement: {
+          id: newSettlement.id,
+          title: newSettlement.title,
+          expense_count: newSettlement.expense_count,
         },
-      });
-    }
-  } catch (logError) {
-    // Don't throw - activity logging shouldn't break main flow
-    console.error("Failed to log settlement creation:", logError);
+      },
+    });
   }
 
   return newSettlement;
