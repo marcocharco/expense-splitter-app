@@ -5,7 +5,7 @@ import {
   NewExpense,
   NewMultiItemExpense,
 } from "@/features/expenses/types/expense";
-import { logActivity } from "@/features/activity/server/activity.actions";
+import { safeLogActivity } from "@/features/activity/utils/safeLogActivity";
 import { calculateChanges } from "@/features/activity/utils/calculateChanges";
 
 // process multi-item expense inputs for RPC function
@@ -49,29 +49,23 @@ export async function insertExpense(values: NewExpense, groupId: string) {
 
   if (error) throw new Error(error.message);
 
-  // Log activity
-  try {
-    if (newExpense?.id) {
-      await logActivity({
-        groupId,
-        actorId: user.id,
-        activityType: "create_expense",
-        entityType: "expense",
-        entityId: newExpense.id,
-        meta: {
-          action: "created",
-          expense: {
-            title: newExpense.title,
-            amount: newExpense.amount,
-            paid_by: newExpense.paid_by.id,
-            date: newExpense.date,
-          },
+  if (newExpense?.id) {
+    await safeLogActivity({
+      groupId,
+      actorId: user.id,
+      activityType: "create_expense",
+      entityType: "expense",
+      entityId: newExpense.id,
+      meta: {
+        action: "created",
+        expense: {
+          title: newExpense.title,
+          amount: newExpense.amount,
+          paid_by: newExpense.paid_by.id,
+          date: newExpense.date,
         },
-      });
-    }
-  } catch (logError) {
-    // Don't throw - activity logging shouldn't break main flow
-    console.error("Failed to log expense creation:", logError);
+      },
+    });
   }
 }
 
@@ -108,42 +102,36 @@ export async function updateExpense(
 
   if (error) throw new Error(error.message);
 
-  // Calculate changes and log activity
-  try {
-    if (result?.old && result?.new) {
-      const changes = calculateChanges(
-        result.old,
-        {
-          title: result.new.title,
-          amount: result.new.amount,
-          paid_by: result.new.paid_by.id,
-          date: result.new.date,
-          category_id: result.new.category?.id || null,
-        },
-        ["title", "amount", "paid_by", "date", "category_id"]
-      );
+  if (result?.old && result?.new) {
+    const changes = calculateChanges(
+      result.old,
+      {
+        title: result.new.title,
+        amount: result.new.amount,
+        paid_by: result.new.paid_by.id,
+        date: result.new.date,
+        category_id: result.new.category?.id || null,
+      },
+      ["title", "amount", "paid_by", "date", "category_id"]
+    );
 
-      if (changes.length > 0) {
-        await logActivity({
-          groupId,
-          actorId: user.id,
-          activityType: "update_expense",
-          entityType: "expense",
-          entityId: expenseId,
-          meta: {
-            action: "updated",
-            changes,
-            expense: {
-              id: expenseId,
-              title: result.new.title,
-            },
+    if (changes.length > 0) {
+      await safeLogActivity({
+        groupId,
+        actorId: user.id,
+        activityType: "update_expense",
+        entityType: "expense",
+        entityId: expenseId,
+        meta: {
+          action: "updated",
+          changes,
+          expense: {
+            id: expenseId,
+            title: result.new.title,
           },
-        });
-      }
+        },
+      });
     }
-  } catch (logError) {
-    // Don't throw - activity logging shouldn't break main flow
-    console.error("Failed to log expense update:", logError);
   }
 }
 
@@ -167,28 +155,22 @@ export async function deleteExpense(expenseId: string) {
 
   if (error) throw new Error(error.message);
 
-  // Log activity
-  try {
-    if (deletedExpense) {
-      await logActivity({
-        groupId: deletedExpense.group_id,
-        actorId: user.id,
-        activityType: "delete_expense",
-        entityType: "expense",
-        entityId: expenseId,
-        meta: {
-          action: "deleted",
-          expense: {
-            id: expenseId,
-            title: deletedExpense.title,
-            amount: deletedExpense.amount,
-          },
+  if (deletedExpense) {
+    await safeLogActivity({
+      groupId: deletedExpense.group_id,
+      actorId: user.id,
+      activityType: "delete_expense",
+      entityType: "expense",
+      entityId: expenseId,
+      meta: {
+        action: "deleted",
+        expense: {
+          id: expenseId,
+          title: deletedExpense.title,
+          amount: deletedExpense.amount,
         },
-      });
-    }
-  } catch (logError) {
-    // Don't throw - activity logging shouldn't break main flow
-    console.error("Failed to log expense deletion:", logError);
+      },
+    });
   }
 }
 
@@ -222,29 +204,23 @@ export async function insertMultiItemExpense(
 
   if (error) throw new Error(error.message);
 
-  // Log activity
-  try {
-    if (newExpense?.id) {
-      await logActivity({
-        groupId,
-        actorId: user.id,
-        activityType: "create_expense",
-        entityType: "expense",
-        entityId: newExpense.id,
-        meta: {
-          action: "created",
-          expense: {
-            title: newExpense.title,
-            amount: newExpense.amount,
-            paid_by: newExpense.paid_by.id,
-            date: newExpense.date,
-          },
+  if (newExpense?.id) {
+    await safeLogActivity({
+      groupId,
+      actorId: user.id,
+      activityType: "create_expense",
+      entityType: "expense",
+      entityId: newExpense.id,
+      meta: {
+        action: "created",
+        expense: {
+          title: newExpense.title,
+          amount: newExpense.amount,
+          paid_by: newExpense.paid_by.id,
+          date: newExpense.date,
         },
-      });
-    }
-  } catch (logError) {
-    // Don't throw - activity logging shouldn't break main flow
-    console.error("Failed to log multi-item expense creation:", logError);
+      },
+    });
   }
 }
 
@@ -283,41 +259,35 @@ export async function updateMultiItemExpense(
     throw new Error(error.message);
   }
 
-  // Calculate changes and log activity
-  try {
-    if (result?.old && result?.new) {
-      const changes = calculateChanges(
-        result.old,
-        {
-          title: result.new.title,
-          amount: result.new.amount,
-          paid_by: result.new.paid_by,
-          date: result.new.date,
-          category_id: result.new.category_id || null,
-        },
-        ["title", "amount", "paid_by", "date", "category_id"]
-      );
+  if (result?.old && result?.new) {
+    const changes = calculateChanges(
+      result.old,
+      {
+        title: result.new.title,
+        amount: result.new.amount,
+        paid_by: result.new.paid_by,
+        date: result.new.date,
+        category_id: result.new.category_id || null,
+      },
+      ["title", "amount", "paid_by", "date", "category_id"]
+    );
 
-      if (changes.length > 0) {
-        await logActivity({
-          groupId,
-          actorId: user.id,
-          activityType: "update_expense",
-          entityType: "expense",
-          entityId: expenseId,
-          meta: {
-            action: "updated",
-            changes,
-            expense: {
-              id: expenseId,
-              title: result.new.title,
-            },
+    if (changes.length > 0) {
+      await safeLogActivity({
+        groupId,
+        actorId: user.id,
+        activityType: "update_expense",
+        entityType: "expense",
+        entityId: expenseId,
+        meta: {
+          action: "updated",
+          changes,
+          expense: {
+            id: expenseId,
+            title: result.new.title,
           },
-        });
-      }
+        },
+      });
     }
-  } catch (logError) {
-    // Don't throw - activity logging shouldn't break main flow
-    console.error("Failed to log multi-item expense update:", logError);
   }
 }
