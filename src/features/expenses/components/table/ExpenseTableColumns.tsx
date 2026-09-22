@@ -15,23 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getExpenseUserStatus } from "../../utils/getExpenseUserStatus";
-
-function getPaymentStatus(expense: Expense) {
-  if (expense.settlement) {
-    if (expense.settlement.status === "closed") return "Paid";
-    return "In Settlement";
-  }
-
-  const total = expense.splits.filter(
-    (s) => expense.paid_by.id !== s.user.id
-  ).length;
-  const paid = expense.splits.filter(
-    (s) => s.remaining_owing === 0 && s.initial_owing > 0
-  ).length;
-
-  if (paid === total) return "Paid";
-  return `${paid}/${total} Paid`;
-}
+import { getPaymentStatus } from "../../utils/getPaymentStatus";
 
 export const createExpenseTableColumns = (
   onEditExpense: (expense: Expense) => void,
@@ -84,9 +68,9 @@ export const createExpenseTableColumns = (
       const getStatusTextColor = (type: string) => {
         switch (type) {
           case "owed":
-            return "text-green-600"; // Current user is owed money
+            return "text-main"; // Current user is owed money
           case "owes":
-            return "text-red-600"; // Current user owes money
+            return "text-orange-500"; // Current user owes money
           case "paid":
             return "text-gray-400"; // Current user was paid
           case "paid_share":
