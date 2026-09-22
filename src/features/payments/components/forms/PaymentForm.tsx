@@ -20,7 +20,8 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import { useSettlements } from "@/features/settlements/hooks/useSettlements";
 import { usePayableExpenses, usePayableExpenseItems, usePayableSettlements } from "@/features/payments/hooks/usePayableItems";
 import { toast } from "sonner";
-import PaymentFormExpensesPanel from "./PaymentFormExpensesPanel";
+import MultiSelectInput from "@/components/forms/MultiSelectInput";
+import { FormLabel } from "@/components/ui/form";
 import PaymentFormSettlementsPanel from "./PaymentFormSettlementsPanel";
 
 const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
@@ -285,12 +286,24 @@ const PaymentForm = ({ onSuccess }: { onSuccess: () => void }) => {
                   </p>
                 </div>
               ) : paymentType === "expense" ? (
-                <PaymentFormExpensesPanel<FormValues>
-                  control={form.control}
-                  name="selectedExpenseIds"
-                  items={expenseItems}
-                  hasBothFields={!!paidBy && !!paidTo}
-                />
+                expenseItems.length === 0 ? (
+                  <div className="rounded-xl border border-dashed bg-muted/40 px-4 py-8 text-center">
+                    <p className="text-sm font-medium">No unpaid expenses</p>
+                    <p className="text-xs text-muted-foreground">
+                      Select a different member or add new expenses to settle.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="flex flex-col h-full space-y-4">
+                    <FormLabel className="form-item-label">
+                      Choose Expenses
+                      <span className="text-muted-foreground font-normal text-sm"> (select one or more)</span>
+                    </FormLabel>
+                    <div className="flex-1 min-h-0">
+                      <MultiSelectInput control={form.control} name="selectedExpenseIds" items={expenseItems} />
+                    </div>
+                  </div>
+                )
               ) : (
                 <PaymentFormSettlementsPanel<FormValues>
                   control={form.control}
